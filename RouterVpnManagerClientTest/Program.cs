@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RouterVpnManagerClientLibrary;
 
 namespace RouterVpnManagerClientTest
 {
@@ -10,7 +11,8 @@ namespace RouterVpnManagerClientTest
     {
         static void Main(string[] args)
         {
-
+            RouterVpnManagerConnection connection = new RouterVpnManagerConnection();
+            
         }
     }
 }

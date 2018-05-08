@@ -9,3 +9,5 @@
 /RouterVpnManagerClientLibrary/obj/Debug
 /RouterVpnManagerClientTest/obj/Debug
 /RouterVpnManagerClientTest/bin/Debug
+/packages/Newtonsoft.Json.11.0.2
+/RouterVpnManagerClientLibrary/bin/Debug
