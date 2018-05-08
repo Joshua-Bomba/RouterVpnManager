@@ -3,3 +3,8 @@
 ################################################################################
 
 /.vs/RouterVpnManager/v15/Server/sqlite3
+/RouterVpnManagerClient/obj
+/RouterVpnManagerClientAppleTV/bin/iPhoneSimulator/Debug
+/RouterVpnManagerClientAppleTV/obj/iPhoneSimulator/Debug
+/RouterVpnManagerClientLibrary/obj/Debug
+/RouterVpnManagerClientTest/obj/Debug
