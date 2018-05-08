@@ -11,11 +11,11 @@ if len(sys.argv) >= 2:
     s.connect((host,port))
 
     def ts(str):
-        s.send('e'.encode())
+        s.send(str.encode())
         data = s.recv(1024).decode()
         print(data)
     while 2:
-        r = input('enter')
+        r = input('enter: ')
         ts(r)
     s.close
 else:
