@@ -12,7 +12,7 @@ class clientconnection(Thread):
         self.start()
     def run(self):
         while 1:
-            print('client sent', self.sock.recv(1024).decode())
+            print('client sent: ', self.sock.recv(1024).decode())
             self.sock.send(b'Messsage recived')
 
 

@@ -15,7 +15,8 @@ if len(sys.argv) >= 2:
         data = s.recv(1024).decode()
         print(data)
     while 2:
-        r = input('enter: ')
+        print "enter: ",
+        r = sys.stdin.readline()
         ts(r)
     s.close
 else:
