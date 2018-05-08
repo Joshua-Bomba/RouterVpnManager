@@ -2,20 +2,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>004dd1f7-710e-4d9c-90bd-e9a41ec1b715</ProjectGuid>
+    <ProjectGuid>54bc570a-cba8-41b8-b7d4-020e611c252b</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>RouterVpnManager.py</StartupFile>
+    <StartupFile>RouterVpnManagerPythonTestClient.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>RouterVpnManager</Name>
-    <RootNamespace>RouterVpnManager</RootNamespace>
+    <Name>RouterVpnManagerPythonTestClient</Name>
+    <RootNamespace>RouterVpnManagerPythonTestClient</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <InterpreterArguments>
-    </InterpreterArguments>
-    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <CommandLineArguments>localhost 8000</CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,7 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="RouterVpnManager.py" />
+    <Compile Include="RouterVpnManagerPythonTestClient.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

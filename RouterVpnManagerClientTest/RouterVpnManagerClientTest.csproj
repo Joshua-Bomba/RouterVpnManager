@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RouterVpnManagerClientLibrary\RouterVpnManagerClientLibrary.csproj">
+      <Project>{8684ad50-4f55-4753-859d-1920daad6c80}</Project>
+      <Name>RouterVpnManagerClientLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

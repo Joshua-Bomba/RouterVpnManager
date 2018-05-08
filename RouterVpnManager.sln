@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouterVpnManagerClientLibra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouterVpnManagerClientTest", "RouterVpnManagerClientTest\RouterVpnManagerClientTest.csproj", "{4D859494-F7E9-4DF6-A11E-5D9637D94B3D}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "RouterVpnManagerPythonTestClient", "RouterVpnManagerPythonTestClient\RouterVpnManagerPythonTestClient.pyproj", "{54BC570A-CBA8-41B8-B7D4-020E611C252B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,12 @@ Global
 		{4D859494-F7E9-4DF6-A11E-5D9637D94B3D}.Release|iPhone.Build.0 = Release|Any CPU
 		{4D859494-F7E9-4DF6-A11E-5D9637D94B3D}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{4D859494-F7E9-4DF6-A11E-5D9637D94B3D}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{54BC570A-CBA8-41B8-B7D4-020E611C252B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54BC570A-CBA8-41B8-B7D4-020E611C252B}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{54BC570A-CBA8-41B8-B7D4-020E611C252B}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{54BC570A-CBA8-41B8-B7D4-020E611C252B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54BC570A-CBA8-41B8-B7D4-020E611C252B}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{54BC570A-CBA8-41B8-B7D4-020E611C252B}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
