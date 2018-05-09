@@ -14,6 +14,7 @@ namespace RouterVpnManagerClientTest
             using (RouterVpnManagerConnection connection = new RouterVpnManagerConnection())
             {
                 connection.Connect();
+                Console.ReadLine();
             }
             
         }
