@@ -49,7 +49,7 @@ namespace RouterVpnManagerClientLibrary.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
         public int Timeout {
             get {
                 return ((int)(this["Timeout"]));
