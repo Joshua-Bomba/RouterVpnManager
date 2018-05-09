@@ -25,7 +25,7 @@ namespace RouterVpnManagerClientLibrary.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
         public string Host {
             get {
                 return ((string)(this["Host"]));
@@ -38,9 +38,9 @@ namespace RouterVpnManagerClientLibrary.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8000")]
-        public uint Port {
+        public int Port {
             get {
-                return ((uint)(this["Port"]));
+                return ((int)(this["Port"]));
             }
             set {
                 this["Port"] = value;

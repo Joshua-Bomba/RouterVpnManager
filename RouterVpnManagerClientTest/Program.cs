@@ -11,7 +11,10 @@ namespace RouterVpnManagerClientTest
     {
         static void Main(string[] args)
         {
-            RouterVpnManagerConnection connection = new RouterVpnManagerConnection();
+            using (RouterVpnManagerConnection connection = new RouterVpnManagerConnection())
+            {
+                connection.Connect();
+            }
             
         }
     }

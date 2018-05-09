@@ -3,9 +3,9 @@
   <Profiles />
   <Settings>
     <Setting Name="Host" Type="System.String" Scope="User">
-      <Value Profile="(Default)">localhost</Value>
+      <Value Profile="(Default)">127.0.0.1</Value>
     </Setting>
-    <Setting Name="Port" Type="System.UInt32" Scope="User">
+    <Setting Name="Port" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">8000</Value>
     </Setting>
     <Setting Name="Timeout" Type="System.Int32" Scope="User">
