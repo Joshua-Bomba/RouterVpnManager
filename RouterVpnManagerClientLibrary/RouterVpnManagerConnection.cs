@@ -15,7 +15,7 @@ namespace RouterVpnManagerClientLibrary
         private TcpClient client_;
 
 
-        public delegate void Callback(string message);
+        public delegate void Callback(JObject message);
 
         public RouterVpnManagerConnection()
         {
@@ -29,14 +29,16 @@ namespace RouterVpnManagerClientLibrary
             {
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(Host), Port);
                 client_.Connect(ep);
-                byte[] bytes = Encoding.ASCII.GetBytes("connection");
+
+                JObject obj = ControlledRequests.FormatMessage("request","connection");
+                byte[] bytes = Encoding.ASCII.GetBytes(obj.ToString());
 
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
 
-                ProcessCallback((string message) =>
+                ProcessCallback((JObject message) =>
                 {
-                    RouterVpnManagerLogLibrary.Log("Received: " + message);
+                    RouterVpnManagerLogLibrary.Log(message["data"].ToString());
                 });
 
 
@@ -59,7 +61,8 @@ namespace RouterVpnManagerClientLibrary
                 byte[] bytesResponse = new byte[client_.ReceiveBufferSize];
                 int bytesRead = ns.Read(bytesResponse, 0, client_.ReceiveBufferSize);
                 string dataReceived = Encoding.ASCII.GetString(bytesResponse, 0, bytesRead);
-                callback(dataReceived);
+                JObject obj = JObject.Parse(dataReceived);
+                callback(obj);
                 return true;
             }
             catch (Exception e)
@@ -76,24 +79,24 @@ namespace RouterVpnManagerClientLibrary
             client_.Close();
         }
 
-        public bool SendPlainTextMessage(string text, Callback callback = null)
-        {
-            if (client_.Connected)
-            {
-                NetworkStream ns = client_.GetStream();
-                byte[] bytes = Encoding.ASCII.GetBytes(text);
-                ns.Write(bytes, 0, bytes.Length);
-                if (callback != null)
-                {
-                    ProcessCallback(callback);
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //public bool SendPlainTextMessage(string text, Callback callback = null)
+        //{
+        //    if (client_.Connected)
+        //    {
+        //        NetworkStream ns = client_.GetStream();
+        //        byte[] bytes = Encoding.ASCII.GetBytes(text);
+        //        ns.Write(bytes, 0, bytes.Length);
+        //        if (callback != null)
+        //        {
+        //            ProcessCallback(callback);
+        //        }
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public bool SendJson(JObject obj, Callback callback = null)
         {

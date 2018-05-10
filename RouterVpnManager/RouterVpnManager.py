@@ -1,7 +1,51 @@
+import json
 import sys
 import subprocess
 import socket
 import threading
+
+
+class processRequest:
+    __processed = False
+    __stringJson = None
+    __jsonObject = None
+    __exception = ""
+    __sock = None
+    def __init__(self,message,socket):
+        self.__stringJson = message
+        self.__sock = socket
+        self.deseralizeJson()
+        if(self.__jsonObject != None):
+            self.goThroughRequests()
+    def requestProgressedSucessfully(self):
+        return self.__processed
+    def getException(self):
+        return self.__exception
+    def deseralizeJson(self):
+        try:
+            data = json.loads(self.__stringJson)
+            if 'request' not in data or 'data' not in data or 'type' not in data:
+                raise ValueError("Missing keys from the json")
+            self.__jsonObject = data
+        except Exception, e:
+            self.__exception = e.message
+            print(e.message)
+    def sendResponse(self,type,request,data):
+        response = {}
+        response["type"] = type
+        response["request"] = request
+        response["data"] = data
+        if(type == "response"):
+            self.__sock.send(json.dumps(response))
+    def goThroughRequests(self):
+        if self.__jsonObject["type"] == "request":
+            if self.__jsonObject["request"] == "connection":            
+                self.sendResponse("response","","Connection Established")
+                self.__processed = True
+            else:
+                self.__exception = "The request does not exist"
+        else:
+            self.__exception = "Could not processs this type of request"
 
 class client(threading.Thread):
     __connection = None
@@ -19,10 +63,13 @@ class client(threading.Thread):
                 break
             else:
                 print('client sent: ', data)
-            self.sock.send('Messsage recived')
+                request = processRequest(data,self.sock)
+                if (not request.requestProgressedSucessfully()):
+                    self.sock.send('Messsage recived, could not process request: ', request.getException())
     def disconnect(self):
         print "client disconnected"
         self.__connection.disconnect(self)
+
 
 
 class connections:
