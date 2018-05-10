@@ -73,7 +73,7 @@ namespace RouterVpnManagerClientLibrary
 
         public void Disconnect()
         {
-
+            client_.Close();
         }
 
         public bool SendPlainTextMessage(string text, Callback callback = null)

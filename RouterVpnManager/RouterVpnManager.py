@@ -10,14 +10,19 @@ class client(threading.Thread):
         self.__connection = connection
         self.sock = socket
         self.add=address
-        print('Connection recived from client: ')
         self.start()
     def run(self):
         while 1:
-            print('client sent: ', self.sock.recv(1024).decode())
-            self.sock.send(b'Messsage recived')
-    def disconnect():
+            data = self.sock.recv(1024)
+            if(data == ''):
+                self.disconnect()
+                break
+            else:
+                print('client sent: ', data)
+            self.sock.send('Messsage recived')
+    def disconnect(self):
         print "client disconnected"
+        self.__connection.disconnect(self)
 
 
 class connections:
@@ -43,7 +48,7 @@ class connections:
             self.connect(clientsocket,address)
            
     def connect(self,clientsocket,address):
-        print("connecting to port %d" % (address[1]))
+        print("connecting to  %s:%d" % (address[0],address[1]))
         self.__clientsMapLock.acquire()
         try:
             self.__clientsMap[address[1]] = client(clientsocket,address,self)
@@ -52,7 +57,7 @@ class connections:
     def disconnect(self,client):
         self.__clientsMapLock.acquire()
         try:
-            del self.__clientsMap[client.port]
+            del self.__clientsMap[client.add[1]]
         finally:
             self.__clientsMapLock.release()
 
