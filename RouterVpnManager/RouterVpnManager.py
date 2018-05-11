@@ -3,7 +3,78 @@ import sys
 import subprocess
 import socket
 import threading
+import time
 
+class subprocessHandler:
+    __lock = None
+    __command = None
+    __handler = None
+    __callback = None
+    __running = False
+    def __init__(self,command,callback):
+        self.__lock = threading.Lock()
+        self.__command = command
+        self.__callback = callback
+        self.execute()
+    def execute(self):
+        self.__running = True
+        self.__handler = subprocess.Popen(self.__command,shell=True)
+    def kill(self):
+        self.__lock.acquire()
+        try:
+            if self.__running:
+                self.__running = False
+                self.__handler.terminate()
+                self.__callback(self)
+        finally:
+            self.__lock.release()
+    def checkStatus(self):
+        self.__lock.acquire()
+        try:
+            if self.__running:
+                retcode = self.__handler.poll()
+                if(retcode is not None):
+                    self.__running = False
+                    self.__callback(self)
+                    return False
+            else:
+                return False
+        finally:
+            self.__lock.release()
+
+class subprocessManager(threading.Thread):
+    __processLock = None
+    __process = []
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.__processLock = threading.Lock()
+        self.start()
+    def startProcess(self,command,callback):
+        handler = None
+        self.__processLock.acquire()
+        try:
+            handler = subprocessHandler(command,callback)
+            self.__process.append(handler)
+        finally:
+            self.__processLock.release()
+            return handler;
+    def run(self):
+        index = -1
+        while 1:
+            self.__processLock.acquire()
+            try:
+                print len(self.__process)
+                if len(self.__process) != 0:
+                    if index < len(self.__process) - 1:
+                        index = index + 1
+                    else:
+                        index = 0
+                    if self.__process[index].checkStatus() == False:
+                        del self.__process[index]
+                        index = 0
+            finally:
+                self.__processLock.release()
+            time.sleep(.1)
 
 class processRequest:
     __processed = False
@@ -118,3 +189,16 @@ def start():
     else:
         print("This script requires a host address and port")
 start()
+
+
+#def finishedTask(handler):
+#    print "ping finished"
+#
+#processManager = subprocessManager()
+#print "ping started"
+#process = processManager.startProcess("ping 192.168.1.1 -t",callback=finishedTask)
+#processManager.startProcess("ping 192.168.2.1 -t",callback=finishedTask)
+#
+#process.kill()
+#
+#raw_input("Press any key to continue ")
