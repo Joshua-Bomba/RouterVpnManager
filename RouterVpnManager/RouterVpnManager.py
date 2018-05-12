@@ -4,6 +4,7 @@ import subprocess
 import socket
 import threading
 import time
+import os
 
 class subprocessHandler:
     __lock = None
@@ -111,7 +112,15 @@ class processRequest:
     def goThroughRequests(self):
         if self.__jsonObject["type"] == "request":
             if self.__jsonObject["request"] == "connection":            
-                self.sendResponse("response","","Connection Established")
+                self.sendResponse("response","connection","Connection Established")
+                self.__processed = True
+            elif self.__jsonObject["request"] == "listovpn":
+                path = os.path.dirname(os.path.realpath(__file__))
+                vpnConnections = []
+                for file in os.listdir(path):
+                    if file.endswith(".ovpn"):
+                        vpnConnections.append(file)
+                self.sendResponse("response","listovpn",vpnConnections)
                 self.__processed = True
             else:
                 self.__exception = "The request does not exist"

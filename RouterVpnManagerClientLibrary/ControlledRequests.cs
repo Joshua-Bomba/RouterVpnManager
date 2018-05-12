@@ -10,9 +10,10 @@ namespace RouterVpnManagerClientLibrary
 {
     public class ControlledRequests
     {
-        public ControlledRequests()
+        private RouterVpnManagerConnection connection_;
+        public ControlledRequests(RouterVpnManagerConnection connection)
         {
-            
+            this.connection_ = connection;
         }
 
         public static JObject FormatMessage(string type,string request, object data = null)
@@ -22,6 +23,17 @@ namespace RouterVpnManagerClientLibrary
             obj["request"] = request;
             obj["data"] = data != null ? JObject.FromObject(data) : new JObject();
             return obj;
+        }
+
+        public IEnumerable<string> ListAvaliableVpns()
+        {
+            JObject obj = FormatMessage("request", "listovpn", null);
+            IEnumerable<string> array = null;
+            connection_.SendJson(obj, ((JObject response) =>
+            {
+                array = response["data"].ToArray().Select(x => x.ToString());
+            }));
+            return array;
         }
     }
 }
