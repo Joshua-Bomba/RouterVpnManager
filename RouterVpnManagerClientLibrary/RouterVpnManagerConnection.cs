@@ -17,7 +17,8 @@ namespace RouterVpnManagerClientLibrary
         private TcpClient client_;
         private ConcurrentDictionary<string, Callback> callbacks_;
         private BlockingCollection<KeyValuePair<string,Callback>> requests_;
-
+        private bool responseListener_;
+        private Task responserListenerTask_;
         public delegate bool Callback(JObject message);
 
         public RouterVpnManagerConnection()
@@ -25,6 +26,8 @@ namespace RouterVpnManagerClientLibrary
             client_ = new TcpClient();
             callbacks_ = new ConcurrentDictionary<string, Callback>();
             requests_ = new BlockingCollection<KeyValuePair<string,Callback>>();
+            responseListener_ = true;
+            responserListenerTask_ = null;
             SetDefaults();
         }
 
@@ -87,9 +90,14 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        public void Disconnect()
+        public async void Disconnect()
         {
+            responseListener_ = false;
             client_.Close();
+            if (responserListenerTask_ != null)
+            {
+                await responserListenerTask_;
+            }
         }
 
         public bool SendJson(JObject obj, Callback callback = null)
@@ -124,9 +132,9 @@ namespace RouterVpnManagerClientLibrary
 
         protected void ProcessResponses()
         {
-            Task.Run(() =>
+            responserListenerTask_ = Task.Run(() =>
             {
-                for (;;)
+                while(responseListener_)
                 {
                     try
                     {
@@ -139,8 +147,7 @@ namespace RouterVpnManagerClientLibrary
                         {
                             if (callbacks_.ContainsKey(obj["request"].ToString()))
                             {
-                                Callback callback;
-                                callbacks_.TryGetValue(obj["request"].ToString(), out callback);
+                                callbacks_.TryGetValue(obj["request"].ToString(), out var callback);
                                 callback?.Invoke(obj);
                             }
                         }
