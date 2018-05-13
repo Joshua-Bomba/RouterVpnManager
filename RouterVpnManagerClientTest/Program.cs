@@ -15,6 +15,7 @@ namespace RouterVpnManagerClientTest
             {
                 connection.Connect();
                 ControlledRequests requests = new ControlledRequests(connection);
+                requests.AddBroadcastListener();
                 requests.ListAvaliableVpns();
                 Console.ReadLine();
             }

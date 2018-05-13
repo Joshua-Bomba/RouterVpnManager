@@ -94,9 +94,11 @@ class processRequest:
     __exception = ""
     __sock = None
     __vpnManager = None
-    def __init__(self,message,socket):
+    __connection = None
+    def __init__(self,message,socket,connection):
         self.__stringJson = message
         self.__sock = socket
+        self.__connection = connection
         self.__vpnManager = routerVpnManager()
         self.deseralizeJson()
         if(self.__jsonObject != None):
@@ -132,6 +134,9 @@ class processRequest:
             elif self.__jsonObject["request"] == "connecttovpn":
                 #insert connect to vpn code here
                 self.__processed = True
+            elif self.__jsonObject["request"] == "checkconnectionstatus":
+                #insert checkconnectionstatus in here
+                self.__processed = True
             else:
                 self.__exception = "The request does not exist"
         else:
@@ -153,7 +158,7 @@ class client(threading.Thread):
                 break
             else:
                 print('client sent: ', data)
-                request = processRequest(data,self.sock)
+                request = processRequest(data,self.sock,self.__connection)
                 if (not request.requestProgressedSucessfully()):
                     self.sock.send('Messsage recived, could not process request: ', request.getException())
     def disconnect(self):

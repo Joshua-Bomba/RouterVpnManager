@@ -25,6 +25,16 @@ namespace RouterVpnManagerClientLibrary
             return obj;
         }
 
+        public void AddBroadcastListener()
+        {
+            connection_.AddCallbackHandler("connecttovpn", (JObject response) =>
+            {
+                RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
+                return true;
+            });
+        }
+
+
         public IEnumerable<string> ListAvaliableVpns()
         {
             JObject obj = FormatMessage("request", "listovpn", null);
@@ -35,6 +45,24 @@ namespace RouterVpnManagerClientLibrary
                 return true;
             }));
             return array;
+        }
+
+        public void ConnectToVpn(string vpn)
+        {
+            JObject obj = FormatMessage("request", "connecttovpn", vpn);
+            connection_.SendJson(obj);
+        }
+
+        public string CheckCurrentConnection()
+        {
+            JObject obj = FormatMessage("request", "checkconnectionstatus");
+            string currentConnection = null;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                currentConnection = response["data"].ToString();
+                return true;
+            });
+            return currentConnection;
         }
     }
 }
