@@ -77,15 +77,27 @@ class subprocessManager(threading.Thread):
                 self.__processLock.release()
             time.sleep(.1)
 
+class routerVpnManager:     
+    def getOvpnFiles(self):
+        path = os.path.dirname(os.path.realpath(__file__))
+        vpnConnections = []
+        for file in os.listdir(path):
+            if file.endswith(".ovpn"):
+                vpnConnections.append(file)
+        return vpnConnections
+    
+
 class processRequest:
     __processed = False
     __stringJson = None
     __jsonObject = None
     __exception = ""
     __sock = None
+    __vpnManager = None
     def __init__(self,message,socket):
         self.__stringJson = message
         self.__sock = socket
+        self.__vpnManager = routerVpnManager()
         self.deseralizeJson()
         if(self.__jsonObject != None):
             self.goThroughRequests()
@@ -115,12 +127,10 @@ class processRequest:
                 self.sendResponse("response","connection","Connection Established")
                 self.__processed = True
             elif self.__jsonObject["request"] == "listovpn":
-                path = os.path.dirname(os.path.realpath(__file__))
-                vpnConnections = []
-                for file in os.listdir(path):
-                    if file.endswith(".ovpn"):
-                        vpnConnections.append(file)
-                self.sendResponse("response","listovpn",vpnConnections)
+                self.sendResponse("response","listovpn",self.__vpnManager.getOvpnFiles())
+                self.__processed = True
+            elif self.__jsonObject["request"] == "connecttovpn":
+                #insert connect to vpn code here
                 self.__processed = True
             else:
                 self.__exception = "The request does not exist"

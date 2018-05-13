@@ -32,6 +32,7 @@ namespace RouterVpnManagerClientLibrary
             connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
+                return true;
             }));
             return array;
         }
