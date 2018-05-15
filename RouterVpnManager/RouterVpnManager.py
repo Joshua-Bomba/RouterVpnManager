@@ -29,6 +29,12 @@ class subprocessHandler:
                 self.__callback(self)
         finally:
             self.__lock.release()
+    def isRunning(self):
+        try:
+            self.__lock.acquire()
+            return self.__running
+        finally:
+            self.__lock.release()
     def checkStatus(self):
         self.__lock.acquire()
         try:
@@ -77,7 +83,12 @@ class subprocessManager(threading.Thread):
                 self.__processLock.release()
             time.sleep(.1)
 
-class routerVpnManager:     
+class routerVpnManager:   
+    __processManager = None
+    __connectionStatus = None
+    VPN_CONNECTION_CODE = "openvpn "
+    def __init(self):
+        self.__processManager = subprocessManager() 
     def getOvpnFiles(self):
         path = os.path.dirname(os.path.realpath(__file__))
         vpnConnections = []
@@ -85,7 +96,21 @@ class routerVpnManager:
             if file.endswith(".ovpn"):
                 vpnConnections.append(file)
         return vpnConnections
-    
+    def onSuddenUnexpectedDisconnect(self): 
+        print 'rip'
+    def connectToVpn(self,str):
+        files = getOvpnFiles()
+        if str in files:
+            
+            if self.__connectionStatus is None or not self.__connectionStatus.isRunning:
+                self.__connectionStatus = processManager.startProcess(VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
+                return ""
+            else:
+                return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
+        else:
+            return "could not connect the VPN opvn file does not exist"
+    def getVpnStatus(self):
+        
 
 class processRequest:
     __processed = False
@@ -132,6 +157,12 @@ class processRequest:
                 self.sendResponse("response","listovpn",self.__vpnManager.getOvpnFiles())
                 self.__processed = True
             elif self.__jsonObject["request"] == "connecttovpn":
+                data = {}
+                data.status = self.__vpnManager.connectToVpn(self.__jsonObject["data"])
+                data.vpnLocation = self.__jsonObject["data"]
+                self.sendResponse("response","connecttopvpn",data)
+                if data.status:
+                    self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
                 #insert connect to vpn code here
                 self.__processed = True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
@@ -188,7 +219,14 @@ class connections:
         while 1:
             clientsocket, address = self.__serversocket.accept()
             self.connect(clientsocket,address)
-           
+    def sendBroadcast(self,type,request,data):
+        response = {}
+        response["type"] = type
+        response["request"] = request
+        response["data"] = data
+        if(type == "broadcast"):
+            json.dumps(response)#insert send here for each connected client
+
     def connect(self,clientsocket,address):
         print("connecting to  %s:%d" % (address[0],address[1]))
         self.__clientsMapLock.acquire()
@@ -218,9 +256,8 @@ start()
 #def finishedTask(handler):
 #    print "ping finished"
 #
-#processManager = subprocessManager()
 #print "ping started"
-#process = processManager.startProcess("ping 192.168.1.1 -t",callback=finishedTask)
+#process = 
 #processManager.startProcess("ping 192.168.2.1 -t",callback=finishedTask)
 #
 #process.kill()
