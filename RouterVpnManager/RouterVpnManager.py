@@ -98,11 +98,15 @@ class routerVpnManager:
         return vpnConnections
     def onSuddenUnexpectedDisconnect(self): 
         print 'rip'
+    def isRunning(self):
+        if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
+            return True
+        else:
+            return False
     def connectToVpn(self,str):
         files = getOvpnFiles()
         if str in files:
-            
-            if self.__connectionStatus is None or not self.__connectionStatus.isRunning:
+            if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
                 self.__connectionStatus = processManager.startProcess(VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
                 return ""
             else:
@@ -163,10 +167,9 @@ class processRequest:
                 self.sendResponse("response","connecttopvpn",data)
                 if data.status:
                     self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
-                #insert connect to vpn code here
                 self.__processed = True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
-                #insert checkconnectionstatus in here
+                self.sendResponse("response","checkconnectionstatus",self.__vpnManager.isRunning())
                 self.__processed = True
             else:
                 self.__exception = "The request does not exist"
