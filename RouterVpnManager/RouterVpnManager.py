@@ -70,7 +70,6 @@ class subprocessManager(threading.Thread):
         while 1:
             self.__processLock.acquire()
             try:
-                print len(self.__process)
                 if len(self.__process) != 0:
                     if index < len(self.__process) - 1:
                         index = index + 1
@@ -114,7 +113,7 @@ class routerVpnManager:
         else:
             return "could not connect the VPN opvn file does not exist"
     def getVpnStatus(self):
-        
+        print 'Not impelmented yet, rip' 
 
 class processRequest:
     __processed = False
@@ -253,16 +252,19 @@ def start():
         c.listen();
     else:
         print("This script requires a host address and port")
-start()
+#start()
 
 
-#def finishedTask(handler):
-#    print "ping finished"
-#
-#print "ping started"
-#process = 
-#processManager.startProcess("ping 192.168.2.1 -t",callback=finishedTask)
-#
-#process.kill()
-#
-#raw_input("Press any key to continue ")
+def finishedTask(handler):
+    print "ping finished"
+
+print "ping started"
+
+processManager = subprocessManager()
+
+process = processManager.startProcess("ping 192.168.2.1 -t",callback=finishedTask)
+
+raw_input("Press any key to continue ")
+
+process.kill()
+
