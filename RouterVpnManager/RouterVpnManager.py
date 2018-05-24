@@ -1,32 +1,64 @@
+import os
 import json
 import sys
 import subprocess
 import socket
 import threading
 import time
-import os
 
+
+#This class will process any output from a subprocessHandler
+class subprocessOutputHandler(threading.Thread):
+    __PRINTSUBPROCESS = True
+    __handler = None
+    __outputCallback = None
+    def __init__(self,outputCallback = None):
+        threading.Thread.__init__(self)
+        self.__outputCallback = outputCallback
+    def addHandler(self,handler):
+        self.__handler = handler
+    def run(self):
+        while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None:
+            line = self.__handler.stdout.readline()
+            if line != '':
+                self.output(line)
+            else:
+                break
+    def output(self,str):
+        if self.__PRINTSUBPROCESS:
+            sys.stdout.write(str)
+        if self.__outputCallback is not None:
+            self.__outputCallback(self,str)
+
+#this handler class is used to control a single instance of a subprocess
 class subprocessHandler:
     __lock = None
     __command = None
     __handler = None
-    __callback = None
+    __finshCallback = None
     __running = False
-    def __init__(self,command,callback):
+    __output = None
+    def __init__(self,command,finshCallback = None,outputCallback = None):
         self.__lock = threading.Lock()
         self.__command = command
-        self.__callback = callback
+        self.__finshCallback = finshCallback
+        self.__output = subprocessOutputHandler(outputCallback)
         self.execute()
     def execute(self):
         self.__running = True
-        self.__handler = subprocess.Popen(self.__command,shell=True)
+        try:
+            self.__handler = subprocess.Popen(self.__command,stdout=subprocess.PIPE,shell=True)
+            self.__output.addHandler(self.__handler)
+            self.__output.start()
+        except:
+            print "an issue has occured"
     def kill(self):
         self.__lock.acquire()
         try:
             if self.__running:
                 self.__running = False
-                self.__handler.terminate()
-                self.__callback(self)
+                #self.__handler.terminate()#TODO: find a way to kill a process that actually kills it
+                self.__finshCallback(self)
         finally:
             self.__lock.release()
     def isRunning(self):
@@ -43,12 +75,14 @@ class subprocessHandler:
                 if(retcode is not None):
                     self.__running = False
                     self.__callback(self)
+                    
                     return False
             else:
                 return False
         finally:
             self.__lock.release()
 
+# this class is incharge on managing subprocess and creating new ones
 class subprocessManager(threading.Thread):
     __processLock = None
     __process = []
@@ -113,8 +147,9 @@ class routerVpnManager:
         else:
             return "could not connect the VPN opvn file does not exist"
     def getVpnStatus(self):
-        print 'Not impelmented yet, rip' 
+        pass #'TODO: uhh implement
 
+#this class will handle any socket request and respond to them
 class processRequest:
     __processed = False
     __stringJson = None
@@ -175,6 +210,7 @@ class processRequest:
         else:
             self.__exception = "Could not processs this type of request"
 
+#this will handle the socket connection for a paticular client
 class client(threading.Thread):
     __connection = None
     def __init__(self,socket,address,connection):
@@ -199,7 +235,8 @@ class client(threading.Thread):
         self.__connection.disconnect(self)
 
 
-
+#this handles all the connected clients
+#this also handles any kind of broadcast
 class connections:
     __host = None
     __port = 0
@@ -243,7 +280,7 @@ class connections:
         finally:
             self.__clientsMapLock.release()
 
-
+#this method is just some basic code to parse the input parameters
 def start():
     if len(sys.argv) >= 2:
         host = sys.argv[1]
@@ -252,7 +289,7 @@ def start():
         c.listen();
     else:
         print("This script requires a host address and port")
-#start()
+#start()#primary purpose of the above being in a method is because it makes it easier to comment out
 
 
 def finishedTask(handler):
