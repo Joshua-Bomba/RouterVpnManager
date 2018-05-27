@@ -4,7 +4,7 @@
 
 #pip install ptvsd==2.2.0
 import ptvsd
-pstvsd.enable_attach('xplatdemo')
+ptvsd.enable_attach('xplatdemo')
 
 
 import os
