@@ -4,7 +4,7 @@
 
 #pip install ptvsd==2.2.0
 import ptvsd
-ptvsd.enable_attach('xplatdemo')
+ptvsd.enable_attach('RouterVpnManager')
 
 
 import os
@@ -301,11 +301,20 @@ def start():
         c.listen();
     else:
         print("This script requires a host address and port")
+
+
+raw_input("Press any key to start")
+
+
+
 #start()#primary purpose of the above being in a method is because it makes it easier to comment out
 
 
 def finishedTask(handler):
     print "ping finished"
+
+
+
 
 print "ping started"
 
