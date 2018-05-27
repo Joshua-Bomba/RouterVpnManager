@@ -2,10 +2,9 @@
 
 #remote debugging tools
 
-#pip install ptvsd==2.2.0
+#pip install ptvsd
 import ptvsd
 ptvsd.enable_attach('RouterVpnManager')
-
 
 import os
 import json
@@ -57,7 +56,7 @@ class subprocessHandler:
     def execute(self):
         self.__running = True
         try:
-            self.__handler = subprocess.Popen(self.__command,stdout=subprocess.PIPE,shell=True,preexec_fun=os.setsid)
+            self.__handler = subprocess.Popen(self.__command,stdout=subprocess.PIPE,shell=True,preexec_fn=os.setsid)
             self.__output.addHandler(self.__handler)
             self.__output.start()
         except:
