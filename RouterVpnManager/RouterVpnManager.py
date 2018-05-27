@@ -1,6 +1,16 @@
+#this python script will only run in linux
+
+#remote debugging tools
+
+#pip install ptvsd==2.2.0
+import ptvsd
+pstvsd.enable_attach('xplatdemo')
+
+
 import os
 import json
 import sys
+import signal
 import subprocess
 import socket
 import threading
@@ -47,7 +57,7 @@ class subprocessHandler:
     def execute(self):
         self.__running = True
         try:
-            self.__handler = subprocess.Popen(self.__command,stdout=subprocess.PIPE,shell=True)
+            self.__handler = subprocess.Popen(self.__command,stdout=subprocess.PIPE,shell=True,preexec_fun=os.setsid)
             self.__output.addHandler(self.__handler)
             self.__output.start()
         except:
@@ -55,9 +65,11 @@ class subprocessHandler:
     def kill(self):
         self.__lock.acquire()
         try:
-            if self.__running:
+            if self.__running and self.__handler is not None:
                 self.__running = False
+                os.killpg(os.getpid(self.__handler.pid),signal.SIGTERM)
                 #self.__handler.terminate()#TODO: find a way to kill a process that actually kills it
+
                 self.__finshCallback(self)
         finally:
             self.__lock.release()
