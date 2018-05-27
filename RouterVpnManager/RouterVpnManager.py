@@ -319,7 +319,7 @@ print "ping started"
 
 processManager = subprocessManager()
 
-process = processManager.startProcess("ping 192.168.2.1 -t",callback=finishedTask)
+process = processManager.startProcess("ping 192.168.2.1",callback=finishedTask)
 
 raw_input("Press any key to continue ")
 
