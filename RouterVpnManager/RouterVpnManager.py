@@ -66,7 +66,7 @@ class subprocessHandler:
         try:
             if self.__running and self.__handler is not None:
                 self.__running = False
-                os.killpg(os.getpid(self.__handler.pid),signal.SIGTERM)
+                os.killpg(os.getpgid(self.__handler.pid),signal.SIGTERM)
                 #self.__handler.terminate()#TODO: find a way to kill a process that actually kills it
 
                 self.__finshCallback(self)
