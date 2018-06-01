@@ -68,7 +68,6 @@ class subprocessHandler:
                 self.__running = False
                 os.killpg(os.getpgid(self.__handler.pid),signal.SIGTERM)
                 #self.__handler.terminate()#TODO: find a way to kill a process that actually kills it
-                self.__output.join()
                 self.__finshCallback(self)
         finally:
             self.__lock.release()
@@ -85,7 +84,6 @@ class subprocessHandler:
                 retcode = self.__handler.poll()
                 if(retcode is not None):
                     self.__running = False
-                    self.__output.join()
                     self.__callback(self)
                     return False
             else:
