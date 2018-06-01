@@ -27,7 +27,7 @@ class subprocessOutputHandler(threading.Thread):
     def addHandler(self,handler):
         self.__handler = handler
     def run(self):
-        while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None:
+        while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__handler.poll() is not None:
             line = self.__handler.stdout.readline()
             if line != '':
                 self.output(line)
@@ -68,7 +68,7 @@ class subprocessHandler:
                 self.__running = False
                 os.killpg(os.getpgid(self.__handler.pid),signal.SIGTERM)
                 #self.__handler.terminate()#TODO: find a way to kill a process that actually kills it
-
+                self.__output.join()
                 self.__finshCallback(self)
         finally:
             self.__lock.release()
@@ -85,8 +85,8 @@ class subprocessHandler:
                 retcode = self.__handler.poll()
                 if(retcode is not None):
                     self.__running = False
+                    self.__output.join()
                     self.__callback(self)
-                    
                     return False
             else:
                 return False
@@ -97,6 +97,7 @@ class subprocessHandler:
 class subprocessManager(threading.Thread):
     __processLock = None
     __process = []
+    __stopProcessing = False
     def __init__(self):
         threading.Thread.__init__(self)
         self.__processLock = threading.Lock()
@@ -110,9 +111,11 @@ class subprocessManager(threading.Thread):
         finally:
             self.__processLock.release()
             return handler;
+    def stop(self):
+        self.startProcess = True
     def run(self):
         index = -1
-        while 1:
+        while not self.__stopProcessing:
             self.__processLock.acquire()
             try:
                 if len(self.__process) != 0:
@@ -224,14 +227,17 @@ class processRequest:
 #this will handle the socket connection for a paticular client
 class client(threading.Thread):
     __connection = None
+    __stopProcessing = False
     def __init__(self,socket,address,connection):
         threading.Thread.__init__(self)
         self.__connection = connection
         self.sock = socket
         self.add=address
         self.start()
+    def stop(self):
+        self.__stopProcessing = True
     def run(self):
-        while 1:
+        while not self.__stopProcessing:
             data = self.sock.recv(1024)
             if(data == ''):
                 self.disconnect()
@@ -302,7 +308,7 @@ def start():
         print("This script requires a host address and port")
 
 
-raw_input("Press any key to start")
+raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 
