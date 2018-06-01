@@ -112,7 +112,7 @@ class subprocessManager(threading.Thread):
             self.__processLock.release()
             return handler;
     def stop(self):
-        self.startProcess = True
+        self.__stopProcessing = True
     def run(self):
         index = -1
         while not self.__stopProcessing:
@@ -135,7 +135,9 @@ class routerVpnManager:
     __connectionStatus = None
     VPN_CONNECTION_CODE = "openvpn "
     def __init(self):
-        self.__processManager = subprocessManager() 
+        self.__processManager = subprocessManager()
+    def exit(self):
+        self.__processManager.stop()
     def getOvpnFiles(self):
         path = os.path.dirname(os.path.realpath(__file__))
         vpnConnections = []
@@ -165,7 +167,6 @@ class routerVpnManager:
 
 #this class will handle any socket request and respond to them
 class processRequest:
-    __processed = False
     __stringJson = None
     __jsonObject = None
     __exception = ""
@@ -173,15 +174,18 @@ class processRequest:
     __vpnManager = None
     __connection = None
     def __init__(self,message,socket,connection):
+        self.__vpnManager = routerVpnManager()    
+    def processInput(self,message,socket,connection):
         self.__stringJson = message
         self.__sock = socket
         self.__connection = connection
-        self.__vpnManager = routerVpnManager()
         self.deseralizeJson()
         if(self.__jsonObject != None):
-            self.goThroughRequests()
-    def requestProgressedSucessfully(self):
-        return self.__processed
+            return self.goThroughRequests()
+        else:
+            return False
+    def exit(self):
+        self.__vpnManager.exit()
     def getException(self):
         return self.__exception
     def deseralizeJson(self):
@@ -204,10 +208,10 @@ class processRequest:
         if self.__jsonObject["type"] == "request":
             if self.__jsonObject["request"] == "connection":            
                 self.sendResponse("response","connection","Connection Established")
-                self.__processed = True
+                return True
             elif self.__jsonObject["request"] == "listovpn":
                 self.sendResponse("response","listovpn",self.__vpnManager.getOvpnFiles())
-                self.__processed = True
+                return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
                 data.status = self.__vpnManager.connectToVpn(self.__jsonObject["data"])
@@ -215,24 +219,27 @@ class processRequest:
                 self.sendResponse("response","connecttopvpn",data)
                 if data.status:
                     self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
-                self.__processed = True
+                return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 self.sendResponse("response","checkconnectionstatus",self.__vpnManager.isRunning())
-                self.__processed = True
+                return True
             else:
                 self.__exception = "The request does not exist"
         else:
             self.__exception = "Could not processs this type of request"
+        return False
 
 #this will handle the socket connection for a paticular client
 class client(threading.Thread):
     __connection = None
     __stopProcessing = False
+    __request = None
     def __init__(self,socket,address,connection):
         threading.Thread.__init__(self)
         self.__connection = connection
         self.sock = socket
         self.add=address
+        self.__request = processRequest()
         self.start()
     def stop(self):
         self.__stopProcessing = True
@@ -244,9 +251,9 @@ class client(threading.Thread):
                 break
             else:
                 print('client sent: ', data)
-                request = processRequest(data,self.sock,self.__connection)
-                if (not request.requestProgressedSucessfully()):
-                    self.sock.send('Messsage recived, could not process request: ', request.getException())
+                if (self.__request.processInput(data,self.sock,self.__connection)):
+                    self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
+        self.__request.exit()
     def disconnect(self):
         print "client disconnected"
         self.__connection.disconnect(self)
@@ -265,6 +272,9 @@ class connections:
         self.__port = port
         self.__clientsMapLock = threading.Lock()
         self.bind()
+    def exit(self):
+        for c in self.__clientsMap:
+            c.stop()
     def bind(self):
         print 'Port Binded'
         self.__serversocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -330,4 +340,6 @@ process = processManager.startProcess("ping 192.168.2.1",callback=finishedTask)
 raw_input("Press any key to continue ")
 
 process.kill()
+
+processManager.stop()
 
