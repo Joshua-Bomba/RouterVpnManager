@@ -159,6 +159,7 @@ class routerVpnManager:
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
     def exit(self):
         self.__processManager.stop()
+        self.__processManager.join()
     def getOvpnFiles(self):
         path = os.path.dirname(os.path.realpath(__file__))
         vpnConnections = []
