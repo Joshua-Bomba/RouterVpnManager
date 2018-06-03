@@ -238,7 +238,7 @@ class processRequest:
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
                 data.vpnLocation = self.__jsonObject["data"].vpn
-                data.status = self.__vpnManager.connectToVpn(self.__jsonObject["data"])
+                data.status = self.__vpnManager.connectToVpn(data.vpnLocation)
                 self.sendResponse("response","connecttopvpn",data)
                 if data.status:
                     self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
