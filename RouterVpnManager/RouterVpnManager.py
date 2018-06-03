@@ -116,7 +116,11 @@ class subprocessManager(threading.Thread):
             self.__processLock.release()
             return handler;
     def stop(self):
-        self.__stopProcessing = True
+        try:
+            self.__processLock.acquire()
+            self.__stopProcessing = True
+        finally:
+            self.__processLock.release()
     def run(self):
         index = -1
         while not self.__stopProcessing:
