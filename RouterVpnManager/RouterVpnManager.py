@@ -236,7 +236,7 @@ class processRequest:
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
-                data.vpnLocation = self.__jsonObject["data"]["vpn"]
+                data.vpnLocation = self.__jsonObject["data"][u'vpn']
                 data.status = self.__vpnManager.connectToVpn(data.vpnLocation)
                 self.sendResponse("response","connecttopvpn",data)
                 if data.status:
