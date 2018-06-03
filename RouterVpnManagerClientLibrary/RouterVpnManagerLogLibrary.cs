@@ -12,5 +12,13 @@ namespace RouterVpnManagerClientLibrary
         {
             Console.WriteLine(message);
         }
+
+        public static void LogCollection(IEnumerable<string> col)
+        {
+            foreach (var c in col)
+            {
+                Log(c);
+            }
+        }
     }
 }
