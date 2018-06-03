@@ -21,13 +21,16 @@ class subprocessOutputHandler(threading.Thread):
     __PRINTSUBPROCESS = True
     __handler = None
     __outputCallback = None
+    __output = True
     def __init__(self,outputCallback = None):
         threading.Thread.__init__(self)
         self.__outputCallback = outputCallback
     def addHandler(self,handler):
         self.__handler = handler
+    def stop(self):
+        self.__output = False
     def run(self):
-        while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__handler.poll() is not None:
+        while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__output:
             line = self.__handler.stdout.readline()
             if line != '':
                 self.output(line)
@@ -65,12 +68,16 @@ class subprocessHandler:
         self.__lock.acquire()
         try:
             if self.__running and self.__handler is not None:
-                self.__running = False
                 os.killpg(os.getpgid(self.__handler.pid),signal.SIGTERM)
-                #self.__handler.terminate()#TODO: find a way to kill a process that actually kills it
-                self.__finshCallback(self)
+                self.stop()
         finally:
             self.__lock.release()
+    def stop(self):
+        self.__running = False
+        if self.__finshCallback is not None:
+            self.__finshCallback(self)
+        if self.__output is not None:
+            self.__output.stop()
     def isRunning(self):
         try:
             self.__lock.acquire()
@@ -83,8 +90,7 @@ class subprocessHandler:
             if self.__running:
                 retcode = self.__handler.poll()
                 if(retcode is not None):
-                    self.__running = False
-                    self.__callback(self)
+                    self.stop()
                     return False
             else:
                 return False
