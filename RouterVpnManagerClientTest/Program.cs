@@ -13,11 +13,17 @@ namespace RouterVpnManagerClientTest
         {
             using (RouterVpnManagerConnection connection = new RouterVpnManagerConnection())
             {
-                connection.Connect();
-                ControlledRequests requests = new ControlledRequests(connection);
-                requests.AddBroadcastListener();
-                requests.ListAvaliableVpns();
-                Console.ReadLine();
+                if (connection.Connect())
+                {
+                    ControlledRequests requests = new ControlledRequests(connection);
+                    requests.AddBroadcastListener();
+                    string[] vpns = requests.ListAvaliableVpns().ToArray();
+                    Console.ReadLine();
+                    RouterVpnManagerLogLibrary.LogCollection(vpns);
+                    if (vpns.Any())
+                        requests.ConnectToVpn(vpns.First());
+                    Console.ReadLine();
+                }
             }
             
         }

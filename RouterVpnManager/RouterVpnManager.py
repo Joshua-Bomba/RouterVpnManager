@@ -175,7 +175,7 @@ class routerVpnManager:
         else:
             return False
     def connectToVpn(self,str):
-        files = getOvpnFiles()
+        files = self.getOvpnFiles()
         if str in files:
             if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
                 self.__connectionStatus = processManager.startProcess(VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
