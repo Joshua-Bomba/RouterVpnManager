@@ -255,7 +255,7 @@ class client(threading.Thread):
                 break
             else:
                 print('client sent: ', data)
-                if (self.__request.processInput(data,self.sock,self.__connection)):
+                if (not self.__request.processInput(data,self.sock,self.__connection)):
                     self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
         self.__request.exit()
     def disconnect(self):
