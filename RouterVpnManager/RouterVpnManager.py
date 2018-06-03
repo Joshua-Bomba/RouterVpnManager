@@ -216,6 +216,7 @@ class processRequest:
             if 'request' not in data or 'data' not in data or 'type' not in data:
                 raise ValueError("Missing keys from the json")
             self.__jsonObject = data
+            self.__jsonObject.data = json.loads(self.__jsonObject.data)
         except Exception, e:
             self.__exception = e.message
             print(e.message)
@@ -236,8 +237,8 @@ class processRequest:
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
+                data.vpnLocation = self.__jsonObject["data"].vpn
                 data.status = self.__vpnManager.connectToVpn(self.__jsonObject["data"])
-                data.vpnLocation = self.__jsonObject["data"]
                 self.sendResponse("response","connecttopvpn",data)
                 if data.status:
                     self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
