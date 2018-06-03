@@ -141,6 +141,13 @@ class subprocessManager(threading.Thread):
                 finally:
                     self.__processLock.release()
                 time.sleep(.1)
+            try:
+                self.__processLock.acquire()
+                for p in self.__process:
+                    p.kill()
+                del self.__process
+            finally:
+                self.__processLock.release()
         except Exception,e: 
             print str(e)
 
