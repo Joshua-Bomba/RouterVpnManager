@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +50,9 @@ namespace RouterVpnManagerClientLibrary
 
         public void ConnectToVpn(string vpn)
         {
-            JObject obj = FormatMessage("request", "connecttovpn", vpn);
+            dynamic d = new ExpandoObject();
+            d.vpn = vpn;
+            JObject obj = FormatMessage("request", "connecttovpn", d);
             connection_.SendJson(obj);
         }
 
