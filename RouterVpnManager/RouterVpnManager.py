@@ -178,7 +178,7 @@ class routerVpnManager:
         files = self.getOvpnFiles()
         if str in files:
             if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
-                self.__connectionStatus = processManager.startProcess(VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
+                self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
                 return ""
             else:
                 return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
