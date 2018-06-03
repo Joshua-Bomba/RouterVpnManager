@@ -30,12 +30,15 @@ class subprocessOutputHandler(threading.Thread):
     def stop(self):
         self.__output = False
     def run(self):
-        while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__output:
-            line = self.__handler.stdout.readline()
-            if line != '':
-                self.output(line)
-            else:
-                break
+        try:
+            while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__output:
+                line = self.__handler.stdout.readline()
+                if line != '':
+                    self.output(line)
+                else:
+                    break
+        except Exception,e: 
+            print str(e)
     def output(self,str):
         if self.__PRINTSUBPROCESS:
             sys.stdout.write(str)
@@ -122,28 +125,31 @@ class subprocessManager(threading.Thread):
         finally:
             self.__processLock.release()
     def run(self):
-        index = -1
-        while not self.__stopProcessing:
-            self.__processLock.acquire()
-            try:
-                if len(self.__process) != 0:
-                    if index < len(self.__process) - 1:
-                        index = index + 1
-                    else:
-                        index = 0
-                    if self.__process[index].checkStatus() == False:
-                        del self.__process[index]
-                        index = 0
-            finally:
-                self.__processLock.release()
-            time.sleep(.1)
+        try:
+            index = -1
+            while not self.__stopProcessing:
+                self.__processLock.acquire()
+                try:
+                    if len(self.__process) != 0:
+                        if index < len(self.__process) - 1:
+                            index = index + 1
+                        else:
+                            index = 0
+                        if self.__process[index].checkStatus() == False:
+                            del self.__process[index]
+                            index = 0
+                finally:
+                    self.__processLock.release()
+                time.sleep(.1)
+        except Exception,e: 
+            print str(e)
 
 class routerVpnManager:   
     __processManager = None
     __connectionStatus = None
     VPN_CONNECTION_CODE = "openvpn "
     def __init__(self):
-        self.__processManager = subprocessManager()
+        self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
     def exit(self):
         self.__processManager.stop()
     def getOvpnFiles(self):
@@ -252,16 +258,19 @@ class client(threading.Thread):
     def stop(self):
         self.__stopProcessing = True
     def run(self):
-        while not self.__stopProcessing:
-            data = self.sock.recv(1024)
-            if(data == ''):
-                self.disconnect()
-                break
-            else:
-                print('client sent: ', data)
-                if (not self.__request.processInput(data,self.sock,self.__connection)):
-                    self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
-        self.__request.exit()
+        try:
+            while not self.__stopProcessing:
+                data = self.sock.recv(1024)
+                if(data == ''):
+                    self.disconnect()
+                    break
+                else:
+                    print('client sent: ', data)
+                    if (not self.__request.processInput(data,self.sock,self.__connection)):
+                        self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
+            self.__request.exit()
+        except Exception,e: 
+            print str(e)
     def disconnect(self):
         print "client disconnected"
         self.__connection.disconnect(self)
