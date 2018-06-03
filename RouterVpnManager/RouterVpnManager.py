@@ -142,7 +142,7 @@ class routerVpnManager:
     __processManager = None
     __connectionStatus = None
     VPN_CONNECTION_CODE = "openvpn "
-    def __init(self):
+    def __init__(self):
         self.__processManager = subprocessManager()
     def exit(self):
         self.__processManager.stop()
