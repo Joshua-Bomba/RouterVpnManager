@@ -270,18 +270,19 @@ class client(threading.Thread):
             while not self.__stopProcessing:
                 data = self.sock.recv(1024)
                 if(data == ''):
-                    self.disconnect()
                     break
                 else:
                     print('client sent: ', data)
                     if (not self.__request.processInput(data,self.sock,self.__connection)):
                         self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
-            self.__request.exit()
         except Exception,e: 
             print str(e)
+        finally:
+            self.disconnect()
     def disconnect(self):
         print "client disconnected"
         self.__connection.disconnect(self)
+        self.__request.exit()
 
 
 #this handles all the connected clients
