@@ -216,7 +216,6 @@ class processRequest:
             if 'request' not in data or 'data' not in data or 'type' not in data:
                 raise ValueError("Missing keys from the json")
             self.__jsonObject = data
-            self.__jsonObject["data"] = json.loads(data["data"])
         except Exception, e:
             self.__exception = e.message
             print(e.message)
