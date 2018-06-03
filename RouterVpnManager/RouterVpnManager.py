@@ -326,24 +326,29 @@ raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 
-#start()#primary purpose of the above being in a method is because it makes it easier to comment out
 
-
-def finishedTask(handler):
-    print "ping finished"
+start()#primary purpose of the above being in a method is because it makes it easier to comment out
 
 
 
+#def testSubprocessManager():
+#    print "ping started"
 
-print "ping started"
+#    processManager = subprocessManager()
 
-processManager = subprocessManager()
+#    process = processManager.startProcess("ping 192.168.2.1",callback=finishedTask)
 
-process = processManager.startProcess("ping 192.168.2.1",callback=finishedTask)
+#    raw_input("Press any key to continue ")
 
-raw_input("Press any key to continue ")
+#    process.kill()
 
-process.kill()
+#    processManager.stop()
 
-processManager.stop()
+#def finishedTask(handler):
+#    print "ping finished"
+
+
+
+
+
 
