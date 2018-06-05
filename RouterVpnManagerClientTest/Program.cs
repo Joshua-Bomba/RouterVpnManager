@@ -41,7 +41,7 @@ namespace RouterVpnManagerClientTest
                     switch (input)
                     {
                         case "help":
-                            Console.WriteLine("Commands: help, ");
+                            Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect");
                             break;
                         case "exit":
                             Console.WriteLine("Exiting");
@@ -113,7 +113,8 @@ namespace RouterVpnManagerClientTest
         static void ConnectToVpn(string connectionNumber)
         {
             int selection;
-            if (int.TryParse(connectionNumber, out selection))
+            string[] s = connectionNumber.Split(' ');
+            if (s.Length > 1 &&int.TryParse(s[1], out selection))
             {
                 string[] vpns = requests.ListAvaliableVpns().ToArray();
                 if (selection < vpns.Length)
