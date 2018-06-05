@@ -151,7 +151,7 @@ class subprocessManager(threading.Thread):
         except Exception,e: 
             print str(e)
 
-class routerVpnManager:   
+class routerVpnManager:   #TODO: this needs to down on the Connections level since there is only one vpn for all clients, well needs some locking
     __processManager = None
     __connectionStatus = None
     __currentConnection = None

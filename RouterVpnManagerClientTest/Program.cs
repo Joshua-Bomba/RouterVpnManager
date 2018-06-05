@@ -34,11 +34,11 @@ namespace RouterVpnManagerClientTest
             string input = "";
             while (input != "exit")
             {
-                Console.WriteLine("Please Enter a Command. type help to get a list of commands");
+                Console.Write("Please Enter a Command. type help to get a list of commands: ");
                 input = Console.ReadLine()?.ToLower();
                 if (input != null)
                 {
-                    switch (input)
+                    switch (input.Split(' ').First())
                     {
                         case "help":
                             Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect");
@@ -78,7 +78,7 @@ namespace RouterVpnManagerClientTest
             string[] response = requests.ListAvaliableVpns().ToArray();
             for (int i = 0; i < response.Length; i++)
             {
-                Console.WriteLine($"{i}: {response}");
+                Console.WriteLine($"{i}: {response[i]}");
             }
         }
 
