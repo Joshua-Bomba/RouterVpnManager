@@ -154,8 +154,11 @@ class subprocessManager(threading.Thread):
 class routerVpnManager:   
     __processManager = None
     __connectionStatus = None
+    __currentConnection = None
+    __processRequest = None#For Handling unexpected Disconnection of the Process
     VPN_CONNECTION_CODE = "openvpn "
-    def __init__(self):
+    def __init__(self,processRequest):
+        self.__processRequest = processRequest
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
     def exit(self):
         self.__processManager.stop()
@@ -168,7 +171,7 @@ class routerVpnManager:
                 vpnConnections.append(file)
         return vpnConnections
     def onSuddenUnexpectedDisconnect(self): 
-        print 'rip'
+        self.__processRequest.unexpectedDisconnect()
     def isRunning(self):
         if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
             return True
@@ -178,14 +181,18 @@ class routerVpnManager:
         files = self.getOvpnFiles()
         if str in files:
             if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
-                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
+                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)#The onSuddenUnexpectedDisconnect may not work
+                self.__currentConnection = str
                 return ""
             else:
                 return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
         else:
             return "could not connect the VPN opvn file does not exist"
-    def getVpnStatus(self):
-        pass #'TODO: uhh implement
+    def getVpnConnection(self):
+        if self.isRunning():
+            return self.__currentConnection
+        else:
+            return ""
 
 #this class will handle any socket request and respond to them
 class processRequest:
@@ -226,6 +233,10 @@ class processRequest:
         response["data"] = data
         if(type == "response"):
             self.__sock.send(json.dumps(response))
+    def unexpectedDisconnect(self):
+        data = {}
+        data["Reason"] = "unexpectedDisconnect"
+        self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
     def goThroughRequests(self):
         if self.__jsonObject["type"] == "request":
             if self.__jsonObject["request"] == "connection":            
@@ -236,14 +247,17 @@ class processRequest:
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
-                data["vpnLocation"] = self.__jsonObject["data"][u'vpn']
-                data["status"] = self.__vpnManager.connectToVpn(data["vpnLocation"])
+                data["VpnLocation"] = self.__jsonObject["data"][u'vpn']
+                data["Status"] = self.__vpnManager.connectToVpn(data["VpnLocation"])
                 self.sendResponse("response","connecttopvpn",data)
-                if data["status"]:
-                    self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
+                if data["Status"]:
+                    self.__connection.sendBroadcast("broadcast","connecttopvpn",data)
                 return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
-                self.sendResponse("response","checkconnectionstatus",self.__vpnManager.isRunning())
+                data = {}
+                data["Running"] = self.__vpnManager.isRunning()
+                data["ConnectedTo"] = self.__vpnManager.getVpnConnection()
+                self.sendResponse("response","checkconnectionstatus",data)
                 return True
             else:
                 self.__exception = "The request does not exist"

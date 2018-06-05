@@ -6,16 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RouterVpnManagerClientLibrary.ServerResponseObjects;
 
 namespace RouterVpnManagerClientLibrary
 {
     public class ControlledRequests
     {
         private RouterVpnManagerConnection connection_;
+        private IBroadcastListener listener_;
         public ControlledRequests(RouterVpnManagerConnection connection)
         {
             this.connection_ = connection;
+            AddBroadcastListener();
         }
+
+        public void AddBroadcastListener(IBroadcastListener listener)
+        {
+            this.listener_ = listener;
+        }
+
 
         public static JObject FormatMessage(string type,string request, object data = null)
         {
@@ -26,11 +35,19 @@ namespace RouterVpnManagerClientLibrary
             return obj;
         }
 
-        public void AddBroadcastListener()
+        private void AddBroadcastListener()
         {
             connection_.AddCallbackHandler("connecttovpn", (JObject response) =>
             {
                 RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
+                listener_?.ConnectToVpn(response["data"].ToObject<ConnectToVpnResponse>());
+                return true;
+            });
+
+            connection_.AddCallbackHandler("disconnectfrompvpn", (JObject response) =>
+            {
+                RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
+                listener_?.DisconnectFromVpn(response["data"].ToObject<DisconnectFromVpnResponse>());
                 return true;
             });
         }
@@ -56,13 +73,21 @@ namespace RouterVpnManagerClientLibrary
             connection_.SendJson(obj);
         }
 
-        public string CheckCurrentConnection()
+        public ConnectionStatusResponse CheckCurrentConnection()
         {
             JObject obj = FormatMessage("request", "checkconnectionstatus");
-            string currentConnection = null;
+            ConnectionStatusResponse currentConnection = null;
             connection_.SendJson(obj, (JObject response) =>
             {
-                currentConnection = response["data"].ToString();
+                try
+                {
+                    currentConnection = response["data"].ToObject<ConnectionStatusResponse>();
+                }
+                catch (Exception e)
+                {
+                    RouterVpnManagerLogLibrary.Log(e.ToString());
+                    return false;
+                }
                 return true;
             });
             return currentConnection;
