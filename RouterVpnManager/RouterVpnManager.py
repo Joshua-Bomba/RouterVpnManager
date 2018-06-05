@@ -211,7 +211,7 @@ class processRequest:
     __vpnManager = None
     __connection = None
     def __init__(self):
-        self.__vpnManager = routerVpnManager()    
+        self.__vpnManager = routerVpnManager(self)    
     def processInput(self,message,socket,connection):
         self.__stringJson = message
         self.__sock = socket
