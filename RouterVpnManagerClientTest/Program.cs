@@ -22,6 +22,7 @@ namespace RouterVpnManagerClientTest
                 if (connection.Connect())
                 {
                     requests = new ControlledRequests(connection);
+                    requests.AddBroadcastListener(new Broadcasts());
                     ListenForCommands();
                 }
             }
@@ -81,19 +82,33 @@ namespace RouterVpnManagerClientTest
             }
         }
 
-        //private class Broadcasts : IBroadcastListener
-        //{
-        //    public void ConnectToVpn(ConnectToVpnResponse response)
-        //    {
-        //        Console.WriteLine(response.Status);
-        //        Console.WriteLine();
-        //    }
+        private class Broadcasts : IBroadcastListener
+        {
+            public void ConnectToVpn(ConnectToVpnResponse response)
+            {
+                if (string.IsNullOrWhiteSpace(response.Status))
+                {
+                    Console.WriteLine("Vpn Connected to: " + response.VpnLocation);
+                }
+                else
+                {
+                    Console.WriteLine("Connection Attempted failed to " + response.VpnLocation + " Reason:" + response.Status);
+                }
 
-        //    public void DisconnectFromVpn(DisconnectFromVpnResponse response)
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-        //}
+            }
+
+            public void DisconnectFromVpn(DisconnectFromVpnResponse response)
+            {
+                if (string.IsNullOrWhiteSpace(response.Status))
+                {
+                    Console.WriteLine("Vpn was disconnected: " + response.Reason);
+                }
+                else
+                {
+                    Console.WriteLine("Vpn was unable to disconnect: " + response.Status + " Reason: " + response.Reason);
+                }
+            }
+        }
 
         static void ConnectToVpn(string connectionNumber)
         {
@@ -118,7 +133,7 @@ namespace RouterVpnManagerClientTest
 
         static void Disconnect()
         {
-
+            requests.DisconnectFromVpn();
         }
 
         //string[] vpns = requests.ListAvaliableVpns().ToArray();

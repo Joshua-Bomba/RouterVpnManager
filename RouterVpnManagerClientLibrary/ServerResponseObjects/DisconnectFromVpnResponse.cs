@@ -11,5 +11,7 @@ namespace RouterVpnManagerClientLibrary.ServerResponseObjects
     public class DisconnectFromVpnResponse
     {
         public string Reason { get; set; }
+
+        public string Status { get; set; }
     }
 }

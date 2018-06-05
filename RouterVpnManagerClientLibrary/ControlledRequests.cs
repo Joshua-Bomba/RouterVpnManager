@@ -39,14 +39,14 @@ namespace RouterVpnManagerClientLibrary
         {
             connection_.AddCallbackHandler("connecttovpn", (JObject response) =>
             {
-                RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
+                //RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
                 listener_?.ConnectToVpn(response["data"].ToObject<ConnectToVpnResponse>());
                 return true;
             });
 
             connection_.AddCallbackHandler("disconnectfrompvpn", (JObject response) =>
             {
-                RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
+                //RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
                 listener_?.DisconnectFromVpn(response["data"].ToObject<DisconnectFromVpnResponse>());
                 return true;
             });
@@ -70,6 +70,12 @@ namespace RouterVpnManagerClientLibrary
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
+            connection_.SendJson(obj);
+        }
+
+        public void DisconnectFromVpn()
+        {
+            JObject obj = FormatMessage("request", "disconnectfrompvpn");
             connection_.SendJson(obj);
         }
 

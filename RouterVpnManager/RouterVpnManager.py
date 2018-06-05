@@ -188,6 +188,14 @@ class routerVpnManager:
                 return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
         else:
             return "could not connect the VPN opvn file does not exist"
+    def disconnectFromVpn(self):
+        if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
+            self.__connectionStatus.kill()
+            self.__connectionStatus = None
+            return ""
+        else: 
+            return "could not disconnect since no vpn is connected"
+
     def getVpnConnection(self):
         if self.isRunning():
             return self.__currentConnection
@@ -235,7 +243,8 @@ class processRequest:
             self.__sock.send(json.dumps(response))
     def unexpectedDisconnect(self):
         data = {}
-        data["Reason"] = "unexpectedDisconnect"
+        data["Status"] = ""
+        data["Reason"] = "Unexpected Disconnection"
         self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
     def goThroughRequests(self):
         if self.__jsonObject["type"] == "request":
@@ -253,6 +262,11 @@ class processRequest:
                 if data["Status"]:
                     self.__connection.sendBroadcast("broadcast","connecttopvpn",data)
                 return True
+            elif self.__jsonObject["request"] == "disconnectfrompvpn":
+                data = {}
+                data["Reason"] = "Client Disconnected"
+                data["Status"] = self.__vpnManager.disconnectFromVpn()
+                self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 data = {}
                 data["Running"] = self.__vpnManager.isRunning()
