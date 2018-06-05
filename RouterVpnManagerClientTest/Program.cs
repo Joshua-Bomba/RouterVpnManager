@@ -74,12 +74,46 @@ namespace RouterVpnManagerClientTest
 
         static void ListAvaliableVpns()
         {
-
+            string[] response = requests.ListAvaliableVpns().ToArray();
+            for (int i = 0; i < response.Length; i++)
+            {
+                Console.WriteLine($"{i}: {response}");
+            }
         }
+
+        //private class Broadcasts : IBroadcastListener
+        //{
+        //    public void ConnectToVpn(ConnectToVpnResponse response)
+        //    {
+        //        Console.WriteLine(response.Status);
+        //        Console.WriteLine();
+        //    }
+
+        //    public void DisconnectFromVpn(DisconnectFromVpnResponse response)
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //}
 
         static void ConnectToVpn(string connectionNumber)
         {
-
+            int selection;
+            if (int.TryParse(connectionNumber, out selection))
+            {
+                string[] vpns = requests.ListAvaliableVpns().ToArray();
+                if (selection < vpns.Length)
+                {
+                    requests.ConnectToVpn(vpns[selection]);
+                }
+                else
+                {
+                    Console.WriteLine("Please select a valid option");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid number");
+            }
         }
 
         static void Disconnect()
