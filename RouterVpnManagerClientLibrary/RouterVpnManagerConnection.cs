@@ -49,6 +49,7 @@ namespace RouterVpnManagerClientLibrary
                 ProcessResponses();
 
                 JObject obj = ControlledRequests.FormatMessage("request","connection");
+                obj["signature"] = Guid.NewGuid().ToString();
                 byte[] bytes = Encoding.ASCII.GetBytes(obj.ToString());
 
                 NetworkStream ns = client_.GetStream();
