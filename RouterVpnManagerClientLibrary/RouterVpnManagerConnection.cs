@@ -16,7 +16,7 @@ namespace RouterVpnManagerClientLibrary
     {
         private TcpClient client_;
         private ConcurrentDictionary<string, Callback> callbacks_;
-        private ConcurrentBag<KeyValuePair<string,Callback>> requests_;
+        private ConcurrentBag<KeyValuePair<JObject,Callback>> requests_;
         private BlockingCollection<JObject> responses_;
         private bool responseInjestionListener_;
         private Task responseInjestionTask_;
@@ -29,7 +29,7 @@ namespace RouterVpnManagerClientLibrary
         {
             client_ = new TcpClient();
             callbacks_ = new ConcurrentDictionary<string, Callback>();
-            requests_ = new ConcurrentBag<KeyValuePair<string,Callback>>();
+            requests_ = new ConcurrentBag<KeyValuePair<JObject,Callback>>();
             responses_ = new BlockingCollection<JObject>();
             responseInjestionListener_ = true;
             responseProcessListener_ = true;
@@ -54,7 +54,7 @@ namespace RouterVpnManagerClientLibrary
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
 
-                AddCallback("connection", (JObject message) =>
+                AddCallback(obj, (JObject message) =>
                 {
                     RouterVpnManagerLogLibrary.Log(message["data"].ToString());
                     return true;
@@ -71,19 +71,25 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        private void AddCallback(string response,Callback callback)
+        private bool AddCallback(JObject response,Callback callback)
         {
             ManualResetEvent oSignalEvent = new ManualResetEvent(false);
             try
             {
-                KeyValuePair<string, Callback> waitFor = new KeyValuePair<string, Callback>(response, (JObject obj) =>
+                KeyValuePair<JObject, Callback> waitFor = new KeyValuePair<JObject, Callback>(response, (JObject obj) =>
                 {
                     bool state = callback(obj);
                     oSignalEvent.Set();
                     return state;
                 });
                 requests_.Add(waitFor);
-                oSignalEvent.WaitOne();
+                bool responseState = oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
+                if (!responseState)
+                {
+
+                }
+
+                return responseState;
             }
             catch (Exception e)
             {
@@ -120,12 +126,14 @@ namespace RouterVpnManagerClientLibrary
         {
             if (client_.Connected)
             {
+                obj["signature"] = Guid.NewGuid().ToString();
+
                 NetworkStream ns = client_.GetStream();
                 byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(obj));
                 ns.Write(bytes, 0, bytes.Length);
                 if (callback != null)
                 {
-                    AddCallback(obj["request"].ToString(),callback);
+                    AddCallback(obj,callback);
                 }
                 return true;
             }
@@ -188,7 +196,7 @@ namespace RouterVpnManagerClientLibrary
                         }
                         else if (obj["type"].ToString() == "response")
                         {
-                            KeyValuePair<string, Callback> response = requests_.FirstOrDefault(x => x.Key == obj["request"].ToString());
+                            KeyValuePair<JObject, Callback> response = requests_.FirstOrDefault(x => x.Key["request"].ToString() == obj["request"].ToString()&& x.Key["signature"].ToString() == obj["signature"].ToString());
                             response.Value?.Invoke(obj);
                         }
                     }

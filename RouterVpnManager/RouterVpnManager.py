@@ -239,6 +239,7 @@ class processRequest:
         response["type"] = type
         response["request"] = request
         response["data"] = data
+        response["signature"] = self.__jsonObject["signature"]
         if(type == "response"):
             self.__sock.send(json.dumps(response))
     def unexpectedDisconnect(self):
