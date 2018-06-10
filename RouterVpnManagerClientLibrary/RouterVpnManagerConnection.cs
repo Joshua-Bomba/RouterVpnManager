@@ -16,7 +16,7 @@ namespace RouterVpnManagerClientLibrary
     {
         private TcpClient client_;
         private ConcurrentDictionary<string, Callback> callbacks_;
-        private ConcurrentBag<KeyValuePair<JObject,Callback>> requests_;
+        private ConcurrentDictionary<JObject,Callback> requests_;
         private BlockingCollection<JObject> responses_;
         private bool responseInjestionListener_;
         private Task responseInjestionTask_;
@@ -29,7 +29,7 @@ namespace RouterVpnManagerClientLibrary
         {
             client_ = new TcpClient();
             callbacks_ = new ConcurrentDictionary<string, Callback>();
-            requests_ = new ConcurrentBag<KeyValuePair<JObject,Callback>>();
+            requests_ = new ConcurrentDictionary<JObject, Callback>();
             responses_ = new BlockingCollection<JObject>();
             responseInjestionListener_ = true;
             responseProcessListener_ = true;
@@ -77,16 +77,18 @@ namespace RouterVpnManagerClientLibrary
             ManualResetEvent oSignalEvent = new ManualResetEvent(false);
             try
             {
-                KeyValuePair<JObject, Callback> waitFor = new KeyValuePair<JObject, Callback>(response, (JObject obj) =>
+                bool responseState = true;
+                responseState &= requests_.TryAdd(response, (JObject obj) =>
                 {
                     bool state = callback(obj);
                     oSignalEvent.Set();
                     return state;
-                });
-                requests_.Add(waitFor);
-                bool responseState = oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
+                }); 
+                responseState &= oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
                 if (!responseState)
                 {
+                    Callback c;
+                    requests_.TryRemove(response, out c);
 
                 }
 
@@ -125,16 +127,17 @@ namespace RouterVpnManagerClientLibrary
 
         public bool SendJson(JObject obj, Callback callback = null)
         {
+            JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
             {
-                obj["signature"] = Guid.NewGuid().ToString();
+                o["signature"] = Guid.NewGuid().ToString();
 
                 NetworkStream ns = client_.GetStream();
-                byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(obj));
+                byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
                 ns.Write(bytes, 0, bytes.Length);
                 if (callback != null)
                 {
-                    AddCallback(obj,callback);
+                    return AddCallback(o,callback);
                 }
                 return true;
             }

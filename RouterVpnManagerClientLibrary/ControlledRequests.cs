@@ -57,7 +57,7 @@ namespace RouterVpnManagerClientLibrary
         {
             JObject obj = FormatMessage("request", "listovpn", null);
             IEnumerable<string> array = null;
-            connection_.SendJson(obj, ((JObject response) =>
+            bool state = connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
                 return true;
