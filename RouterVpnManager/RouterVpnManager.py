@@ -50,13 +50,13 @@ class subprocessHandler:
     __lock = None
     __command = None
     __handler = None
-    __finshCallback = None
+    __processRequest = None
     __running = False
     __output = None
-    def __init__(self,command,finshCallback = None,outputCallback = None):
+    def __init__(self,command,processRequest = None,outputCallback = None):
         self.__lock = threading.Lock()
         self.__command = command
-        self.__finshCallback = finshCallback
+        self.__processRequest = processRequest
         self.__output = subprocessOutputHandler(outputCallback)
         self.execute()
     def execute(self):
@@ -77,8 +77,8 @@ class subprocessHandler:
             self.__lock.release()
     def stop(self):
         self.__running = False
-        if self.__finshCallback is not None:
-            self.__finshCallback(self)
+        if self.__processRequest is not None:
+            self.__processRequest.unexpectedDisconnect()
         if self.__output is not None:
             self.__output.stop()
     def isRunning(self):
@@ -109,11 +109,11 @@ class subprocessManager(threading.Thread):
         threading.Thread.__init__(self)
         self.__processLock = threading.Lock()
         self.start()
-    def startProcess(self,command,callback):
+    def startProcess(self,command,processRequest):
         handler = None
         self.__processLock.acquire()
         try:
-            handler = subprocessHandler(command,callback)
+            handler = subprocessHandler(command,processRequest)
             self.__process.append(handler)
         finally:
             self.__processLock.release()
@@ -170,8 +170,6 @@ class routerVpnManager:   #TODO: this needs to down on the Connections level sin
             if file.endswith(".ovpn"):
                 vpnConnections.append(file)
         return vpnConnections
-    def onSuddenUnexpectedDisconnect(self): 
-        self.__processRequest.unexpectedDisconnect()
     def isRunning(self):
         if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
             return True
@@ -181,7 +179,7 @@ class routerVpnManager:   #TODO: this needs to down on the Connections level sin
         files = self.getOvpnFiles()
         if str in files:
             if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
-                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)#The onSuddenUnexpectedDisconnect may not work
+                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__processRequest)
                 self.__currentConnection = str
                 return ""
             else:
@@ -371,7 +369,6 @@ def start():
         c.listen();
     else:
         print("This script requires a host address and port")
-
 
 raw_input("Press Any Key Once The Debugger is hooked on")
 
