@@ -258,8 +258,7 @@ class processRequest:
                 data["VpnLocation"] = self.__jsonObject["data"][u'vpn']
                 data["Status"] = self.__vpnManager.connectToVpn(data["VpnLocation"])
                 self.sendResponse("response","connecttopvpn",data)
-                if data["Status"]:
-                    self.__connection.sendBroadcast("broadcast","connecttopvpn",data)
+                self.__connection.sendBroadcast("broadcast","connecttopvpn",data)
                 return True
             elif self.__jsonObject["request"] == "disconnectfrompvpn":
                 data = {}
