@@ -208,17 +208,23 @@ class processRequest:
     __sock = None
     __vpnManager = None
     __connection = None
+    __inputProcessLock = None
     def __init__(self):
-        self.__vpnManager = routerVpnManager(self)    
+        self.__vpnManager = routerVpnManager(self)
+        self.__inputProcessLock = threading.Lock()
     def processInput(self,message,socket,connection):
-        self.__stringJson = message
-        self.__sock = socket
-        self.__connection = connection
-        self.deseralizeJson()
-        if(self.__jsonObject != None):
-            return self.goThroughRequests()
-        else:
-            return False
+        self.__inputProcessLock.acquire()
+        try:
+            self.__stringJson = message
+            self.__sock = socket
+            self.__connection = connection
+            self.deseralizeJson()
+            if(self.__jsonObject != None):
+                return self.goThroughRequests()
+            else:
+                return False
+        finally:
+            self.__inputProcessLock.release()
     def exit(self):
         self.__vpnManager.exit()
     def getException(self):
@@ -244,7 +250,7 @@ class processRequest:
         data = {}
         data["Status"] = ""
         data["Reason"] = "Unexpected Disconnection"
-        self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
+        self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
     def goThroughRequests(self):
         if self.__jsonObject["type"] == "request":
             if self.__jsonObject["request"] == "connection":            
@@ -258,13 +264,13 @@ class processRequest:
                 data["VpnLocation"] = self.__jsonObject["data"][u'vpn']
                 data["Status"] = self.__vpnManager.connectToVpn(data["VpnLocation"])
                 self.sendResponse("response","connecttopvpn",data)
-                self.__connection.sendBroadcast("broadcast","connecttopvpn",data)
+                self.__connection.sendBroadcast(self,"broadcast","connecttopvpn",data)
                 return True
             elif self.__jsonObject["request"] == "disconnectfrompvpn":
                 data = {}
                 data["Reason"] = "Client Disconnected"
                 data["Status"] = self.__vpnManager.disconnectFromVpn()
-                self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
+                self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 data = {}
                 data["Running"] = self.__vpnManager.isRunning()
@@ -276,6 +282,16 @@ class processRequest:
         else:
             self.__exception = "Could not processs this type of request"
         return False
+    def handleBroadcast(self,sender,response):
+        #if(self != sender):#this may still deadlock when there is more then 1 broadcast at once, hummmm. There is only supposto be one client so i'll remove the lock and if it crashes, it crashes
+            #self.__inputProcessLock.acquire()
+            #try:
+        if(response["type"] == "broadcast"):
+            self.__sock.send(json.dumps(response));
+            #finally:
+                #self.__inputProcessLock.release()
+
+
 
 #this will handle the socket connection for a paticular client
 class client(threading.Thread):
@@ -337,13 +353,18 @@ class connections:
         while 1:
             clientsocket, address = self.__serversocket.accept()
             self.connect(clientsocket,address)
-    def sendBroadcast(self,type,request,data):
+    def sendBroadcast(self,sender,type,request,data):
         response = {}
         response["type"] = type
         response["request"] = request
         response["data"] = data
         if(type == "broadcast"):
-            json.dumps(response)#insert send here for each connected client
+            self.__clientsMapLock.acquire()
+            try:
+                for c in self.__clientsMap:
+                    c.__request.handleBroadcast(sender,response)
+            finally:
+                self.__clientsMapLock.release()
 
     def connect(self,clientsocket,address):
         print("connecting to  %s:%d" % (address[0],address[1]))
