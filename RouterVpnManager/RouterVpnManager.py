@@ -369,7 +369,7 @@ def start():
     else:
         print("This script requires a host address and port")
 
-raw_input("Press Any Key Once The Debugger is hooked on")
+#raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 
