@@ -363,6 +363,8 @@ class connections:
             try:
                 for c in self.__clientsMap:
                     c.__request.handleBroadcast(sender,response)
+            except Exception,e: 
+                print str(e)
             finally:
                 self.__clientsMapLock.release()
 
