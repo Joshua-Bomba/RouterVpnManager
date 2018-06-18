@@ -361,8 +361,8 @@ class connections:
         if(type == "broadcast"):
             self.__clientsMapLock.acquire()
             try:
-                for k,v in self.__clientsMap.items():
-                    v.__request.handleBroadcast(sender,response)
+                for k in self.__clientsMap:
+                    self.__clientsMap[k]._client__request.handleBroadcast(sender,response)
             except Exception,e: 
                 print str(e)
             finally:
