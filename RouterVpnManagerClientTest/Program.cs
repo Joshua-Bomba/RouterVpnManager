@@ -101,11 +101,11 @@ namespace RouterVpnManagerClientTest
             {
                 if (string.IsNullOrWhiteSpace(response.Status))
                 {
-                    Console.WriteLine("Vpn was disconnected: " + response.Reason);
+                    Console.WriteLine("\nVpn was disconnected: " + response.Reason);
                 }
                 else
                 {
-                    Console.WriteLine("Vpn was unable to disconnect: " + response.Status + " Reason: " + response.Reason);
+                    Console.WriteLine("\nVpn was unable to disconnect: " + response.Status + " Reason: " + response.Reason);
                 }
             }
         }

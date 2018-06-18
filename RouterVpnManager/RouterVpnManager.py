@@ -271,6 +271,7 @@ class processRequest:
                 data["Reason"] = "Client Disconnected"
                 data["Status"] = self.__vpnManager.disconnectFromVpn()
                 self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
+                return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 data = {}
                 data["Running"] = self.__vpnManager.isRunning()
