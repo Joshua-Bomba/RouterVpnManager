@@ -16,18 +16,25 @@ namespace RouterVpnManagerClientLibrary
     {
         private TcpClient client_;
         private ConcurrentDictionary<string, Callback> callbacks_;
-        private BlockingCollection<KeyValuePair<string,Callback>> requests_;
-        private bool responseListener_;
-        private Task responserListenerTask_;
+        private ConcurrentDictionary<JObject,Callback> requests_;
+        private BlockingCollection<JObject> responses_;
+        private bool responseInjestionListener_;
+        private Task responseInjestionTask_;
+        private bool responseProcessListener_;
+        private Task responseProcessTask_;
+
         public delegate bool Callback(JObject message);
 
         public RouterVpnManagerConnection()
         {
             client_ = new TcpClient();
             callbacks_ = new ConcurrentDictionary<string, Callback>();
-            requests_ = new BlockingCollection<KeyValuePair<string,Callback>>();
-            responseListener_ = true;
-            responserListenerTask_ = null;
+            requests_ = new ConcurrentDictionary<JObject, Callback>();
+            responses_ = new BlockingCollection<JObject>();
+            responseInjestionListener_ = true;
+            responseProcessListener_ = true;
+            responseInjestionTask_ = null;
+            responseProcessTask_ = null;
             SetDefaults();
         }
 
@@ -38,15 +45,17 @@ namespace RouterVpnManagerClientLibrary
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(Host), Port);
                 client_.Connect(ep);
 
+                ProcessInjestion();
                 ProcessResponses();
 
                 JObject obj = ControlledRequests.FormatMessage("request","connection");
+                obj["signature"] = Guid.NewGuid().ToString();
                 byte[] bytes = Encoding.ASCII.GetBytes(obj.ToString());
 
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
 
-                AddCallback("connection", (JObject message) =>
+                AddCallback(obj, (JObject message) =>
                 {
                     RouterVpnManagerLogLibrary.Log(message["data"].ToString());
                     return true;
@@ -63,19 +72,27 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        private void AddCallback(string response,Callback callback)
+        private bool AddCallback(JObject response,Callback callback)
         {
             ManualResetEvent oSignalEvent = new ManualResetEvent(false);
             try
             {
-                KeyValuePair<string, Callback> waitFor = new KeyValuePair<string, Callback>(response, (JObject obj) =>
+                bool responseState = true;
+                responseState &= requests_.TryAdd(response, (JObject obj) =>
                 {
                     bool state = callback(obj);
                     oSignalEvent.Set();
                     return state;
-                });
-                requests_.Add(waitFor);
-                oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
+                }); 
+                responseState &= oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
+                if (!responseState)
+                {
+                    Callback c;
+                    requests_.TryRemove(response, out c);
+
+                }
+
+                return responseState;
             }
             catch (Exception e)
             {
@@ -92,24 +109,35 @@ namespace RouterVpnManagerClientLibrary
 
         public async void Disconnect()
         {
-            responseListener_ = false;
+            responseProcessListener_ = false;
+            responseInjestionListener_ = false;
             client_.Close();
-            if (responserListenerTask_ != null)
+
+            //TODO: make this less shit
+            if (responseInjestionTask_ != null)
             {
-                await responserListenerTask_;
+                await responseInjestionTask_;//This may(probably will) cause a lockup
+            }
+
+            if (responseProcessTask_ != null)
+            {
+                await responseProcessTask_;//This most definetly may cause a lockup
             }
         }
 
         public bool SendJson(JObject obj, Callback callback = null)
         {
+            JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
             {
+                o["signature"] = Guid.NewGuid().ToString();
+
                 NetworkStream ns = client_.GetStream();
-                byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(obj));
+                byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
                 ns.Write(bytes, 0, bytes.Length);
                 if (callback != null)
                 {
-                    AddCallback(obj["request"].ToString(),callback);
+                    return AddCallback(o,callback);
                 }
                 return true;
             }
@@ -130,11 +158,11 @@ namespace RouterVpnManagerClientLibrary
             return false;
         }
 
-        protected void ProcessResponses()
+        protected void ProcessInjestion()
         {
-            responserListenerTask_ = Task.Run(() =>
+            responseInjestionTask_ = Task.Run(() =>
             {
-                while(responseListener_)
+                while(responseInjestionListener_)
                 {
                     try
                     {
@@ -143,6 +171,25 @@ namespace RouterVpnManagerClientLibrary
                         int bytesRead = ns.Read(bytesResponse, 0, client_.ReceiveBufferSize);
                         string dataReceived = Encoding.ASCII.GetString(bytesResponse, 0, bytesRead);
                         JObject obj = JObject.Parse(dataReceived);
+                        responses_.Add(obj);
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+            });
+        }
+
+        protected void ProcessResponses()
+        {
+            responseProcessTask_ = Task.Run(() =>
+            {
+                while (responseProcessListener_)
+                {
+                    try
+                    {
+                        JObject obj = responses_.Take();
                         if (obj["type"].ToString() == "broadcast")
                         {
                             if (callbacks_.ContainsKey(obj["request"].ToString()))
@@ -153,14 +200,13 @@ namespace RouterVpnManagerClientLibrary
                         }
                         else if (obj["type"].ToString() == "response")
                         {
-                            KeyValuePair<string,Callback> response = requests_.FirstOrDefault(x => x.Key == obj["request"].ToString());
+                            KeyValuePair<JObject, Callback> response = requests_.FirstOrDefault(x => x.Key["request"].ToString() == obj["request"].ToString()&& x.Key["signature"].ToString() == obj["signature"].ToString());
                             response.Value?.Invoke(obj);
                         }
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        //This will occure every 5 seconds because of the timeout
-                        //This will also allow time to check if the program is still running
+
                     }
                 }
             });
@@ -178,7 +224,7 @@ namespace RouterVpnManagerClientLibrary
         private void SetDefaults()
         {
             SendTimeout = Properties.Settings.Default.Timeout;
-            RecivedTimeout = Properties.Settings.Default.Timeout;
+            RecivedTimeout = 0;
             Host = Properties.Settings.Default.Host;
             Port = Properties.Settings.Default.Port;
         }

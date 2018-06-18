@@ -50,13 +50,13 @@ class subprocessHandler:
     __lock = None
     __command = None
     __handler = None
-    __finshCallback = None
+    __processRequest = None
     __running = False
     __output = None
-    def __init__(self,command,finshCallback = None,outputCallback = None):
+    def __init__(self,command,processRequest = None,outputCallback = None):
         self.__lock = threading.Lock()
         self.__command = command
-        self.__finshCallback = finshCallback
+        self.__processRequest = processRequest
         self.__output = subprocessOutputHandler(outputCallback)
         self.execute()
     def execute(self):
@@ -77,8 +77,8 @@ class subprocessHandler:
             self.__lock.release()
     def stop(self):
         self.__running = False
-        if self.__finshCallback is not None:
-            self.__finshCallback(self)
+        if self.__processRequest is not None:
+            self.__processRequest.unexpectedDisconnect()
         if self.__output is not None:
             self.__output.stop()
     def isRunning(self):
@@ -109,11 +109,11 @@ class subprocessManager(threading.Thread):
         threading.Thread.__init__(self)
         self.__processLock = threading.Lock()
         self.start()
-    def startProcess(self,command,callback):
+    def startProcess(self,command,processRequest):
         handler = None
         self.__processLock.acquire()
         try:
-            handler = subprocessHandler(command,callback)
+            handler = subprocessHandler(command,processRequest)
             self.__process.append(handler)
         finally:
             self.__processLock.release()
@@ -151,11 +151,14 @@ class subprocessManager(threading.Thread):
         except Exception,e: 
             print str(e)
 
-class routerVpnManager:   
+class routerVpnManager:   #TODO: this needs to down on the Connections level since there is only one vpn for all clients, well needs some locking
     __processManager = None
     __connectionStatus = None
+    __currentConnection = None
+    __processRequest = None#For Handling unexpected Disconnection of the Process
     VPN_CONNECTION_CODE = "openvpn "
-    def __init__(self):
+    def __init__(self,processRequest):
+        self.__processRequest = processRequest
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
     def exit(self):
         self.__processManager.stop()
@@ -167,8 +170,6 @@ class routerVpnManager:
             if file.endswith(".ovpn"):
                 vpnConnections.append(file)
         return vpnConnections
-    def onSuddenUnexpectedDisconnect(self): 
-        print 'rip'
     def isRunning(self):
         if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
             return True
@@ -178,14 +179,26 @@ class routerVpnManager:
         files = self.getOvpnFiles()
         if str in files:
             if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
-                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.onSuddenUnexpectedDisconnect)
+                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__processRequest)
+                self.__currentConnection = str
                 return ""
             else:
                 return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
         else:
             return "could not connect the VPN opvn file does not exist"
-    def getVpnStatus(self):
-        pass #'TODO: uhh implement
+    def disconnectFromVpn(self):
+        if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
+            self.__connectionStatus.kill()
+            self.__connectionStatus = None
+            return ""
+        else: 
+            return "could not disconnect since no vpn is connected"
+
+    def getVpnConnection(self):
+        if self.isRunning():
+            return self.__currentConnection
+        else:
+            return ""
 
 #this class will handle any socket request and respond to them
 class processRequest:
@@ -195,17 +208,23 @@ class processRequest:
     __sock = None
     __vpnManager = None
     __connection = None
+    __inputProcessLock = None
     def __init__(self):
-        self.__vpnManager = routerVpnManager()    
+        self.__vpnManager = routerVpnManager(self)
+        self.__inputProcessLock = threading.Lock()
     def processInput(self,message,socket,connection):
-        self.__stringJson = message
-        self.__sock = socket
-        self.__connection = connection
-        self.deseralizeJson()
-        if(self.__jsonObject != None):
-            return self.goThroughRequests()
-        else:
-            return False
+        self.__inputProcessLock.acquire()
+        try:
+            self.__stringJson = message
+            self.__sock = socket
+            self.__connection = connection
+            self.deseralizeJson()
+            if(self.__jsonObject != None):
+                return self.goThroughRequests()
+            else:
+                return False
+        finally:
+            self.__inputProcessLock.release()
     def exit(self):
         self.__vpnManager.exit()
     def getException(self):
@@ -224,8 +243,14 @@ class processRequest:
         response["type"] = type
         response["request"] = request
         response["data"] = data
+        response["signature"] = self.__jsonObject["signature"]
         if(type == "response"):
             self.__sock.send(json.dumps(response))
+    def unexpectedDisconnect(self):
+        data = {}
+        data["Status"] = ""
+        data["Reason"] = "Unexpected Disconnection"
+        self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
     def goThroughRequests(self):
         if self.__jsonObject["type"] == "request":
             if self.__jsonObject["request"] == "connection":            
@@ -236,20 +261,38 @@ class processRequest:
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
-                data["vpnLocation"] = self.__jsonObject["data"][u'vpn']
-                data["status"] = self.__vpnManager.connectToVpn(data["vpnLocation"])
-                self.sendResponse("response","connecttopvpn",data)
-                if data["status"]:
-                    self.__connection.sendBroadcast("broadcast",connecttopvpn,data)
+                data["VpnLocation"] = self.__jsonObject["data"][u'vpn']
+                data["Status"] = self.__vpnManager.connectToVpn(data["VpnLocation"])
+                self.sendResponse("response","connecttovpn",data)
+                self.__connection.sendBroadcast(self,"broadcast","connecttovpn",data)
+                return True
+            elif self.__jsonObject["request"] == "disconnectfrompvpn":
+                data = {}
+                data["Reason"] = "Client Disconnected"
+                data["Status"] = self.__vpnManager.disconnectFromVpn()
+                self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
                 return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
-                self.sendResponse("response","checkconnectionstatus",self.__vpnManager.isRunning())
+                data = {}
+                data["Running"] = self.__vpnManager.isRunning()
+                data["ConnectedTo"] = self.__vpnManager.getVpnConnection()
+                self.sendResponse("response","checkconnectionstatus",data)
                 return True
             else:
                 self.__exception = "The request does not exist"
         else:
             self.__exception = "Could not processs this type of request"
         return False
+    def handleBroadcast(self,sender,response):
+        #if(self != sender):#this may still deadlock when there is more then 1 broadcast at once, hummmm. There is only supposto be one client so i'll remove the lock and if it crashes, it crashes
+            #self.__inputProcessLock.acquire()
+            #try:
+        if(response["type"] == "broadcast"):
+            self.__sock.send(json.dumps(response));
+            #finally:
+                #self.__inputProcessLock.release()
+
+
 
 #this will handle the socket connection for a paticular client
 class client(threading.Thread):
@@ -311,13 +354,20 @@ class connections:
         while 1:
             clientsocket, address = self.__serversocket.accept()
             self.connect(clientsocket,address)
-    def sendBroadcast(self,type,request,data):
+    def sendBroadcast(self,sender,type,request,data):
         response = {}
         response["type"] = type
         response["request"] = request
         response["data"] = data
         if(type == "broadcast"):
-            json.dumps(response)#insert send here for each connected client
+            self.__clientsMapLock.acquire()
+            try:
+                for k in self.__clientsMap:
+                    self.__clientsMap[k]._client__request.handleBroadcast(sender,response)
+            except Exception,e: 
+                print str(e)
+            finally:
+                self.__clientsMapLock.release()
 
     def connect(self,clientsocket,address):
         print("connecting to  %s:%d" % (address[0],address[1]))
@@ -343,8 +393,7 @@ def start():
     else:
         print("This script requires a host address and port")
 
-
-raw_input("Press Any Key Once The Debugger is hooked on")
+#raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 
