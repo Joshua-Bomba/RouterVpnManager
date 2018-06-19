@@ -151,14 +151,16 @@ class subprocessManager(threading.Thread):
         except Exception,e: 
             print str(e)
 
-class routerVpnManager:   #TODO: this needs to down on the Connections level since there is only one vpn for all clients, well needs some locking
+class routerVpnManager:
     __processManager = None
     __connectionStatus = None
     __currentConnection = None
     __connections = None#For Handling unexpected Disconnection of the Process
+    __lock = None
     VPN_CONNECTION_CODE = "openvpn "
     def __init__(self,connections):
         self.__connections = connections
+        self.__lock = threading.Lock()
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
     def exit(self):
         self.__processManager.stop()
@@ -170,35 +172,50 @@ class routerVpnManager:   #TODO: this needs to down on the Connections level sin
             if file.endswith(".ovpn"):
                 vpnConnections.append(file)
         return vpnConnections
-    def isRunning(self):#Sync
-        if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
-            return True
-        else:
-            return False
-    def connectToVpn(self,str):#Sync
-        files = self.getOvpnFiles()
-        if str in files:
-            if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
-                self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
-                self.__currentConnection = str
-                return ""
+    def isRunning(self):
+        self.__lock.acquire()
+        try:
+            if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
+                return True
             else:
-                return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
-        else:
-            return "could not connect the VPN opvn file does not exist"
-    def disconnectFromVpn(self):#Sync
-        if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
-            self.__connectionStatus.kill()
-            self.__connectionStatus = None
-            return ""
-        else: 
-            return "could not disconnect since no vpn is connected"
-
-    def getVpnConnection(self):#Sync
-        if self.isRunning():
-            return self.__currentConnection
-        else:
-            return ""
+                return False
+        finally:
+            self.__lock.release()
+    def connectToVpn(self,str):
+        files = self.getOvpnFiles()
+        self.__lock.acquire()
+        try:
+            if str in files:
+                if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
+                    self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
+                    self.__currentConnection = str
+                    return ""
+                else:
+                    return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
+            else:
+                return "could not connect the VPN opvn file does not exist"
+        finally:
+            self.__lock.release()
+    def disconnectFromVpn(self):
+        self.__lock.acquire()
+        try:
+            if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
+                self.__connectionStatus.kill()
+                self.__connectionStatus = None
+                return ""
+            else: 
+                return "could not disconnect since no vpn is connected"
+        finally:
+            self.__lock.release()
+    def getVpnConnection(self):
+        self.__lock.acquire()
+        try:
+            if self.isRunning():
+                return self.__currentConnection
+            else:
+                return ""
+        finally:
+            self.__lock.release()
 
 #this class will handle any socket request and respond to them
 class processRequest:
@@ -264,7 +281,7 @@ class processRequest:
             elif self.__jsonObject["request"] == "disconnectfrompvpn":
                 data = {}
                 data["Reason"] = "Client Disconnected"
-                data["Status"] = self.__vpnManager.disconnectFromVpn()
+                data["Status"] = self.__vpnManager.disconnectFromVpn()#The disconnect from vpn will be callback twice because it shuts down the Subprocess and causes and unexpected disconnect
                 self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
                 return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
@@ -279,13 +296,8 @@ class processRequest:
             self.__exception = "Could not processs this type of request"
         return False
     def handleBroadcast(self,sender,response):
-        #if(self != sender):#this may still deadlock when there is more then 1 broadcast at once, hummmm. There is only supposto be one client so i'll remove the lock and if it crashes, it crashes
-            #self.__inputProcessLock.acquire()
-            #try:
         if(response["type"] == "broadcast"):
             self.__sock.send(json.dumps(response));
-            #finally:
-                #self.__inputProcessLock.release()
 
 
 
