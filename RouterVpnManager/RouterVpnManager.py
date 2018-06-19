@@ -172,21 +172,23 @@ class routerVpnManager:
             if file.endswith(".ovpn"):
                 vpnConnections.append(file)
         return vpnConnections
-    def isRunning(self):
+    def isRunning(self):#Private Not Thread Safe
         self.__lock.acquire()
         try:
-            if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
-                return True
-            else:
-                return False
+            self.isRunningInternal()
         finally:
             self.__lock.release()
+    def isRunningInternal(self):
+        if self.__connectionStatus is not None and self.__connectionStatus.isRunning():
+            return True
+        else:
+            return False
     def connectToVpn(self,str):
         files = self.getOvpnFiles()
         self.__lock.acquire()
         try:
             if str in files:
-                if self.__connectionStatus is None or not self.__connectionStatus.isRunning():
+                if self.__connectionStatus is None or not self.__connectionStatus.isRunningInternal():
                     self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
                     self.__currentConnection = str
                     return ""
@@ -210,7 +212,7 @@ class routerVpnManager:
     def getVpnConnection(self):
         self.__lock.acquire()
         try:
-            if self.isRunning():
+            if self.isRunningInternal():
                 return self.__currentConnection
             else:
                 return ""
@@ -408,7 +410,7 @@ def start():
     else:
         print("This script requires a host address and port")
 
-raw_input("Press Any Key Once The Debugger is hooked on")
+#raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 

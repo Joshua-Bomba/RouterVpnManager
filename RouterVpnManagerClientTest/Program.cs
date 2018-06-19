@@ -64,7 +64,7 @@ namespace RouterVpnManagerClientTest
                                 break;
                         }
                     }
-                    catch {}
+                    catch {Console.WriteLine("Unable to process request");}
                 }
             }
         }
