@@ -387,7 +387,7 @@ class connections:
         print("connecting to  %s:%d" % (address[0],address[1]))
         self.__clientsMapLock.acquire()
         try:
-            self.__clientsMap[address[1]] = client(clientsocket,address,self)
+            self.__clientsMap[address[1]] = client(clientsocket,address,self,self.__vpnManager)
         finally:
             self.__clientsMapLock.release()
     def disconnect(self,client):
@@ -407,7 +407,7 @@ def start():
     else:
         print("This script requires a host address and port")
 
-#raw_input("Press Any Key Once The Debugger is hooked on")
+raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 
