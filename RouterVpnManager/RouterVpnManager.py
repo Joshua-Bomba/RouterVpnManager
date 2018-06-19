@@ -78,7 +78,7 @@ class subprocessHandler:
     def stop(self):
         self.__running = False
         if self.__connections is not None:
-            self.__connections.vpnUnexpectedDisconnectionBroadcast()
+            self.__connections.vpnUnexpectedDisconnectionBroadcast()	
         if self.__output is not None:
             self.__output.stop()
     def isRunning(self):
@@ -363,7 +363,7 @@ class connections:
         while 1:
             clientsocket, address = self.__serversocket.accept()
             self.connect(clientsocket,address)
-    def vpnUnexpectedDisconnectionBroadcast():
+    def vpnUnexpectedDisconnectionBroadcast(self):
         data = {}
         data["Status"] = ""
         data["Reason"] = "Unexpected Disconnection"
@@ -404,6 +404,7 @@ def start():
         port = int(sys.argv[2])
         c = connections(host,port)
         c.listen();
+        #Add some sort of closing code here or whatever to manage a crash/shutdown
     else:
         print("This script requires a host address and port")
 
