@@ -369,7 +369,7 @@ class connections:
         data = {}
         data["Status"] = ""
         data["Reason"] = "Unexpected Disconnection"
-        self.__connection.sendBroadcast(self,None,"broadcast","disconnectfrompvpn",data)
+        self.sendBroadcast(self,None,"broadcast","disconnectfrompvpn",data)
     def sendBroadcast(self,sender,type,request,data):
         response = {}
         response["type"] = type
