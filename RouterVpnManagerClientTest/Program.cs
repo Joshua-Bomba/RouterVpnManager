@@ -38,29 +38,33 @@ namespace RouterVpnManagerClientTest
                 input = Console.ReadLine()?.ToLower();
                 if (input != null)
                 {
-                    switch (input.Split(' ').First())
+                    try
                     {
-                        case "help":
-                            Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect");
-                            break;
-                        case "exit":
-                            Console.WriteLine("Exiting");
-                            break;
-                        case "status":
-                            PrintConnectionStatus();
-                            break;
-                        case "avaliablevpns":
-                            ListAvaliableVpns();
-                            break;
-                        case "connect":
-                            ConnectToVpn(input);
-                            break;
-                        case "disconnect":
-                            Disconnect();
-                            break;
-                        default:
-                            break;
+                        switch (input.Split(' ').First())
+                        {
+                            case "help":
+                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect");
+                                break;
+                            case "exit":
+                                Console.WriteLine("Exiting");
+                                break;
+                            case "status":
+                                PrintConnectionStatus();
+                                break;
+                            case "avaliablevpns":
+                                ListAvaliableVpns();
+                                break;
+                            case "connect":
+                                ConnectToVpn(input);
+                                break;
+                            case "disconnect":
+                                Disconnect();
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    catch {Console.WriteLine("Unable to process request");}
                 }
             }
         }
