@@ -278,13 +278,13 @@ class processRequest:
                 data["VpnLocation"] = self.__jsonObject["data"][u'vpn']
                 data["Status"] = self.__vpnManager.connectToVpn(data["VpnLocation"])
                 self.sendResponse("response","connecttovpn",data)
-                self.__connection.sendBroadcast(self,"broadcast","connecttovpn",data)
+                self.__connection.sendBroadcast("broadcast","connecttovpn",data)
                 return True
             elif self.__jsonObject["request"] == "disconnectfrompvpn":
                 data = {}
                 data["Reason"] = "Client Disconnected"
                 data["Status"] = self.__vpnManager.disconnectFromVpn()#The disconnect from vpn will be callback twice because it shuts down the Subprocess and causes and unexpected disconnect
-                self.__connection.sendBroadcast(self,"broadcast","disconnectfrompvpn",data)
+                self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
                 return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 data = {}
@@ -297,7 +297,7 @@ class processRequest:
         else:
             self.__exception = "Could not processs this type of request"
         return False
-    def handleBroadcast(self,sender,response):
+    def handleBroadcast(self,response):
         if(response["type"] == "broadcast"):
             self.__sock.send(json.dumps(response));
 
@@ -369,8 +369,8 @@ class connections:
         data = {}
         data["Status"] = ""
         data["Reason"] = "Unexpected Disconnection"
-        self.sendBroadcast(self,None,"broadcast","disconnectfrompvpn",data)
-    def sendBroadcast(self,sender,type,request,data):
+        self.sendBroadcast("broadcast","disconnectfrompvpn",data)
+    def sendBroadcast(self,type,request,data):
         response = {}
         response["type"] = type
         response["request"] = request
@@ -379,7 +379,7 @@ class connections:
             self.__clientsMapLock.acquire()
             try:
                 for k in self.__clientsMap:
-                    self.__clientsMap[k]._client__request.handleBroadcast(sender,response)
+                    self.__clientsMap[k]._client__request.handleBroadcast(response)
             except Exception,e: 
                 print str(e)
             finally:
