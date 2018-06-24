@@ -38,7 +38,7 @@ namespace RouterVpnManagerClientLibrary
             SetDefaults();
         }
 
-        public bool Connect()
+        public async Task<bool> Connect()
         {
             try
             {
@@ -52,16 +52,15 @@ namespace RouterVpnManagerClientLibrary
                 obj["signature"] = Guid.NewGuid().ToString();
                 byte[] bytes = Encoding.ASCII.GetBytes(obj.ToString());
 
-                NetworkStream ns = client_.GetStream();
-                ns.Write(bytes, 0, bytes.Length);
-
-                AddCallback(obj, (JObject message) =>
+                Task<bool> callbackstate = AddCallback(obj, (JObject message) =>
                 {
                     RouterVpnManagerLogLibrary.Log(message["data"].ToString());
                     return true;
                 });
+                NetworkStream ns = client_.GetStream();
+                ns.Write(bytes, 0, bytes.Length);
 
-                return true;
+                return await callbackstate;
             }
             catch (Exception e)
             {
@@ -72,38 +71,36 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        private bool AddCallback(JObject response,Callback callback)
+        private Task<bool> AddCallback(JObject response,Callback callback)
         {
             ManualResetEvent oSignalEvent = new ManualResetEvent(false);
-            try
+            bool responseState = true;
+            responseState = requests_.TryAdd(response, (JObject obj) =>
             {
-                bool responseState = true;
-                responseState &= requests_.TryAdd(response, (JObject obj) =>
+                bool state = callback(obj);
+                oSignalEvent.Set();
+                return state;
+            });
+            return Task.Run(() =>
+            {
+                try
                 {
-                    bool state = callback(obj);
-                    oSignalEvent.Set();
-                    return state;
-                }); 
-                responseState &= oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
-                if (!responseState)
-                {
-                    Callback c;
-                    requests_.TryRemove(response, out c);
+                    oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
+                    if (!responseState)
+                    {
+                        Callback c;
+                        requests_.TryRemove(response, out c);
 
+                    }
+                    return responseState;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
 
-                return responseState;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            finally
-            {
-                oSignalEvent.Reset();
-            }
-
+            });
         }
 
 
@@ -125,7 +122,7 @@ namespace RouterVpnManagerClientLibrary
             }
         }
 
-        public bool SendJson(JObject obj, Callback callback = null)
+        public async Task<bool> SendJson(JObject obj, Callback callback = null)
         {
             JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
@@ -137,7 +134,7 @@ namespace RouterVpnManagerClientLibrary
                 ns.Write(bytes, 0, bytes.Length);
                 if (callback != null)
                 {
-                    return AddCallback(o,callback);
+                    return await AddCallback(o,callback);
                 }
                 return true;
             }

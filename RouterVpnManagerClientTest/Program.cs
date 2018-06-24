@@ -17,16 +17,20 @@ namespace RouterVpnManagerClientTest
 
         static void Main(string[] args)
         {
+            SetupConnection();
+        }
+
+        static async void SetupConnection()
+        {
             using (connection = new RouterVpnManagerConnection())
             {
-                if (connection.Connect())
+                if (await connection.Connect())
                 {
                     requests = new ControlledRequests(connection);
                     requests.AddBroadcastListener(new Broadcasts());
                     ListenForCommands();
                 }
             }
-            
         }
 
         static void ListenForCommands()
@@ -69,17 +73,17 @@ namespace RouterVpnManagerClientTest
             }
         }
 
-        static void PrintConnectionStatus()
+        static async void PrintConnectionStatus()
         {
-            ConnectionStatusResponse csr = requests.CheckCurrentConnection();
+            ConnectionStatusResponse csr = await requests.CheckCurrentConnection();
             Console.WriteLine("Connected?: " +csr.Running);
             if(csr.Running)
                 Console.WriteLine("Current Connection: " + csr.ConnectedTo);
         }
 
-        static void ListAvaliableVpns()
+        static async void ListAvaliableVpns()
         {
-            string[] response = requests.ListAvaliableVpns().ToArray();
+            string[] response = (await requests.ListAvaliableVpns()).ToArray();
             for (int i = 0; i < response.Length; i++)
             {
                 Console.WriteLine($"{i}: {response[i]}");
@@ -114,13 +118,13 @@ namespace RouterVpnManagerClientTest
             }
         }
 
-        static void ConnectToVpn(string connectionNumber)
+        static async void ConnectToVpn(string connectionNumber)
         {
             int selection;
             string[] s = connectionNumber.Split(' ');
             if (s.Length > 1 &&int.TryParse(s[1], out selection))
             {
-                string[] vpns = requests.ListAvaliableVpns().ToArray();
+                string[] vpns = (await requests.ListAvaliableVpns()).ToArray();
                 if (selection < vpns.Length)
                 {
                     requests.ConnectToVpn(vpns[selection]);

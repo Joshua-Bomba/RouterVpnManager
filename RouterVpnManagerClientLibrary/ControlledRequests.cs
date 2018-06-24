@@ -53,11 +53,11 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        public IEnumerable<string> ListAvaliableVpns()
+        public async Task<IEnumerable<string>> ListAvaliableVpns()
         {
             JObject obj = FormatMessage("request", "listovpn", null);
             IEnumerable<string> array = null;
-            bool state = connection_.SendJson(obj, ((JObject response) =>
+            bool state = await connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
                 return true;
@@ -65,25 +65,25 @@ namespace RouterVpnManagerClientLibrary
             return array;
         }
 
-        public void ConnectToVpn(string vpn)
+        public async void ConnectToVpn(string vpn)
         {
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
-            connection_.SendJson(obj);
+            await connection_.SendJson(obj);
         }
 
-        public void DisconnectFromVpn()
+        public async void DisconnectFromVpn()
         {
             JObject obj = FormatMessage("request", "disconnectfrompvpn");
-            connection_.SendJson(obj);
+            await connection_.SendJson(obj);
         }
 
-        public ConnectionStatusResponse CheckCurrentConnection()
+        public async Task<ConnectionStatusResponse> CheckCurrentConnection()
         {
             JObject obj = FormatMessage("request", "checkconnectionstatus");
             ConnectionStatusResponse currentConnection = null;
-            connection_.SendJson(obj, (JObject response) =>
+            await connection_.SendJson(obj, (JObject response) =>
             {
                 try
                 {
