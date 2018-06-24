@@ -244,8 +244,6 @@ class processRequest:
                 return False
         finally:
             self.__inputProcessLock.release()
-    def exit(self):
-        self.__vpnManager.exit()
     def getException(self):
         return self.__exception
     def deseralizeJson(self):
@@ -334,7 +332,6 @@ class client(threading.Thread):
     def disconnect(self):
         print "client disconnected"
         self.__connection.disconnect(self)
-        self.__request.exit()
 
 
 #this handles all the connected clients
@@ -355,6 +352,7 @@ class connections:
     def exit(self):
         for c in self.__clientsMap:
             c.stop()
+        self.__vpnManager.exit();
     def bind(self):
         print 'Port Binded'
         self.__serversocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
