@@ -3,8 +3,8 @@
 #remote debugging tools
 
 #pip install ptvsd
-import ptvsd
-ptvsd.enable_attach('RouterVpnManager')
+#import ptvsd
+#ptvsd.enable_attach('RouterVpnManager')
 
 import os
 import json
