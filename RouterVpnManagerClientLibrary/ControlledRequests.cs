@@ -37,17 +37,21 @@ namespace RouterVpnManagerClientLibrary
 
         private void AddBroadcastListener()
         {
-            connection_.AddCallbackHandler("connecttovpn", (JObject response) =>
+            connection_.AddBroadcastCallbackHandler("connecttovpn", (JObject response) =>
             {
                 //RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
-                listener_?.ConnectToVpn(response["data"].ToObject<ConnectToVpnResponse>());
+                ConnectToVpnResponse ctvr = response.ToObject<ConnectToVpnResponse>();
+                ctvr.SetData();
+                listener_?.ConnectToVpn(ctvr);
                 return true;
             });
 
-            connection_.AddCallbackHandler("disconnectfrompvpn", (JObject response) =>
+            connection_.AddBroadcastCallbackHandler("disconnectfrompvpn", (JObject response) =>
             {
                 //RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
-                listener_?.DisconnectFromVpn(response["data"].ToObject<DisconnectFromVpnResponse>());
+                DisconnectFromVpnResponse dfvr = response.ToObject<DisconnectFromVpnResponse>();
+                dfvr.SetData();
+                listener_?.DisconnectFromVpn(dfvr);
                 return true;
             });
         }
@@ -57,11 +61,11 @@ namespace RouterVpnManagerClientLibrary
         {
             JObject obj = FormatMessage("request", "listovpn", null);
             IEnumerable<string> array = null;
-            bool state = connection_.SendJson(obj, ((JObject response) =>
+            connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
                 return true;
-            }));
+            })).Wait();
             return array;
         }
 
@@ -70,13 +74,13 @@ namespace RouterVpnManagerClientLibrary
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
-            connection_.SendJson(obj);
+            connection_.SendJson(obj).Wait();
         }
 
         public void DisconnectFromVpn()
         {
             JObject obj = FormatMessage("request", "disconnectfrompvpn");
-            connection_.SendJson(obj);
+            connection_.SendJson(obj).Wait();
         }
 
         public ConnectionStatusResponse CheckCurrentConnection()
@@ -87,7 +91,8 @@ namespace RouterVpnManagerClientLibrary
             {
                 try
                 {
-                    currentConnection = response["data"].ToObject<ConnectionStatusResponse>();
+                    currentConnection = response.ToObject<ConnectionStatusResponse>();
+                    currentConnection.SetData();
                 }
                 catch (Exception e)
                 {
@@ -95,7 +100,7 @@ namespace RouterVpnManagerClientLibrary
                     return false;
                 }
                 return true;
-            });
+            }).Wait();
             return currentConnection;
         }
     }

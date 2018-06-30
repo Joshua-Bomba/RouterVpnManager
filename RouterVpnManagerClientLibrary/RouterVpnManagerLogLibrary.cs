@@ -8,16 +8,29 @@ namespace RouterVpnManagerClientLibrary
 {
     public static class RouterVpnManagerLogLibrary
     {
+        public static object lock_ = new object();
         public static void Log(string message)
+        {
+            lock (lock_)
+            {
+                RawLog(message);
+            }
+
+        }
+
+        private static void RawLog(string message)
         {
             Console.WriteLine(message);
         }
 
         public static void LogCollection(IEnumerable<string> col)
         {
-            foreach (var c in col)
+            lock (lock_)
             {
-                Log(c);
+                foreach (var c in col)
+                {
+                    RawLog(c);
+                }
             }
         }
     }
