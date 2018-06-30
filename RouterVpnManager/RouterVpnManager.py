@@ -29,7 +29,6 @@ class subprocessOutputHandler(threading.Thread):
         self.__handler = handler
     def stop(self):
         self.__output = False
-        self.do_run = False
     def run(self):
         try:
             while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__output:
@@ -121,7 +120,6 @@ class subprocessManager(threading.Thread):
             return handler;
     def stop(self):
         try:
-            self.do_run = False
             self.__processLock.acquire()
             self.__stopProcessing = True
             for p in self.__process:
