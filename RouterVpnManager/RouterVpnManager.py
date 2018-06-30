@@ -29,6 +29,7 @@ class subprocessOutputHandler(threading.Thread):
         self.__handler = handler
     def stop(self):
         self.__output = False
+        self.do_run = False
     def run(self):
         try:
             while (self.__PRINTSUBPROCESS or self.__outputCallback is not None) and self.__handler is not None and self.__output:
@@ -120,8 +121,12 @@ class subprocessManager(threading.Thread):
             return handler;
     def stop(self):
         try:
+            self.do_run = False
             self.__processLock.acquire()
             self.__stopProcessing = True
+            for p in self.__process:
+                p.kill()
+            del self.__process
         finally:
             self.__processLock.release()
     def run(self):
@@ -141,13 +146,6 @@ class subprocessManager(threading.Thread):
                 finally:
                     self.__processLock.release()
                 time.sleep(.1)
-            try:
-                self.__processLock.acquire()
-                for p in self.__process:
-                    p.kill()
-                del self.__process
-            finally:
-                self.__processLock.release()
         except Exception,e: 
             print str(e)
 
@@ -163,8 +161,8 @@ class routerVpnManager:
         self.__lock = threading.Lock()
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
     def exit(self):
-        self.__processManager.stop()
-        self.__processManager.join()
+        if self.__processManager is not None:
+            self.__processManager.stop()
     def getOvpnFiles(self):#Async
         path = os.path.dirname(os.path.realpath(__file__))
         vpnConnections = []
@@ -353,6 +351,8 @@ class connections:
         for c in self.__clientsMap:
             c.stop()
         self.__vpnManager.exit();
+        if self.__serversocket is not None:
+            self.__serversocket.close();
     def bind(self):
         print 'Port Binded'
         self.__serversocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -360,9 +360,13 @@ class connections:
     def listen(self):
         print'server started and listening'
         self.__serversocket.listen(5)
-        while 1:
-            clientsocket, address = self.__serversocket.accept()
-            self.connect(clientsocket,address)
+        try:
+            while 1:
+                clientsocket, address = self.__serversocket.accept()
+                self.connect(clientsocket,address)
+        except Exception,e:
+            print str(e)
+
     def vpnUnexpectedDisconnectionBroadcast(self):
         data = {}
         data["status"] = ""
@@ -404,6 +408,7 @@ def start():
         port = int(sys.argv[2])
         c = connections(host,port)
         c.listen();
+        c.exit()
         #Add some sort of closing code here or whatever to manage a crash/shutdown
     else:
         print("This script requires a host address and port")
