@@ -273,21 +273,21 @@ class processRequest:
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
-                data["VpnLocation"] = self.__jsonObject["data"][u'vpn']
-                data["Status"] = self.__vpnManager.connectToVpn(data["VpnLocation"])
+                data["vpnLocation"] = self.__jsonObject["data"][u'vpn']
+                data["status"] = self.__vpnManager.connectToVpn(data["vpnLocation"])
                 self.sendResponse("response","connecttovpn",data)
                 self.__connection.sendBroadcast("broadcast","connecttovpn",data)
                 return True
             elif self.__jsonObject["request"] == "disconnectfrompvpn":
                 data = {}
-                data["Reason"] = "Client Disconnected"
-                data["Status"] = self.__vpnManager.disconnectFromVpn()#The disconnect from vpn will be callback twice because it shuts down the Subprocess and causes and unexpected disconnect
+                data["reason"] = "Client Disconnected"
+                data["status"] = self.__vpnManager.disconnectFromVpn()#The disconnect from vpn will be callback twice because it shuts down the Subprocess and causes and unexpected disconnect
                 self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
                 return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 data = {}
-                data["Running"] = self.__vpnManager.isRunning()
-                data["ConnectedTo"] = self.__vpnManager.getVpnConnection()
+                data["running"] = self.__vpnManager.isRunning()
+                data["connectedTo"] = self.__vpnManager.getVpnConnection()
                 self.sendResponse("response","checkconnectionstatus",data)
                 return True
             else:
@@ -365,8 +365,8 @@ class connections:
             self.connect(clientsocket,address)
     def vpnUnexpectedDisconnectionBroadcast(self):
         data = {}
-        data["Status"] = ""
-        data["Reason"] = "Unexpected Disconnection"
+        data["status"] = ""
+        data["reason"] = "Unexpected Disconnection"
         self.sendBroadcast("broadcast","disconnectfrompvpn",data)
     def sendBroadcast(self,type,request,data):
         response = {}
