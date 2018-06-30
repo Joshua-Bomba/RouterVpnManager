@@ -364,6 +364,8 @@ class connections:
             while 1:
                 clientsocket, address = self.__serversocket.accept()
                 self.connect(clientsocket,address)
+        except KeyboardInterrupt:
+            print "keyboard interuption"
         except Exception,e:
             print str(e)
 
@@ -412,6 +414,12 @@ def start():
         #Add some sort of closing code here or whatever to manage a crash/shutdown
     else:
         print("This script requires a host address and port")
+
+def signal_term_handler(signal, frame):
+    print 'got SIGTERM'
+    sys.exit(0)
+ 
+signal.signal(signal.SIGTERM, signal_term_handler)
 
 #raw_input("Press Any Key Once The Debugger is hooked on")
 
