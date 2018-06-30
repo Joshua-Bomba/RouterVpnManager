@@ -14,27 +14,13 @@ namespace RouterVpnManagerClientLibrary
 {
     public class RouterVpnManagerConnection : IDisposable
     {
+        private RequestProcessor requestProcessor_;
         private TcpClient client_;
-        private ConcurrentDictionary<string, Callback> callbacks_;
-        private ConcurrentDictionary<JObject,Callback> requests_;
-        private BlockingCollection<JObject> responses_;
-        private bool responseInjestionListener_;
-        private Task responseInjestionTask_;
-        private bool responseProcessListener_;
-        private Task responseProcessTask_;
-
-        public delegate bool Callback(JObject message);
 
         public RouterVpnManagerConnection()
         {
             client_ = new TcpClient();
-            callbacks_ = new ConcurrentDictionary<string, Callback>();
-            requests_ = new ConcurrentDictionary<JObject, Callback>();
-            responses_ = new BlockingCollection<JObject>();
-            responseInjestionListener_ = true;
-            responseProcessListener_ = true;
-            responseInjestionTask_ = null;
-            responseProcessTask_ = null;
+            requestProcessor_ = new RequestProcessor(client_);
             SetDefaults();
         }
 
@@ -45,8 +31,7 @@ namespace RouterVpnManagerClientLibrary
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(Host), Port);
                 client_.Connect(ep);
 
-                ProcessInjestion();
-                ProcessResponses();
+                requestProcessor_.Start();
 
                 JObject obj = ControlledRequests.FormatMessage("request","connection");
                 obj["signature"] = Guid.NewGuid().ToString();
@@ -71,27 +56,16 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        private Task<bool> AddCallback(JObject response,Callback callback)
+        private Task<bool> AddCallback(JObject response,RequestProcessor.Callback callback)
         {
             ManualResetEvent oSignalEvent = new ManualResetEvent(false);
             bool responseState = true;
-            responseState = requests_.TryAdd(response, (JObject obj) =>
-            {
-                bool state = callback(obj);
-                oSignalEvent.Set();
-                return state;
-            });
+            responseState = requestProcessor_.AddPrivateCallbackHandler(response, callback, oSignalEvent);
             return Task.Run(() =>
             {
                 try
                 {
                     oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
-                    if (!responseState)
-                    {
-                        Callback c;
-                        requests_.TryRemove(response, out c);
-
-                    }
                     return responseState;
                 }
                 catch (Exception e)
@@ -104,25 +78,13 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        public async void Disconnect()
+        public void Disconnect()
         {
-            responseProcessListener_ = false;
-            responseInjestionListener_ = false;
+            requestProcessor_.Stop();
             client_.Close();
-
-            //TODO: make this less shit
-            if (responseInjestionTask_ != null)
-            {
-                await responseInjestionTask_;//This may(probably will) cause a lockup
-            }
-
-            if (responseProcessTask_ != null)
-            {
-                await responseProcessTask_;//This most definetly may cause a lockup
-            }
         }
 
-        public async Task<bool> SendJson(JObject obj, Callback callback = null)
+        public async Task<bool> SendJson(JObject obj, RequestProcessor.Callback callback = null)
         {
             JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
@@ -144,69 +106,9 @@ namespace RouterVpnManagerClientLibrary
             }
         }
 
-        public bool AddCallbackHandler(string request,Callback callback)
+        public bool AddBroadcastCallbackHandler(string request, RequestProcessor.Callback callback)
         {
-            if (!this.callbacks_.ContainsKey(request))
-            {
-                this.callbacks_.TryAdd(request, callback);
-                return true;
-            }
-
-            return false;
-        }
-
-        protected void ProcessInjestion()
-        {
-            responseInjestionTask_ = Task.Run(() =>
-            {
-                while(responseInjestionListener_)
-                {
-                    try
-                    {
-                        NetworkStream ns = client_.GetStream();
-                        byte[] bytesResponse = new byte[client_.ReceiveBufferSize];
-                        int bytesRead = ns.Read(bytesResponse, 0, client_.ReceiveBufferSize);
-                        string dataReceived = Encoding.ASCII.GetString(bytesResponse, 0, bytesRead);
-                        JObject obj = JObject.Parse(dataReceived);
-                        responses_.Add(obj);
-                    }
-                    catch
-                    {
-                        
-                    }
-                }
-            });
-        }
-
-        protected void ProcessResponses()
-        {
-            responseProcessTask_ = Task.Run(() =>
-            {
-                while (responseProcessListener_)
-                {
-                    try
-                    {
-                        JObject obj = responses_.Take();
-                        if (obj["type"].ToString() == "broadcast")
-                        {
-                            if (callbacks_.ContainsKey(obj["request"].ToString()))
-                            {
-                                callbacks_.TryGetValue(obj["request"].ToString(), out var callback);
-                                callback?.Invoke(obj);
-                            }
-                        }
-                        else if (obj["type"].ToString() == "response")
-                        {
-                            KeyValuePair<JObject, Callback> response = requests_.FirstOrDefault(x => x.Key["request"].ToString() == obj["request"].ToString()&& x.Key["signature"].ToString() == obj["signature"].ToString());
-                            response.Value?.Invoke(obj);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                }
-            });
+            return requestProcessor_.AddPublicCallbackHandler(request, callback);
         }
 
 

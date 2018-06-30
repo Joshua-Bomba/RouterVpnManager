@@ -37,14 +37,14 @@ namespace RouterVpnManagerClientLibrary
 
         private void AddBroadcastListener()
         {
-            connection_.AddCallbackHandler("connecttovpn", (JObject response) =>
+            connection_.AddBroadcastCallbackHandler("connecttovpn", (JObject response) =>
             {
                 //RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
                 listener_?.ConnectToVpn(response["data"].ToObject<ConnectToVpnResponse>());
                 return true;
             });
 
-            connection_.AddCallbackHandler("disconnectfrompvpn", (JObject response) =>
+            connection_.AddBroadcastCallbackHandler("disconnectfrompvpn", (JObject response) =>
             {
                 //RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
                 listener_?.DisconnectFromVpn(response["data"].ToObject<DisconnectFromVpnResponse>());
