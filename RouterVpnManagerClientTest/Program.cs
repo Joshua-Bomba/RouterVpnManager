@@ -74,17 +74,17 @@ namespace RouterVpnManagerClientTest
             }
         }
 
-        static async void PrintConnectionStatus()
+        static void PrintConnectionStatus()
         {
-            ConnectionStatusResponse csr = await requests.CheckCurrentConnection();
+            ConnectionStatusResponse csr = requests.CheckCurrentConnection();
             Console.WriteLine("Connected?: " +csr.Running);
             if(csr.Running)
                 Console.WriteLine("Current Connection: " + csr.ConnectedTo);
         }
 
-        static async void ListAvaliableVpns()
+        static void ListAvaliableVpns()
         {
-            string[] response = (await requests.ListAvaliableVpns()).ToArray();
+            string[] response = requests.ListAvaliableVpns().ToArray();
             for (int i = 0; i < response.Length; i++)
             {
                 Console.WriteLine($"{i}: {response[i]}");
@@ -119,13 +119,13 @@ namespace RouterVpnManagerClientTest
             }
         }
 
-        static async void ConnectToVpn(string connectionNumber)
+        static void ConnectToVpn(string connectionNumber)
         {
             int selection;
             string[] s = connectionNumber.Split(' ');
             if (s.Length > 1 &&int.TryParse(s[1], out selection))
             {
-                string[] vpns = (await requests.ListAvaliableVpns()).ToArray();
+                string[] vpns = requests.ListAvaliableVpns().ToArray();
                 if (selection < vpns.Length)
                 {
                     requests.ConnectToVpn(vpns[selection]);

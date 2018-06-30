@@ -57,37 +57,37 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        public async Task<IEnumerable<string>> ListAvaliableVpns()
+        public IEnumerable<string> ListAvaliableVpns()
         {
             JObject obj = FormatMessage("request", "listovpn", null);
             IEnumerable<string> array = null;
-            bool state = await connection_.SendJson(obj, ((JObject response) =>
+            connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
                 return true;
-            }));
+            })).Wait();
             return array;
         }
 
-        public async void ConnectToVpn(string vpn)
+        public void ConnectToVpn(string vpn)
         {
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
-            await connection_.SendJson(obj);
+            connection_.SendJson(obj).Wait();
         }
 
-        public async void DisconnectFromVpn()
+        public void DisconnectFromVpn()
         {
             JObject obj = FormatMessage("request", "disconnectfrompvpn");
-            await connection_.SendJson(obj);
+            connection_.SendJson(obj).Wait();
         }
 
-        public async Task<ConnectionStatusResponse> CheckCurrentConnection()
+        public ConnectionStatusResponse CheckCurrentConnection()
         {
             JObject obj = FormatMessage("request", "checkconnectionstatus");
             ConnectionStatusResponse currentConnection = null;
-            await connection_.SendJson(obj, (JObject response) =>
+            connection_.SendJson(obj, (JObject response) =>
             {
                 try
                 {
@@ -100,7 +100,7 @@ namespace RouterVpnManagerClientLibrary
                     return false;
                 }
                 return true;
-            });
+            }).Wait();
             return currentConnection;
         }
     }
