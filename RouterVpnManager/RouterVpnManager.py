@@ -172,10 +172,10 @@ class routerVpnManager:
             if file.endswith(".ovpn"):
                 vpnConnections.append(file)
         return vpnConnections
-    def isRunning(self):#Private Not Thread Safe
+    def isRunning(self):
         self.__lock.acquire()
         try:
-            self.isRunningInternal()
+            return self.isRunningInternal()
         finally:
             self.__lock.release()
     def isRunningInternal(self):
