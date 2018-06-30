@@ -349,7 +349,7 @@ class connections:
         self.bind()
     def exit(self):
         for c in self.__clientsMap:
-            c.stop()
+            self.__clientsMap[c].stop()
         self.__vpnManager.exit();
         if self.__serversocket is not None:
             self.__serversocket.close();
