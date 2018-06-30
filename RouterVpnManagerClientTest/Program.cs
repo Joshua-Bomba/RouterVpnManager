@@ -19,14 +19,19 @@ namespace RouterVpnManagerClientTest
         {
             using (connection = new RouterVpnManagerConnection())
             {
-                if (connection.Connect())
+                try
                 {
+                    connection.Connect();
                     requests = new ControlledRequests(connection);
                     requests.AddBroadcastListener(new Broadcasts());
                     ListenForCommands();
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
-            
         }
 
         static void ListenForCommands()
