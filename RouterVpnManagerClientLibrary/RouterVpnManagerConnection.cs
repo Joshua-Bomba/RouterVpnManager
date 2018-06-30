@@ -24,7 +24,7 @@ namespace RouterVpnManagerClientLibrary
             SetDefaults();
         }
 
-        public async Task<bool> Connect()
+        public async void Connect()
         {
             try
             {
@@ -45,12 +45,13 @@ namespace RouterVpnManagerClientLibrary
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
 
-                return await callbackstate;
+                if (!await callbackstate)
+                    throw new Exception("was not able to connect properly");
             }
             catch (Exception e)
             {
                 RouterVpnManagerLogLibrary.Log(e.ToString());
-                return false;
+                throw e;
             }
 
         }
@@ -60,21 +61,29 @@ namespace RouterVpnManagerClientLibrary
         {
             ManualResetEvent oSignalEvent = new ManualResetEvent(false);
             bool responseState = true;
-            responseState = requestProcessor_.AddPrivateCallbackHandler(response, callback, oSignalEvent);
-            return Task.Run(() =>
+            responseState = requestProcessor_.AddPrivateCallbackHandler(response, (JObject o) =>
             {
-                try
-                {
-                    oSignalEvent.WaitOne(Properties.Settings.Default.Timeout);
-                    return responseState;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-
+                bool state = callback(o);
+                oSignalEvent.Set();
+                return state;
             });
+
+            //https://stackoverflow.com/questions/18756354/wrapping-manualresetevent-as-awaitable-task
+            //Most of this below is copy pasta black magic
+
+            var tcs = new TaskCompletionSource<bool>();
+
+            var registration = ThreadPool.RegisterWaitForSingleObject(oSignalEvent, (state, timedOut) =>
+            {
+                var localTcs = (TaskCompletionSource<bool>)state;
+                if (timedOut)
+                    localTcs.TrySetCanceled();
+                else
+                    localTcs.TrySetResult(responseState);
+            },tcs, Timeout.InfiniteTimeSpan, executeOnlyOnce:true);
+
+            tcs.Task.ContinueWith((_, state) => ((RegisteredWaitHandle)state).Unregister(null), registration, TaskScheduler.Default);
+            return tcs.Task;
         }
 
 
@@ -92,13 +101,21 @@ namespace RouterVpnManagerClientLibrary
                 o["signature"] = Guid.NewGuid().ToString();
 
                 NetworkStream ns = client_.GetStream();
-                byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
-                ns.Write(bytes, 0, bytes.Length);
                 if (callback != null)
                 {
-                    return await AddCallback(o,callback);
+                    Task<bool> task = AddCallback(o, callback);
+                    byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
+                    ns.Write(bytes, 0, bytes.Length);
+
+                    bool v = await task;
+                    return v;
                 }
-                return true;
+                else
+                {
+                    byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
+                    ns.Write(bytes, 0, bytes.Length);
+                    return true;
+                }
             }
             else
             {

@@ -83,23 +83,11 @@ namespace RouterVpnManagerClientLibrary
         /// <param name="callback"></param>
         /// <param name="oSignalEvent">Will be set asoon as the callback is called</param>
         /// <returns></returns>
-        public bool AddPrivateCallbackHandler(JObject obj, Callback callback, ManualResetEvent oSignalEvent = null)
+        public bool AddPrivateCallbackHandler(JObject obj, Callback callback)
         {
             if (!this.privateCallbacks_.ContainsKey(obj))
             {
-                if (oSignalEvent == null)
-                {
-                    return privateCallbacks_.TryAdd(obj, callback);
-                }
-                else
-                {
-                    return privateCallbacks_.TryAdd(obj,(JObject o) =>
-                    {
-                        bool state = callback(o);
-                        oSignalEvent.Set();
-                        return state;
-                    });
-                }
+                return privateCallbacks_.TryAdd(obj, callback);
             }
             return false;
         }

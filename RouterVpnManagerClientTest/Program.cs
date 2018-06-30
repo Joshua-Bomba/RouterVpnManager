@@ -17,18 +17,19 @@ namespace RouterVpnManagerClientTest
 
         static void Main(string[] args)
         {
-            SetupConnection();
-        }
-
-        static async void SetupConnection()
-        {
             using (connection = new RouterVpnManagerConnection())
             {
-                if (await connection.Connect())
+                try
                 {
+                    connection.Connect();
                     requests = new ControlledRequests(connection);
                     requests.AddBroadcastListener(new Broadcasts());
                     ListenForCommands();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
         }
