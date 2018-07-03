@@ -197,7 +197,7 @@ class routerVpnManager:
     def disconnectFromVpn(self):
         self.__lock.acquire()
         try:
-            if not self.isRunningInternal():
+            if self.isRunningInternal():
                 self.__connectionStatus.kill()
                 self.__connectionStatus = None
                 return ""
