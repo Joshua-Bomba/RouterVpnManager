@@ -184,7 +184,7 @@ class routerVpnManager:
         self.__lock.acquire()
         try:
             if str in files:
-                if self.isRunningInternal():
+                if not self.isRunningInternal():
                     self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
                     self.__currentConnection = str
                     return ""
@@ -197,7 +197,7 @@ class routerVpnManager:
     def disconnectFromVpn(self):
         self.__lock.acquire()
         try:
-            if self.isRunningInternal():
+            if not self.isRunningInternal():
                 self.__connectionStatus.kill()
                 self.__connectionStatus = None
                 return ""
