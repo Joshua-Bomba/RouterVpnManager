@@ -153,7 +153,7 @@ class routerVpnManager:
     __currentConnection = None
     __connections = None#For Handling unexpected Disconnection of the Process
     __lock = None
-    VPN_CONNECTION_CODE = "openvpn --route-up /tmp/openvpncl/route-up.sh --route-pre-down /tmp/openvpncl/route-down.sh --config "
+    VPN_CONNECTION_CODE = "openvpn --script-security 2 --route-up /tmp/openvpncl/route-up.sh --route-pre-down /tmp/openvpncl/route-down.sh --config "
     def __init__(self,connections):
         self.__connections = connections
         self.__lock = threading.Lock()
