@@ -1,23 +1,15 @@
 Things that you may (probably) will need to do to get this god dam thing working
-I recommend you follow these steps otherwise it might not work + it will save you alot of headach
-Also I'm not responsible in the unlikely event you mess something up. Continue at your own risk. You have been warned
 
-The Basics (I'm going to assume you have already done this / know how to do this i've provide to info. Do a bit of research before installing)
- - Install DD-WRT https://wiki.dd-wrt.com/wiki/index.php/Firmware_FAQ#Where_do_I_download_firmware.3F 
- - Install Entware https://wiki.dd-wrt.com/wiki/index.php/Installing_Entware
+What will you need:
+Install DD-WRT & enable SSH
+connect to the router and
+Install Entware
+install python though Entware using opkg install command
 
-
-
-Install RouterVpnManager
-Once you install entware you should have a opt folder 
- - Enable SSH (probably already have if you installed Entware)
- - Install python & screen though Entware using opkg install command
- - copy paste RouterVpnManager folder containing the python (you can use filezilla)(Path should be /opt/RouterVpnManager)
- - inside this folder you should have a few things
-   - The actual python
-   - start.sh script (still will launch the script in a screen)
-	 - You will need to go in here an modify the setting for your particular setup
- - Grab some .opvn from the vpn of your choice (I Use Expressvpn so there may be some additional steps for you)
+Once you install entware you should have a opt folder inside there create a new folder 
+place The RouterVpnManager.py script in there (you can use filezilla or )
+Grab some .opvn from the vpn of your choice
+before copying them over there are a few modifications you will need to make
  - you will need to make a seperate auth file to store your login details
-  - You will have to open each .opvn file and add "auth-user-pass" with the path to the auth file (other wise it will prompt you for a password which is no good)
- 
+   - You will have to open each .opvn file and add "auth-user-pass" with the path to the auth file
+ - 
