@@ -1,0 +1,15 @@
+Things that you may (probably) will need to do to get this god dam thing working
+
+What will you need:
+Install DD-WRT & enable SSH
+connect to the router and
+Install Entware
+install python though Entware using opkg install command
+
+Once you install entware you should have a opt folder inside there create a new folder 
+place The RouterVpnManager.py script in there (you can use filezilla or )
+Grab some .opvn from the vpn of your choice
+before copying them over there are a few modifications you will need to make
+ - you will need to make a seperate auth file to store your login details
+   - You will have to open each .opvn file and add "auth-user-pass" with the path to the auth file
+ - 

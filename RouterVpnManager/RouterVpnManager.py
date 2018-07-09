@@ -153,7 +153,7 @@ class routerVpnManager:
     __currentConnection = None
     __connections = None#For Handling unexpected Disconnection of the Process
     __lock = None
-    VPN_CONNECTION_CODE = "openvpn "
+    VPN_CONNECTION_CODE = "openvpn --route-up /tmp/openvpncl/route-up.sh --route-pre-down /tmp/openvpncl/route-down.sh --config "
     def __init__(self,connections):
         self.__connections = connections
         self.__lock = threading.Lock()
@@ -184,7 +184,7 @@ class routerVpnManager:
         self.__lock.acquire()
         try:
             if str in files:
-                if self.isRunningInternal():
+                if not self.isRunningInternal():
                     self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
                     self.__currentConnection = str
                     return ""
