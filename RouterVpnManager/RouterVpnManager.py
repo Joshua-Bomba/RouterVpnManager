@@ -172,6 +172,15 @@ class vpnFileManager:
         return os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
     def pathValid():
         return self.__path != None
+    # copys the current openvpncl config to a new folder under the configuration folder
+    def copyCurrentConfig(name):
+        pass 
+    # this will clear the current openvpncl 
+    def clearCurrentConfig():
+        pass 
+    # this will copy the current config file to the openvpncl folder
+    def copyConfig(path):
+        pass 
 
 class routerVpnManager:
     __processManager = None
