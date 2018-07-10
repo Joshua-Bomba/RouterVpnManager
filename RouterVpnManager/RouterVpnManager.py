@@ -16,6 +16,11 @@ import threading
 import time
 
 
+
+CONFIG_FOLDER_NAME = "configurations"
+OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
+VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + +OPENVPNCL_PATH +"/route-down.sh --config "
+
 #This class will process any output from a subprocessHandler
 class subprocessOutputHandler(threading.Thread):
     __PRINTSUBPROCESS = True
@@ -151,13 +156,22 @@ class subprocessManager(threading.Thread):
 class vpnFileManager:
     __path = None
     def __init__(self,path):
-        self.__path = path
+        if os.path.isdir(path):
+            configPath = path + "/" + CONFIG_FOLDER_NAME
+            if not os.path.isdir(configPath):
+                os.makedirs(configPath)
+            self.__path = configPath
     def getAvaliableConnections():
         vpnConnections = []
-        #for file in os.listdir(path):
-        #    if file.endswith(".ovpn"):
-        #        vpnConnections.append(file)
+        for file in os.listdir(self.__path):
+            if os.path.isdir(os.path.join(self.__path,file)):
+                if self.folderValid(os.path.join(self.__path,file)):
+                    vpnConnections.append(file)
         return vpnConnections
+    def folderValid(path):
+        return os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
+    def pathValid():
+        return self.__path != None
 
 class routerVpnManager:
     __processManager = None
@@ -166,8 +180,6 @@ class routerVpnManager:
     __vpnFileManager = None
     __connections = None#For Handling unexpected Disconnection of the Process
     __lock = None
-    CONFIG_LOCATIONS = "configurations"
-    VPN_CONNECTION_CODE = "openvpn --route-up /tmp/openvpncl/route-up.sh --route-pre-down /tmp/openvpncl/route-down.sh --config "
     def __init__(self,connections):
         self.__connections = connections
         self.__lock = threading.Lock()
@@ -195,7 +207,7 @@ class routerVpnManager:
         try:
             if str in files:
                 if not self.isRunningInternal():
-                    self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
+                    self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE + str,self.__connections)
                     self.__currentConnection = str
                     return ""
                 else:
