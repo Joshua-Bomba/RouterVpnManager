@@ -147,27 +147,37 @@ class subprocessManager(threading.Thread):
         except Exception,e: 
             print str(e)
 
+
+class vpnFileManager:
+    __path = None
+    def __init__(self,path):
+        self.__path = path
+    def getAvaliableConnections():
+        vpnConnections = []
+        #for file in os.listdir(path):
+        #    if file.endswith(".ovpn"):
+        #        vpnConnections.append(file)
+        return vpnConnections
+
 class routerVpnManager:
     __processManager = None
     __connectionStatus = None
     __currentConnection = None
+    __vpnFileManager = None
     __connections = None#For Handling unexpected Disconnection of the Process
     __lock = None
+    CONFIG_LOCATIONS = "configurations"
     VPN_CONNECTION_CODE = "openvpn --route-up /tmp/openvpncl/route-up.sh --route-pre-down /tmp/openvpncl/route-down.sh --config "
     def __init__(self,connections):
         self.__connections = connections
         self.__lock = threading.Lock()
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
+        self.__vpnFileManager = vpnFileManager(os.path.dirname(os.path.realpath(__file__)))
     def exit(self):
         if self.__processManager is not None:
             self.__processManager.stop()
-    def getOvpnFiles(self):#Async
-        path = os.path.dirname(os.path.realpath(__file__))
-        vpnConnections = []
-        for file in os.listdir(path):
-            if file.endswith(".ovpn"):
-                vpnConnections.append(file)
-        return vpnConnections
+    def getConnectionNames(self):#Async
+        return self.__vpnFileManager.getAvaliableConnections()
     def isRunning(self):
         self.__lock.acquire()
         try:
@@ -180,7 +190,7 @@ class routerVpnManager:
         else:
             return False
     def connectToVpn(self,str):
-        files = self.getOvpnFiles()
+        files = self.getConnectionNames()
         self.__lock.acquire()
         try:
             if str in files:
@@ -265,7 +275,7 @@ class processRequest:
                 self.sendResponse("response","connection","Connection Established")
                 return True
             elif self.__jsonObject["request"] == "listovpn":
-                self.sendResponse("response","listovpn",self.__vpnManager.getOvpnFiles())
+                self.sendResponse("response","listovpn",self.__vpnManager.getConnectionNames())
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
