@@ -48,7 +48,7 @@ namespace RouterVpnManagerClientTest
                         switch (input.Split(' ').First())
                         {
                             case "help":
-                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect");
+                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect copyconfig");
                                 break;
                             case "exit":
                                 Console.WriteLine("Exiting");
@@ -65,12 +65,29 @@ namespace RouterVpnManagerClientTest
                             case "disconnect":
                                 Disconnect();
                                 break;
+                            case "copyconfig":
+                                CopyCurrentConfig();
+                                break;
                             default:
                                 break;
                         }
                     }
                     catch {Console.WriteLine("Unable to process request");}
                 }
+            }
+        }
+
+        static void CopyCurrentConfig()
+        {
+            Console.WriteLine("Please enter a new name for your config");
+            string name = Console.ReadLine();
+            if (requests.CopyCurrentConfig(name))
+            {
+                Console.WriteLine("current config was copied");
+            }
+            else
+            {
+                Console.WriteLine("Config was not able to be copied");
             }
         }
 

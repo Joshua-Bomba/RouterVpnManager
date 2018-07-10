@@ -317,6 +317,11 @@ class processRequest:
                 data["connectedTo"] = self.__vpnManager.getVpnConnection()
                 self.sendResponse("response","checkconnectionstatus",data)
                 return True
+            elif self.__jsonObject["request"] == "copycurrentconfig":
+                data = {}
+                data["status"] = self.__vpnManager.__vpnFileManager.copyCurrentConfig(self.__jsonObject["data"][u'name'])
+                self.sendResponse("response","copycurrentconfig",data)
+                pass
             else:
                 self.__exception = "The request does not exist"
         else:

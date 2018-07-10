@@ -103,5 +103,30 @@ namespace RouterVpnManagerClientLibrary
             }).Wait();
             return currentConnection;
         }
+
+        public bool CopyCurrentConfig(string name)
+        {
+            dynamic d = new ExpandoObject();
+            d.name = name;
+            JObject obj = FormatMessage("request", "copycurrentconfig", d);
+            bool status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                try
+                {
+                    ResponseBase rb = response.ToObject<ResponseBase>();
+                    bool.TryParse(rb.Data["status"].ToString(), out status);
+                    return status;
+                }
+                catch (Exception e)
+                {
+                    RouterVpnManagerLogLibrary.Log(e.ToString());
+                    return false;
+                }
+
+            }).Wait();
+
+            return status;
+        }
     }
 }
