@@ -14,7 +14,7 @@ import subprocess
 import socket
 import threading
 import time
-
+import shutil
 
 
 CONFIG_FOLDER_NAME = "configurations"
@@ -156,32 +156,70 @@ class subprocessManager(threading.Thread):
 class vpnFileManager:
     __path = None
     def __init__(self,path):
-        if os.path.isdir(path):
-            configPath = path + "/" + CONFIG_FOLDER_NAME
-            if not os.path.isdir(configPath):
-                os.makedirs(configPath)
-            self.__path = configPath
+        try:
+            if os.path.isdir(path):
+                configPath = path + "/" + CONFIG_FOLDER_NAME
+                if not os.path.isdir(configPath):
+                    os.makedirs(configPath)
+                self.__path = configPath
+        except Exception, e:
+            print e
     def getAvaliableConnections():
         vpnConnections = []
-        for file in os.listdir(self.__path):
-            if os.path.isdir(os.path.join(self.__path,file)):
-                if self.folderValid(os.path.join(self.__path,file)):
-                    vpnConnections.append(file)
-        return vpnConnections
+        try:
+
+            for file in os.listdir(self.__path):
+                if os.path.isdir(os.path.join(self.__path,file)):
+                    if self.folderValid(os.path.join(self.__path,file)):
+                        vpnConnections.append(file)
+        except Exception, e:
+            print e
+        finally:
+            return vpnConnections
+            
     def folderValid(path):
-        return os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
+        try:
+            return os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
+        except Exception, e:
+            print e
+            return False
     def pathValid():
         return self.__path != None
     # copys the current openvpncl config to a new folder under the configuration folder
     def copyCurrentConfig(name):
-        pass 
+        try:
+            if not os.path.isdir(CONFIG_FOLDER_NAME + "/" + name):
+                if self.folderValid(OPENVPNCL_PATH):
+                    os.makedirs(CONFIG_FOLDER_NAME + "/" + name)
+                    for f in os.listdir(OPENVPNCL_PATH):
+                        shutil.copyfile(OPENVPNCL_PATH + "/" + f,CONFIG_FOLDER_NAME + "/" + f)
+                    return ""
+                else:
+                    return "No configuration found"
+            else:
+                return "Configuration already exists"
+        except Exception, e:
+            print e
+            return "unhandle exception"
+
     # this will clear the current openvpncl 
     def clearCurrentConfig():
-        pass 
+        try:
+            for f in os.listdir(OPENVPNCL_PATH):
+                os.remove(OPENVPNCL_PATH + "/" + f)
+                return ""
+        except Exception, e:
+            print e
+            return "unhandle exception"
     # this will copy the current config file to the openvpncl folder
-    def copyConfig(path):
-        pass 
-
+    def copyConfig(folderName):
+        try:
+            for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
+                shutil.copyfile(CONFIG_FOLDER_NAME + "/" + f,OPENVPNCL_PATH + "/" + f)
+                return ""
+        except Exception, e:
+            print e
+            return "unhandle exception"
 class routerVpnManager:
     __processManager = None
     __connectionStatus = None
