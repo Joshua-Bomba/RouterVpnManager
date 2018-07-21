@@ -19,7 +19,7 @@ import shutil
 
 CONFIG_FOLDER_NAME = "configurations"
 OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
-VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + +OPENVPNCL_PATH +"/route-down.sh --config "
+VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config "
 
 #This class will process any output from a subprocessHandler
 class subprocessOutputHandler(threading.Thread):
