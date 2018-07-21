@@ -164,7 +164,7 @@ class vpnFileManager:
                 self.__path = configPath
         except Exception, e:
             print e
-    def getAvaliableConnections():
+    def getAvaliableConnections(self):
         vpnConnections = []
         try:
 
@@ -176,17 +176,18 @@ class vpnFileManager:
             print e
         finally:
             return vpnConnections
-            
-    def folderValid(path):
+    def configExists(self,name):
+        return name in self.getAvaliableConnections()
+    def folderValid(self,path):
         try:
             return os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
         except Exception, e:
             print e
             return False
-    def pathValid():
+    def pathValid(self):
         return self.__path != None
     # copys the current openvpncl config to a new folder under the configuration folder
-    def copyCurrentConfig(name):
+    def copyCurrentConfig(self,name):
         try:
             if not os.path.isdir(CONFIG_FOLDER_NAME + "/" + name):
                 if self.folderValid(OPENVPNCL_PATH):
@@ -203,7 +204,7 @@ class vpnFileManager:
             return "unhandle exception"
 
     # this will clear the current openvpncl 
-    def clearCurrentConfig():
+    def clearCurrentConfig(self):
         try:
             for f in os.listdir(OPENVPNCL_PATH):
                 os.remove(OPENVPNCL_PATH + "/" + f)
@@ -212,7 +213,7 @@ class vpnFileManager:
             print e
             return "unhandle exception"
     # this will copy the current config file to the openvpncl folder
-    def copyConfig(folderName):
+    def copyConfig(self,folderName):
         try:
             for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
                 shutil.copyfile(CONFIG_FOLDER_NAME + "/" + f,OPENVPNCL_PATH + "/" + f)
@@ -254,9 +255,12 @@ class routerVpnManager:
         try:
             if str in files:
                 if not self.isRunningInternal():
-                    self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE + str,self.__connections)
-                    self.__currentConnection = str
-                    return ""
+                    if self.__vpnFileManager.configExists(str):
+                        self.__vpnFileManager.clearCurrentConfig()
+                        self.__vpnFileManager.copyConfig(str)
+                        self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE + str,self.__connections)
+                        self.__currentConnection = str
+                        return ""
                 else:
                     return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
             else:
