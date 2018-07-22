@@ -115,7 +115,7 @@ namespace RouterVpnManagerClientLibrary
                 try
                 {
                     ResponseBase rb = response.ToObject<ResponseBase>();
-                    bool.TryParse(rb.Data["status"].ToString(), out status);
+                    status = string.IsNullOrWhiteSpace(rb.Data["status"].ToString());
                     return status;
                 }
                 catch (Exception e)

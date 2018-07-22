@@ -193,7 +193,7 @@ class vpnFileManager:
                 if self.folderValid(OPENVPNCL_PATH):
                     os.makedirs(CONFIG_FOLDER_NAME + "/" + name)
                     for f in os.listdir(OPENVPNCL_PATH):
-                        shutil.copyfile(OPENVPNCL_PATH + "/" + f,CONFIG_FOLDER_NAME + "/" + f)
+                        shutil.copyfile(OPENVPNCL_PATH + "/" + f,CONFIG_FOLDER_NAME + "/" + name + "/" + f)
                     return ""
                 else:
                     return "No configuration found"
@@ -216,7 +216,7 @@ class vpnFileManager:
     def copyConfig(self,folderName):
         try:
             for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
-                shutil.copyfile(CONFIG_FOLDER_NAME + "/" + f,OPENVPNCL_PATH + "/" + f)
+                shutil.copyfile(CONFIG_FOLDER_NAME + "/" + folderName + "/" + f,OPENVPNCL_PATH + "/" + f)
                 return ""
         except Exception, e:
             print e
