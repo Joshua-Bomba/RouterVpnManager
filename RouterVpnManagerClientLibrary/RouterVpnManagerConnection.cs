@@ -37,15 +37,16 @@ namespace RouterVpnManagerClientLibrary
                 obj["signature"] = Guid.NewGuid().ToString();
                 byte[] bytes = Encoding.ASCII.GetBytes(obj.ToString());
 
-                Task<bool> callbackstate = AddCallback(obj, (JObject message) =>
+                bool state = false;
+                Task callbackstate = AddCallback(obj, (JObject message) =>
                 {
                     RouterVpnManagerLogLibrary.Log(message["data"].ToString());
-                    return true;
+                    state = true;
                 });
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
-
-                if (!await callbackstate)
+                await callbackstate;
+                if (!state)
                     throw new Exception("was not able to connect properly");
             }
             catch (Exception e)
@@ -63,9 +64,8 @@ namespace RouterVpnManagerClientLibrary
             bool responseState = true;
             responseState = requestProcessor_.AddPrivateCallbackHandler(response, (JObject o) =>
             {
-                bool state = callback(o);
+                callback(o);
                 oSignalEvent.Set();
-                return state;
             });
 
             //https://stackoverflow.com/questions/18756354/wrapping-manualresetevent-as-awaitable-task
@@ -93,7 +93,7 @@ namespace RouterVpnManagerClientLibrary
             client_.Close();
         }
 
-        public async Task<bool> SendJson(JObject obj, RequestProcessor.Callback callback = null)
+        public async Task SendJson(JObject obj, RequestProcessor.Callback callback = null)
         {
             JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
@@ -107,19 +107,17 @@ namespace RouterVpnManagerClientLibrary
                     byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
                     ns.Write(bytes, 0, bytes.Length);
 
-                    bool v = await task;
-                    return v;
+                    await task;
                 }
                 else
                 {
                     byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
                     ns.Write(bytes, 0, bytes.Length);
-                    return true;
                 }
             }
             else
             {
-                return false;
+
             }
         }
 

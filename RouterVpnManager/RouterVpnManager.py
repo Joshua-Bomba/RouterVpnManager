@@ -221,6 +221,15 @@ class vpnFileManager:
         except Exception, e:
             print e
             return "unhandle exception"
+    def deleteConfig(self,folderName):
+        try:
+            if folderName != "" and os.path.isdir(CONFIG_FOLDER_NAME + "/" + folderName):
+                shutil.rmtree(CONFIG_FOLDER_NAME + "/" + folderName)      
+            else:
+                return "could not find config"
+        except Exception, e:
+            print e
+            return "unhandle exception"
 class routerVpnManager:
     __processManager = None
     __connectionStatus = None
@@ -363,6 +372,10 @@ class processRequest:
                 data = {}
                 data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.copyCurrentConfig(self.__jsonObject["data"][u'name'])
                 self.sendResponse("response","copycurrentconfig",data)
+                return True
+            elif self.__jsonObject["request"] == "deleteconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.deleteConfig(self.__jsonObject["data"][u'name'])
                 return True
             else:
                 self.__exception = "The request does not exist"

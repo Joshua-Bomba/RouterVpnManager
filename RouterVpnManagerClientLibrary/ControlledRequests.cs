@@ -43,7 +43,6 @@ namespace RouterVpnManagerClientLibrary
                 ConnectToVpnResponse ctvr = response.ToObject<ConnectToVpnResponse>();
                 ctvr.SetData();
                 listener_?.ConnectToVpn(ctvr);
-                return true;
             });
 
             connection_.AddBroadcastCallbackHandler("disconnectfrompvpn", (JObject response) =>
@@ -52,7 +51,6 @@ namespace RouterVpnManagerClientLibrary
                 DisconnectFromVpnResponse dfvr = response.ToObject<DisconnectFromVpnResponse>();
                 dfvr.SetData();
                 listener_?.DisconnectFromVpn(dfvr);
-                return true;
             });
         }
 
@@ -64,7 +62,6 @@ namespace RouterVpnManagerClientLibrary
             connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
-                return true;
             })).Wait();
             return array;
         }
@@ -97,9 +94,7 @@ namespace RouterVpnManagerClientLibrary
                 catch (Exception e)
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
-                    return false;
                 }
-                return true;
             }).Wait();
             return currentConnection;
         }
@@ -116,12 +111,35 @@ namespace RouterVpnManagerClientLibrary
                 {
                     ResponseBase rb = response.ToObject<ResponseBase>();
                     status = string.IsNullOrWhiteSpace(rb.Data["status"].ToString());
-                    return status;
                 }
                 catch (Exception e)
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
-                    return false;
+                    status = false;
+                }
+
+            }).Wait();
+
+            return status;
+        }
+
+        public bool DeleteConfig(string name)
+        {
+            dynamic d = new ExpandoObject();
+            d.name = name;
+            JObject obj = FormatMessage("request", "deleteconfig",d);
+            bool status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                try
+                {
+                    ResponseBase rb = response.ToObject<ResponseBase>();
+                    status = string.IsNullOrWhiteSpace(rb.Data["status"].ToString());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    status = false;
                 }
 
             }).Wait();

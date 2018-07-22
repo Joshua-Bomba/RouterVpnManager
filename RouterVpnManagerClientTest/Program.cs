@@ -68,12 +68,29 @@ namespace RouterVpnManagerClientTest
                             case "copyconfig":
                                 CopyCurrentConfig();
                                 break;
+                            case "deleteconfig":
+                                DeleteConfig();
+                                break;
                             default:
                                 break;
                         }
                     }
                     catch {Console.WriteLine("Unable to process request");}
                 }
+            }
+        }
+
+        static void DeleteConfig()
+        {
+            Console.WriteLine("Please enter the name of the config you want to delete");
+            string name = Console.ReadLine();
+            if (requests.DeleteConfig(name))
+            {
+                Console.WriteLine("Config was Deleted sucessfully");
+            }
+            else
+            {
+                Console.WriteLine("Could not delete config");
             }
         }
 
