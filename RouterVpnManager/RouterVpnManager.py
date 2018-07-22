@@ -20,9 +20,9 @@ import Queue
 
 CONFIG_FOLDER_NAME = "configurations"
 OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
-VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config "
+VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config openvpn.conf"
 
-raw_input("Press Any Key Once The Debugger is hooked on")
+#raw_input("Press Any Key Once The Debugger is hooked on")
 
 class logger(threading.Thread):
     __connections = None
@@ -309,7 +309,7 @@ class routerVpnManager:
                     if self.__vpnFileManager.configExists(str):
                         self.__vpnFileManager.clearCurrentConfig()
                         self.__vpnFileManager.copyConfig(str)
-                        self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE + str,self.__connections)
+                        self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE,self.__connections)
                         self.__currentConnection = str
                         return ""
                 else:
