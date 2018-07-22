@@ -18,3 +18,7 @@
 /RouterVpnManager/my_expressvpn_usa_-_washington_dc_udp.ovpn
 /RouterVpnManager/toronto
 /RouterVpnManager/washington
+/RouterVpnManager/template/my_expressvpn_canada_-_toronto_udp.ovpn
+/RouterVpnManager/template/my_expressvpn_germany_-_darmstadt_udp.ovpn
+/RouterVpnManager/template/my_expressvpn_usa_-_washington_dc_udp.ovpn
+/RouterVpnManager/template/openvpncl
