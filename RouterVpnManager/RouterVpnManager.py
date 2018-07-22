@@ -51,10 +51,10 @@ class logger(threading.Thread):
                 sys.stdout.write(str)
                 if self.__connections is not None:
                     m = {}
-                    m.message = str
+                    m["message"] = str
                     self.__connections.sendBroadcast("broadcast","broadcastlog",m)
         except Exception, e:
-            log.writeLine("Queue Exception Exiting log" + e)
+            log.writeLine("Queue Exception Exiting log" + str(e))
     def stop(self):
         self.__output = False
 
@@ -540,10 +540,16 @@ def start():
     if len(sys.argv) >= 2:
         host = sys.argv[1]
         port = int(sys.argv[2])
-        c = connections(host,port)
-        c.listen();
-        c.exit()
-        log.stop()
+        c = None
+        try:
+            c = connections(host,port)
+            c.listen();
+        except Exception,e:
+            log.writeLine(e)
+        finally:
+            if c is not None:
+                c.exit()
+            log.stop()
         #Add some sort of closing code here or whatever to manage a crash/shutdown
     else:
         log.writeLine("This script requires a host address and port")
