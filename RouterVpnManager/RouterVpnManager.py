@@ -31,6 +31,7 @@ class logger(threading.Thread):
     def __init__(self):
         self.__output = True
         self.__outputQueue = Queue.Queue()
+        self.start()#whoops forgot to start it https://youtu.be/KIrCOfDbL_E?t=1m44s
     def setConnections(self,connections):
         self.__connections = connections
     def write(self,outputString):
