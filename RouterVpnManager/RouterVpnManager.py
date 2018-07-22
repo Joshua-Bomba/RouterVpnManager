@@ -148,6 +148,8 @@ class subprocessHandler:
                 return False
         finally:
             self.__lock.release()
+    def wait(self):
+	    self.__handler.wait()
 
 # this class is incharge on managing subprocess and creating new ones
 class subprocessManager(threading.Thread):
@@ -199,13 +201,15 @@ class subprocessManager(threading.Thread):
 
 class vpnFileManager:
     __path = None
-    def __init__(self,path):
+    __processManager = None
+    def __init__(self,path,processManager):
         try:
             if os.path.isdir(path):
                 configPath = path + "/" + CONFIG_FOLDER_NAME
                 if not os.path.isdir(configPath):
                     os.makedirs(configPath)
                 self.__path = configPath
+            self.__processManager = processManager
         except Exception, e:
             log.writeLine(e)
     def getAvaliableConnections(self):
@@ -238,7 +242,7 @@ class vpnFileManager:
                     os.makedirs(CONFIG_FOLDER_NAME + "/" + name)
                     for f in os.listdir(OPENVPNCL_PATH):
                         shutil.copyfile(OPENVPNCL_PATH + "/" + f,CONFIG_FOLDER_NAME + "/" + name + "/" + f)
-                    return ""
+                    return self.applyPermissions()
                 else:
                     return "No configuration found"
             else:
@@ -277,6 +281,19 @@ class vpnFileManager:
         except Exception, e:
             log.writeLine(e)
             return "unhandle exception"
+    def applyPermissions(self):
+        if self.folderValid(OPENVPNCL_PATH):
+            try:
+                chmod1 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-up.sh")
+                chmod2 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-down.sh")
+                chmod1.wait()
+                chmod2.wait()
+            except:
+                return "There was an issue applying the required permissions to the config"
+        else:
+            return "There was an issue with the config"
+
+
 class routerVpnManager:
     __processManager = None
     __connectionStatus = None
@@ -288,7 +305,7 @@ class routerVpnManager:
         self.__connections = connections
         self.__lock = threading.Lock()
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
-        self.__vpnFileManager = vpnFileManager(os.path.dirname(os.path.realpath(__file__)))
+        self.__vpnFileManager = vpnFileManager(os.path.dirname(os.path.realpath(__file__)),self.__processManager)
     def exit(self):
         if self.__processManager is not None:
             self.__processManager.stop()
