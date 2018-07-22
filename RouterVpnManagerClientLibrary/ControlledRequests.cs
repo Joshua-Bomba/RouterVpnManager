@@ -53,11 +53,11 @@ namespace RouterVpnManagerClientLibrary
                 listener_?.DisconnectFromVpn(dfvr);
             });
 
-            connection_.AddBroadcastCallbackHandler("message", (JObject response) =>
+            connection_.AddBroadcastCallbackHandler("broadcastlog", (JObject response) =>
             {
                 BroadcastMessage bm = response.ToObject<BroadcastMessage>();
                 bm.SetData();
-                listener_?.BroadcastRecieved(bm);
+                RouterVpnManagerLogLibrary.LogBroadcastMessage(bm.Message);
             });
         }
 
