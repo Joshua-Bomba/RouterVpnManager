@@ -361,7 +361,7 @@ class processRequest:
                 return True
             elif self.__jsonObject["request"] == "copycurrentconfig":
                 data = {}
-                data["status"] = self.__vpnManager.__vpnFileManager.copyCurrentConfig(self.__jsonObject["data"][u'name'])
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.copyCurrentConfig(self.__jsonObject["data"][u'name'])
                 self.sendResponse("response","copycurrentconfig",data)
                 pass
             else:
