@@ -48,7 +48,7 @@ namespace RouterVpnManagerClientTest
                         switch (input.Split(' ').First())
                         {
                             case "help":
-                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect");
+                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect, saveconfig [name], deleteconfig [index], clearconfigfolder, copyconfigto [index]");
                                 break;
                             case "exit":
                                 Console.WriteLine("Exiting");
@@ -65,12 +65,116 @@ namespace RouterVpnManagerClientTest
                             case "disconnect":
                                 Disconnect();
                                 break;
+                            case "saveconfig":
+                                SaveConfig(input);
+                                break;
+                            case "deleteconfig":
+                                DeleteConfig(input);
+                                break;
+                            case "clearconfigfolder":
+                                ClearConfigFolder();
+                                break;;
+                            case "copyconfigto":
+                                CopyConfigTo(input);
+                                break;
                             default:
                                 break;
                         }
                     }
                     catch {Console.WriteLine("Unable to process request");}
                 }
+            }
+        }
+
+        static void CopyConfigTo(string commandparams)
+        {
+            string[] s = commandparams.Split(' ');
+            if (s.Length > 1 && int.TryParse(s[1], out var selection))
+            {
+                string[] vpns = requests.ListAvaliableVpns().ToArray();
+                if (selection < vpns.Length)
+                {
+                    StatusResponse sr = requests.CopyConfig(vpns[selection]);
+                    if (sr)
+                    {
+                        Console.WriteLine("Config was sucessfully copied");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Config could not be copied: " + sr.Message);   
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Please select a valid option");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid number");
+            }
+        }
+
+        static void ClearConfigFolder()
+        {
+            StatusResponse sr = requests.ClearConfigFolder();
+            if (sr)
+            {
+                Console.WriteLine("Config was sucessfully cleared");
+            }
+            else
+            {
+                Console.WriteLine("Config could not be cleared: " + sr.Message);
+            }
+        }
+
+        static void DeleteConfig(string commandparams)
+        {
+            string[] s = commandparams.Split(' ');
+            if (s.Length > 1 && int.TryParse(s[1], out var selection))
+            {
+                string[] vpns = requests.ListAvaliableVpns().ToArray();
+                if (selection < vpns.Length)
+                {
+                    StatusResponse sr = requests.DeleteConfig(vpns[selection]);
+                    if (sr)
+                    {
+                        Console.WriteLine("Config was Deleted sucessfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Could not delete config: " + sr.Message);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Please select a valid option");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid number");
+            }
+        }
+
+        static void SaveConfig(string commandparams)
+        {
+            string[] s = commandparams.Split(' ');
+            if (s.Length > 1)
+            {
+                StatusResponse sr = requests.SaveConfig(s[1]);
+                if (sr)
+                {
+                    Console.WriteLine("current config was copied");
+                }
+                else
+                {
+                    Console.WriteLine("Config was not able to be copied: " + sr.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please enter a valid name");
             }
         }
 

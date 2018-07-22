@@ -13,7 +13,7 @@ namespace RouterVpnManagerClientLibrary
     public class RequestProcessor
     {
 
-        public delegate bool Callback(JObject message);
+        public delegate void Callback(JObject message);
 
 
         private TcpClient client_;
