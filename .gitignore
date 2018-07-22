@@ -11,12 +11,5 @@
 /RouterVpnManagerClientTest/bin/Debug
 /packages/Newtonsoft.Json.11.0.2
 /RouterVpnManagerClientLibrary/bin/Debug
-/RouterVpnManager/auth.txt
-/RouterVpnManager/germany
-/RouterVpnManager/my_expressvpn_canada_-_toronto_udp.ovpn
-/RouterVpnManager/my_expressvpn_germany_-_darmstadt_udp.ovpn
-/RouterVpnManager/my_expressvpn_usa_-_washington_dc_udp.ovpn
-/RouterVpnManager/toronto
-/RouterVpnManager/washington
 /RouterVpnManager/template/*
 /RouterVpnManager/configurations/*
