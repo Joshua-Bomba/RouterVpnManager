@@ -20,7 +20,7 @@ import Queue
 
 CONFIG_FOLDER_NAME = "configurations"
 OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
-VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config openvpn.conf"
+VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config " + OPENVPNCL_PATH +"/openvpn.conf"
 
 #raw_input("Press Any Key Once The Debugger is hooked on")
 
