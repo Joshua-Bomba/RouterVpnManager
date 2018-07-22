@@ -452,7 +452,7 @@ class client(threading.Thread):
                 if(data == ''):
                     break
                 else:
-                    log.writeLine('client sent: ', data)
+                    log.writeLine('client sent: '+ data)
                     if (not self.__request.processInput(data,self.sock,self.__connection)):
                         self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
         except Exception,e: 
