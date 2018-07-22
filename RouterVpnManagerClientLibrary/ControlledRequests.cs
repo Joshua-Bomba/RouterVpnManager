@@ -43,7 +43,6 @@ namespace RouterVpnManagerClientLibrary
                 ConnectToVpnResponse ctvr = response.ToObject<ConnectToVpnResponse>();
                 ctvr.SetData();
                 listener_?.ConnectToVpn(ctvr);
-                return true;
             });
 
             connection_.AddBroadcastCallbackHandler("disconnectfrompvpn", (JObject response) =>
@@ -52,7 +51,13 @@ namespace RouterVpnManagerClientLibrary
                 DisconnectFromVpnResponse dfvr = response.ToObject<DisconnectFromVpnResponse>();
                 dfvr.SetData();
                 listener_?.DisconnectFromVpn(dfvr);
-                return true;
+            });
+
+            connection_.AddBroadcastCallbackHandler("broadcastlog", (JObject response) =>
+            {
+                BroadcastMessage bm = response.ToObject<BroadcastMessage>();
+                bm.SetData();
+                RouterVpnManagerLogLibrary.LogBroadcastMessage(bm.Message);
             });
         }
 
@@ -64,7 +69,6 @@ namespace RouterVpnManagerClientLibrary
             connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
-                return true;
             })).Wait();
             return array;
         }
@@ -97,11 +101,87 @@ namespace RouterVpnManagerClientLibrary
                 catch (Exception e)
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
-                    return false;
                 }
-                return true;
             }).Wait();
             return currentConnection;
+        }
+
+        public StatusResponse SaveConfig(string name)
+        {
+            dynamic d = new ExpandoObject();
+            d.name = name;
+            JObject obj = FormatMessage("request", "copycurrentconfig", d);
+            StatusResponse status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                try
+                {
+                    StatusResponse rb = response.ToObject<StatusResponse>();
+                    rb.SetData();
+                    status = rb;
+                }
+                catch (Exception e)
+                {
+                    RouterVpnManagerLogLibrary.Log(e.ToString());
+                    status = new StatusResponse {Status = false, Message = e.ToString()};
+                }
+
+            }).Wait();
+
+            return status;
+        }
+
+        public StatusResponse DeleteConfig(string name)
+        {
+            dynamic d = new ExpandoObject();
+            d.name = name;
+            JObject obj = FormatMessage("request", "deleteconfig",d);
+            StatusResponse status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                try
+                {
+                    StatusResponse rb = response.ToObject<StatusResponse>();
+                    rb.SetData();
+                    status = rb;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    status = new StatusResponse { Status = false, Message = e.ToString() };
+                }
+
+            }).Wait();
+
+            return status;
+        }
+
+        public StatusResponse ClearConfigFolder()
+        {
+            JObject obj = FormatMessage("request", "clearcurrentconfig");
+            StatusResponse status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                StatusResponse rb = response.ToObject<StatusResponse>();
+                rb.SetData();
+                status = rb;
+            }).Wait();
+            return status;
+        }
+
+        public StatusResponse CopyConfig(string config)
+        {
+            dynamic d = new ExpandoObject();
+            d.name = config;
+            JObject obj = FormatMessage("request", "copyconfig",d);
+            StatusResponse status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                StatusResponse rb = response.ToObject<StatusResponse>();
+                rb.SetData();
+                status = rb;
+            }).Wait();
+            return status;
         }
     }
 }
