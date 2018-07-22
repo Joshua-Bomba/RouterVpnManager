@@ -224,7 +224,7 @@ class vpnFileManager:
         return name in self.getAvaliableConnections()
     def folderValid(self,path):
         try:
-            return os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
+            return os.path.isdir(path) and os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
         except Exception, e:
             log.writeLine(e)
             return False
