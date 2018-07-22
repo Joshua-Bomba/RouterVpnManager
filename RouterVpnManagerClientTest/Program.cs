@@ -48,7 +48,7 @@ namespace RouterVpnManagerClientTest
                         switch (input.Split(' ').First())
                         {
                             case "help":
-                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect copyconfig");
+                                Console.WriteLine("Commands: help, exit, status, avaliablevpns, connect [index], disconnect copyconfig deleteconfig");
                                 break;
                             case "exit":
                                 Console.WriteLine("Exiting");

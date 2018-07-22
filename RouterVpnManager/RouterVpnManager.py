@@ -376,6 +376,7 @@ class processRequest:
             elif self.__jsonObject["request"] == "deleteconfig":
                 data = {}
                 data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.deleteConfig(self.__jsonObject["data"][u'name'])
+                self.sendResponse("response","deleteconfig",data)
                 return True
             else:
                 self.__exception = "The request does not exist"
