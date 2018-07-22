@@ -284,8 +284,8 @@ class vpnFileManager:
     def applyPermissions(self):
         if self.folderValid(OPENVPNCL_PATH):
             try:
-                chmod1 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-up.sh")
-                chmod2 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-down.sh")
+                chmod1 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-up.sh", None)
+                chmod2 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-down.sh", None)
                 chmod1.wait()
                 chmod2.wait()
             except:
