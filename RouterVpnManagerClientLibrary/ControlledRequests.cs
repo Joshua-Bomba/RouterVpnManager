@@ -52,6 +52,13 @@ namespace RouterVpnManagerClientLibrary
                 dfvr.SetData();
                 listener_?.DisconnectFromVpn(dfvr);
             });
+
+            connection_.AddBroadcastCallbackHandler("message", (JObject response) =>
+            {
+                BroadcastMessage bm = response.ToObject<BroadcastMessage>();
+                bm.SetData();
+                listener_?.BroadcastRecieved(bm);
+            });
         }
 
 

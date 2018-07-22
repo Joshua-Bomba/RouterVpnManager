@@ -35,6 +35,7 @@ class logger(threading.Thread):
         self.start()#whoops forgot to start it https://youtu.be/KIrCOfDbL_E?t=1m44s
     def setConnections(self,connections):
         self.__connections = connections
+        self.writeLine("Broadcast Logging has now began")
     def write(self,outputString):
         if not isinstance(outputString, basestring):
             outputString = str(outputString)

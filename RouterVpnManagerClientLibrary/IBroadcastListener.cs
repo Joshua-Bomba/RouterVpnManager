@@ -13,5 +13,7 @@ namespace RouterVpnManagerClientLibrary
         void ConnectToVpn(ConnectToVpnResponse response);
 
         void DisconnectFromVpn(DisconnectFromVpnResponse response);
+
+        void BroadcastRecieved(BroadcastMessage message);
     }
 }

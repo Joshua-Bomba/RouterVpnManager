@@ -151,6 +151,11 @@ namespace RouterVpnManagerClientTest
                     Console.WriteLine("\nVpn was unable to disconnect: " + response.Status + " Reason: " + response.Reason);
                 }
             }
+
+            public void BroadcastRecieved(BroadcastMessage message)
+            {
+                Console.Write(message);
+            }
         }
 
         static void ConnectToVpn(string connectionNumber)
