@@ -14,6 +14,55 @@ import subprocess
 import socket
 import threading
 import time
+import shutil
+import Queue
+
+
+CONFIG_FOLDER_NAME = "configurations"
+OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
+VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config " + OPENVPNCL_PATH +"/openvpn.conf"
+
+#raw_input("Press Any Key Once The Debugger is hooked on")
+
+class logger(threading.Thread):
+    __connections = None
+    __output = None
+    #__outputQueue = None
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.__output = True
+        #self.__outputQueue = Queue.Queue()
+        #self.start()#whoops forgot to start it https://youtu.be/KIrCOfDbL_E?t=1m44s
+    def setConnections(self,connections):
+        self.__connections = connections
+        #self.writeLine("Broadcast Logging has now began")
+    def write(self,outputString):
+        if not isinstance(outputString, basestring):
+            outputString = str(outputString)
+        #self.__outputQueue.put(outputString)
+        sys.stdout.write(outputString)
+    def writeLine(self,outputString):
+        if not isinstance(outputString, basestring):
+            outputString = str(outputString)
+        outputString += "\n"
+        self.write(outputString)
+    def run(self):
+        #try:
+        #    while self.__output:
+        #        str = self.__outputQueue.get()
+        #        sys.stdout.write(str)
+        #        if self.__connections is not None:
+        #            m = {}
+        #            m["message"] = str
+        #            self.__connections.sendBroadcast("broadcast","broadcastlog",m)
+        #except Exception, e:
+        #    print "Queue Exception Exiting log" + str(e)#probably not a good idea to broadcast this exception out
+        pass
+    def stop(self):
+        self.__output = False
+
+log = logger()
+
 
 
 #This class will process any output from a subprocessHandler
@@ -38,10 +87,10 @@ class subprocessOutputHandler(threading.Thread):
                 else:
                     break
         except Exception,e: 
-            print str(e)
+            log.writeLine(str(e))
     def output(self,str):
         if self.__PRINTSUBPROCESS:
-            sys.stdout.write(str)
+            log.write(str)
         if self.__outputCallback is not None:
             self.__outputCallback(self,str)
 
@@ -66,7 +115,7 @@ class subprocessHandler:
             self.__output.addHandler(self.__handler)
             self.__output.start()
         except:
-            print "an issue has occured"
+            log.writeLine("an issue has occured")
     def kill(self):
         self.__lock.acquire()
         try:
@@ -99,6 +148,8 @@ class subprocessHandler:
                 return False
         finally:
             self.__lock.release()
+    def wait(self):
+        self.__handler.wait()
 
 # this class is incharge on managing subprocess and creating new ones
 class subprocessManager(threading.Thread):
@@ -145,29 +196,121 @@ class subprocessManager(threading.Thread):
                     self.__processLock.release()
                 time.sleep(.1)
         except Exception,e: 
-            print str(e)
+            log.writeLine( str(e))
+
+
+class vpnFileManager:
+    __path = None
+    __processManager = None
+    def __init__(self,path,processManager):
+        try:
+            if os.path.isdir(path):
+                configPath = path + "/" + CONFIG_FOLDER_NAME
+                if not os.path.isdir(configPath):
+                    os.makedirs(configPath)
+                self.__path = configPath
+            self.__processManager = processManager
+        except Exception, e:
+            log.writeLine(e)
+    def getAvaliableConnections(self):
+        vpnConnections = []
+        try:
+
+            for file in os.listdir(self.__path):
+                if os.path.isdir(os.path.join(self.__path,file)):
+                    if self.folderValid(os.path.join(self.__path,file)):
+                        vpnConnections.append(file)
+        except Exception, e:
+           log.writeLine(e)
+        finally:
+            return vpnConnections
+    def configExists(self,name):
+        return name in self.getAvaliableConnections()
+    def folderValid(self,path):
+        try:
+            return os.path.isdir(path) and os.path.isfile(path + "/openvpn.conf") and os.path.isfile(path + "/route-up.sh") and os.path.isfile(path + "/route-down.sh")
+        except Exception, e:
+            log.writeLine(e)
+            return False
+    def pathValid(self):
+        return self.__path != None
+    # copys the current openvpncl config to a new folder under the configuration folder
+    def copyCurrentConfig(self,name):
+        try:
+            if not os.path.isdir(CONFIG_FOLDER_NAME + "/" + name):
+                if self.folderValid(OPENVPNCL_PATH):
+                    os.makedirs(CONFIG_FOLDER_NAME + "/" + name)
+                    for f in os.listdir(OPENVPNCL_PATH):
+                        shutil.copyfile(OPENVPNCL_PATH + "/" + f,CONFIG_FOLDER_NAME + "/" + name + "/" + f)
+                    return ""
+                else:
+                    return "No configuration found"
+            else:
+                return "Configuration already exists"
+        except Exception, e:
+            log.writeLine(e)
+            return "unhandle exception"
+
+    # this will clear the current openvpncl 
+    def clearCurrentConfig(self):
+        try:
+            if os.path.isdir(OPENVPNCL_PATH):
+                shutil.rmtree(OPENVPNCL_PATH)
+            else:
+                return "no config to clear"
+        except Exception, e:
+            log.writeLine(e)
+            return "unhandle exception"
+    # this will copy the current config file to the openvpncl folder
+    def copyConfig(self,folderName):
+        try:
+            if not os.path.isdir(OPENVPNCL_PATH):
+                os.makedirs(OPENVPNCL_PATH)
+            for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
+                shutil.copyfile(CONFIG_FOLDER_NAME + "/" + folderName + "/" + f,OPENVPNCL_PATH + "/" + f)
+            return self.applyPermissions()
+        except Exception, e:
+            log.writeLine(e)
+            return "unhandle exception"
+    def deleteConfig(self,folderName):
+        try:
+            if folderName != "" and os.path.isdir(CONFIG_FOLDER_NAME + "/" + folderName):
+                shutil.rmtree(CONFIG_FOLDER_NAME + "/" + folderName)      
+            else:
+                return "could not find config"
+        except Exception, e:
+            log.writeLine(e)
+            return "unhandle exception"
+    def applyPermissions(self):
+        if self.folderValid(OPENVPNCL_PATH):
+            try:
+                chmod1 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-up.sh", None)
+                chmod2 = self.__processManager.startProcess("chmod +x " + OPENVPNCL_PATH + "/route-down.sh", None)
+                chmod1.wait()
+                chmod2.wait()
+            except:
+                return "There was an issue applying the required permissions to the config"
+        else:
+            return "There was an issue with the config"
+
 
 class routerVpnManager:
     __processManager = None
     __connectionStatus = None
     __currentConnection = None
+    __vpnFileManager = None
     __connections = None#For Handling unexpected Disconnection of the Process
     __lock = None
-    VPN_CONNECTION_CODE = "openvpn --route-up /tmp/openvpncl/route-up.sh --route-pre-down /tmp/openvpncl/route-down.sh --config "
     def __init__(self,connections):
         self.__connections = connections
         self.__lock = threading.Lock()
         self.__processManager = subprocessManager()#When this is called an the code wants to exit ensure that this object is cleared up and the thread is stoped
+        self.__vpnFileManager = vpnFileManager(os.path.dirname(os.path.realpath(__file__)),self.__processManager)
     def exit(self):
         if self.__processManager is not None:
             self.__processManager.stop()
-    def getOvpnFiles(self):#Async
-        path = os.path.dirname(os.path.realpath(__file__))
-        vpnConnections = []
-        for file in os.listdir(path):
-            if file.endswith(".ovpn"):
-                vpnConnections.append(file)
-        return vpnConnections
+    def getConnectionNames(self):#Async
+        return self.__vpnFileManager.getAvaliableConnections()
     def isRunning(self):
         self.__lock.acquire()
         try:
@@ -180,14 +323,17 @@ class routerVpnManager:
         else:
             return False
     def connectToVpn(self,str):
-        files = self.getOvpnFiles()
+        files = self.getConnectionNames()
         self.__lock.acquire()
         try:
             if str in files:
                 if not self.isRunningInternal():
-                    self.__connectionStatus = self.__processManager.startProcess(self.VPN_CONNECTION_CODE + str,self.__connections)
-                    self.__currentConnection = str
-                    return ""
+                    if self.__vpnFileManager.configExists(str):
+                        self.__vpnFileManager.clearCurrentConfig()
+                        self.__vpnFileManager.copyConfig(str)
+                        self.__connectionStatus = self.__processManager.startProcess(VPN_CONNECTION_CODE,self.__connections)
+                        self.__currentConnection = str
+                        return ""
                 else:
                     return "could not connect since it's already connect to a vpn"#TODO: could change this to a disconnect and reconnect sort of thing
             else:
@@ -250,7 +396,7 @@ class processRequest:
             self.__jsonObject = data
         except Exception, e:
             self.__exception = e.message
-            print(e.message)
+            log.writeLine(e.message)
     def sendResponse(self,type,request,data):
         response = {}
         response["type"] = type
@@ -265,7 +411,7 @@ class processRequest:
                 self.sendResponse("response","connection","Connection Established")
                 return True
             elif self.__jsonObject["request"] == "listovpn":
-                self.sendResponse("response","listovpn",self.__vpnManager.getOvpnFiles())
+                self.sendResponse("response","listovpn",self.__vpnManager.getConnectionNames())
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
@@ -285,6 +431,26 @@ class processRequest:
                 data["running"] = self.__vpnManager.isRunning()
                 data["connectedTo"] = self.__vpnManager.getVpnConnection()
                 self.sendResponse("response","checkconnectionstatus",data)
+                return True
+            elif self.__jsonObject["request"] == "copycurrentconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.copyCurrentConfig(self.__jsonObject["data"][u'name'])
+                self.sendResponse("response","copycurrentconfig",data)
+                return True
+            elif self.__jsonObject["request"] == "deleteconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.deleteConfig(self.__jsonObject["data"][u'name'])
+                self.sendResponse("response","deleteconfig",data)
+                return True
+            elif self.__jsonObject["request"] == "clearcurrentconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.clearCurrentConfig()
+                self.sendResponse("response","clearcurrentconfig",data)
+                return True
+            elif self.__jsonObject["request"] == "copyconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.copyConfig(self.__jsonObject["data"][u'name'])
+                self.sendResponse("response","copyconfig",data)
                 return True
             else:
                 self.__exception = "The request does not exist"
@@ -318,15 +484,15 @@ class client(threading.Thread):
                 if(data == ''):
                     break
                 else:
-                    print('client sent: ', data)
+                    log.writeLine('client sent: '+ data)
                     if (not self.__request.processInput(data,self.sock,self.__connection)):
                         self.sock.send('Messsage recived, could not process request: ', self.__request.getException())
         except Exception,e: 
-            print str(e)
+            log.writeLine( str(e))
         finally:
             self.disconnect()
     def disconnect(self):
-        print "client disconnected"
+        log.writeLine( "client disconnected")
         self.__connection.disconnect(self)
 
 
@@ -344,6 +510,7 @@ class connections:
         self.__port = port
         self.__clientsMapLock = threading.Lock()
         self.__vpnManager = routerVpnManager(self)
+        log.setConnections(self)
         self.bind()
     def exit(self):
         for c in self.__clientsMap:
@@ -352,20 +519,20 @@ class connections:
         if self.__serversocket is not None:
             self.__serversocket.close();
     def bind(self):
-        print 'Port Binded'
+        log.writeLine('Port Binded')
         self.__serversocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.__serversocket.bind((self.__host,self.__port))
     def listen(self):
-        print'server started and listening'
+        log.writeLine('server started and listening')
         self.__serversocket.listen(5)
         try:
             while 1:
                 clientsocket, address = self.__serversocket.accept()
                 self.connect(clientsocket,address)
         except KeyboardInterrupt:
-            print "keyboard interuption"
+            log.writeLine("keyboard interuption")
         except Exception,e:
-            print str(e)
+            log.writeLine(str(e))
 
     def vpnUnexpectedDisconnectionBroadcast(self):
         data = {}
@@ -383,12 +550,12 @@ class connections:
                 for k in self.__clientsMap:
                     self.__clientsMap[k]._client__request.handleBroadcast(response)
             except Exception,e: 
-                print str(e)
+                log.writeLine(str(e))
             finally:
                 self.__clientsMapLock.release()
 
     def connect(self,clientsocket,address):
-        print("connecting to  %s:%d" % (address[0],address[1]))
+        log.writeLine("connecting to  %s:%d" % (address[0],address[1]))
         self.__clientsMapLock.acquire()
         try:
             self.__clientsMap[address[1]] = client(clientsocket,address,self,self.__vpnManager)
@@ -406,20 +573,26 @@ def start():
     if len(sys.argv) >= 2:
         host = sys.argv[1]
         port = int(sys.argv[2])
-        c = connections(host,port)
-        c.listen();
-        c.exit()
+        c = None
+        try:
+            c = connections(host,port)
+            c.listen();
+        except Exception,e:
+            log.writeLine(e)
+        finally:
+            if c is not None:
+                c.exit()
+            log.stop()
         #Add some sort of closing code here or whatever to manage a crash/shutdown
     else:
-        print("This script requires a host address and port")
+        log.writeLine("This script requires a host address and port")
 
 def signal_term_handler(signal, frame):
-    print 'got SIGTERM'
+    log.writeLine('got SIGTERM')
     sys.exit(0)
  
 signal.signal(signal.SIGTERM, signal_term_handler)
 
-#raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 

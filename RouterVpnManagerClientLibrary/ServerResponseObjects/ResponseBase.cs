@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 namespace RouterVpnManagerClientLibrary.ServerResponseObjects
 {
     [JsonObject]
-    public abstract class ResponseBase
+    public class ResponseBase
     {
         public string Request { get; set; }
 
@@ -19,6 +19,6 @@ namespace RouterVpnManagerClientLibrary.ServerResponseObjects
 
         public JObject Data { get; set; }
 
-        public abstract void SetData();
+        public virtual void SetData() { }
     }
 }

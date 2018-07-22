@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,10 +56,12 @@
     <Compile Include="RouterVpnManagerConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouterVpnManagerLogLibrary.cs" />
+    <Compile Include="ServerResponseObjects\BroadcastMessage.cs" />
     <Compile Include="ServerResponseObjects\ConnectionStatusResponse.cs" />
     <Compile Include="ServerResponseObjects\ConnectToVpnResponse.cs" />
     <Compile Include="ServerResponseObjects\DisconnectFromVpnResponse.cs" />
     <Compile Include="ServerResponseObjects\ResponseBase.cs" />
+    <Compile Include="ServerResponseObjects\StatusResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
