@@ -22,7 +22,7 @@ CONFIG_FOLDER_NAME = "configurations"
 OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
 VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config "
 
-
+raw_input("Press Any Key Once The Debugger is hooked on")
 
 class logger(threading.Thread):
     __connections = None
@@ -554,7 +554,6 @@ def signal_term_handler(signal, frame):
  
 signal.signal(signal.SIGTERM, signal_term_handler)
 
-#raw_input("Press Any Key Once The Debugger is hooked on")
 
 
 
