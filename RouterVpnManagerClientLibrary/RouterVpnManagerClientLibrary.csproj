@@ -61,6 +61,7 @@
     <Compile Include="ServerResponseObjects\ConnectToVpnResponse.cs" />
     <Compile Include="ServerResponseObjects\DisconnectFromVpnResponse.cs" />
     <Compile Include="ServerResponseObjects\ResponseBase.cs" />
+    <Compile Include="ServerResponseObjects\StatusResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

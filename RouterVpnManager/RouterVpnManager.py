@@ -250,15 +250,18 @@ class vpnFileManager:
     # this will clear the current openvpncl 
     def clearCurrentConfig(self):
         try:
-            for f in os.listdir(OPENVPNCL_PATH):
-                os.remove(OPENVPNCL_PATH + "/" + f)
-                return ""
+            if os.path.isdir(OPENVPNCL_PATH):
+                shutil.rmtree(OPENVPNCL_PATH)
+            else:
+                return "no config to clear"
         except Exception, e:
             log.writeLine(e)
             return "unhandle exception"
     # this will copy the current config file to the openvpncl folder
     def copyConfig(self,folderName):
         try:
+            if not os.path.isdir(OPENVPNCL_PATH):
+                os.makedirs(OPENVPNCL_PATH)
             for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
                 shutil.copyfile(CONFIG_FOLDER_NAME + "/" + folderName + "/" + f,OPENVPNCL_PATH + "/" + f)
                 return ""
@@ -422,6 +425,15 @@ class processRequest:
                 data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.deleteConfig(self.__jsonObject["data"][u'name'])
                 self.sendResponse("response","deleteconfig",data)
                 return True
+            elif self.__jsonObject["request"] == "clearcurrentconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.clearCurrentConfig()
+                self.sendResponse("response","clearcurrentconfig",data)
+                return True
+            elif self.__jsonObject["request"] == "copyconfig":
+                data = {}
+                data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.copyConfig(self.__jsonObject["data"][u'name'])
+                self.sendResponse("response","copyconfig",data)
             else:
                 self.__exception = "The request does not exist"
         else:

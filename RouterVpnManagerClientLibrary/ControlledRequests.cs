@@ -106,23 +106,24 @@ namespace RouterVpnManagerClientLibrary
             return currentConnection;
         }
 
-        public bool CopyCurrentConfig(string name)
+        public StatusResponse CopyCurrentConfig(string name)
         {
             dynamic d = new ExpandoObject();
             d.name = name;
             JObject obj = FormatMessage("request", "copycurrentconfig", d);
-            bool status = false;
+            StatusResponse status = false;
             connection_.SendJson(obj, (JObject response) =>
             {
                 try
                 {
-                    ResponseBase rb = response.ToObject<ResponseBase>();
-                    status = string.IsNullOrWhiteSpace(rb.Data["status"].ToString());
+                    StatusResponse rb = response.ToObject<StatusResponse>();
+                    rb.SetData();
+                    status = rb;
                 }
                 catch (Exception e)
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
-                    status = false;
+                    status = new StatusResponse {Status = false, Message = e.ToString()};
                 }
 
             }).Wait();
@@ -130,27 +131,56 @@ namespace RouterVpnManagerClientLibrary
             return status;
         }
 
-        public bool DeleteConfig(string name)
+        public StatusResponse DeleteConfig(string name)
         {
             dynamic d = new ExpandoObject();
             d.name = name;
             JObject obj = FormatMessage("request", "deleteconfig",d);
-            bool status = false;
+            StatusResponse status = false;
             connection_.SendJson(obj, (JObject response) =>
             {
                 try
                 {
-                    ResponseBase rb = response.ToObject<ResponseBase>();
-                    status = string.IsNullOrWhiteSpace(rb.Data["status"].ToString());
+                    StatusResponse rb = response.ToObject<StatusResponse>();
+                    rb.SetData();
+                    status = rb;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    status = false;
+                    status = new StatusResponse { Status = false, Message = e.ToString() };
                 }
 
             }).Wait();
 
+            return status;
+        }
+
+        public StatusResponse ClearConfigFolder()
+        {
+            JObject obj = FormatMessage("request", "clearcurrentconfig");
+            StatusResponse status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                StatusResponse rb = response.ToObject<StatusResponse>();
+                rb.SetData();
+                status = rb;
+            }).Wait();
+            return status;
+        }
+
+        public StatusResponse CopyConfig(string config)
+        {
+            dynamic d = new ExpandoObject();
+            d.name = config;
+            JObject obj = FormatMessage("request", "copyconfig",d);
+            StatusResponse status = false;
+            connection_.SendJson(obj, (JObject response) =>
+            {
+                StatusResponse rb = response.ToObject<StatusResponse>();
+                rb.SetData();
+                status = rb;
+            }).Wait();
             return status;
         }
     }
