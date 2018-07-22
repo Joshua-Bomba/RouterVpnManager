@@ -106,7 +106,7 @@ namespace RouterVpnManagerClientLibrary
             return currentConnection;
         }
 
-        public StatusResponse CopyCurrentConfig(string name)
+        public StatusResponse SaveConfig(string name)
         {
             dynamic d = new ExpandoObject();
             d.name = name;

@@ -264,7 +264,7 @@ class vpnFileManager:
                 os.makedirs(OPENVPNCL_PATH)
             for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
                 shutil.copyfile(CONFIG_FOLDER_NAME + "/" + folderName + "/" + f,OPENVPNCL_PATH + "/" + f)
-                return ""
+            return ""
         except Exception, e:
             log.writeLine(e)
             return "unhandle exception"
