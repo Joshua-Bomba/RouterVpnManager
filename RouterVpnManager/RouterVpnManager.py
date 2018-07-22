@@ -27,35 +27,37 @@ VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --r
 class logger(threading.Thread):
     __connections = None
     __output = None
-    __outputQueue = None
+    #__outputQueue = None
     def __init__(self):
         threading.Thread.__init__(self)
         self.__output = True
-        self.__outputQueue = Queue.Queue()
-        self.start()#whoops forgot to start it https://youtu.be/KIrCOfDbL_E?t=1m44s
+        #self.__outputQueue = Queue.Queue()
+        #self.start()#whoops forgot to start it https://youtu.be/KIrCOfDbL_E?t=1m44s
     def setConnections(self,connections):
         self.__connections = connections
-        self.writeLine("Broadcast Logging has now began")
+        #self.writeLine("Broadcast Logging has now began")
     def write(self,outputString):
         if not isinstance(outputString, basestring):
             outputString = str(outputString)
-        self.__outputQueue.put(outputString)
+        #self.__outputQueue.put(outputString)
+        sys.stdout.write(outputString)
     def writeLine(self,outputString):
         if not isinstance(outputString, basestring):
             outputString = str(outputString)
         outputString += "\n"
-        self.write(outputString)
+        #self.write(outputString)
     def run(self):
-        try:
-            while self.__output:
-                str = self.__outputQueue.get()
-                sys.stdout.write(str)
-                if self.__connections is not None:
-                    m = {}
-                    m["message"] = str
-                    self.__connections.sendBroadcast("broadcast","broadcastlog",m)
-        except Exception, e:
-            log.writeLine("Queue Exception Exiting log" + str(e))
+        #try:
+        #    while self.__output:
+        #        str = self.__outputQueue.get()
+        #        sys.stdout.write(str)
+        #        if self.__connections is not None:
+        #            m = {}
+        #            m["message"] = str
+        #            self.__connections.sendBroadcast("broadcast","broadcastlog",m)
+        #except Exception, e:
+        #    print "Queue Exception Exiting log" + str(e)#probably not a good idea to broadcast this exception out
+        pass
     def stop(self):
         self.__output = False
 
