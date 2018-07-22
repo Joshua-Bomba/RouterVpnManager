@@ -242,7 +242,7 @@ class vpnFileManager:
                     os.makedirs(CONFIG_FOLDER_NAME + "/" + name)
                     for f in os.listdir(OPENVPNCL_PATH):
                         shutil.copyfile(OPENVPNCL_PATH + "/" + f,CONFIG_FOLDER_NAME + "/" + name + "/" + f)
-                    return self.applyPermissions()
+                    return ""
                 else:
                     return "No configuration found"
             else:
@@ -268,7 +268,7 @@ class vpnFileManager:
                 os.makedirs(OPENVPNCL_PATH)
             for f in os.listdir(CONFIG_FOLDER_NAME + "/" + folderName):
                 shutil.copyfile(CONFIG_FOLDER_NAME + "/" + folderName + "/" + f,OPENVPNCL_PATH + "/" + f)
-            return ""
+            return self.applyPermissions()
         except Exception, e:
             log.writeLine(e)
             return "unhandle exception"
@@ -451,6 +451,7 @@ class processRequest:
                 data = {}
                 data["status"] = self.__vpnManager._routerVpnManager__vpnFileManager.copyConfig(self.__jsonObject["data"][u'name'])
                 self.sendResponse("response","copyconfig",data)
+                return True
             else:
                 self.__exception = "The request does not exist"
         else:
