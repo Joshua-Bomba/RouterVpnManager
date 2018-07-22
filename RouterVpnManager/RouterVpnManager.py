@@ -45,7 +45,7 @@ class logger(threading.Thread):
         if not isinstance(outputString, basestring):
             outputString = str(outputString)
         outputString += "\n"
-        #self.write(outputString)
+        self.write(outputString)
     def run(self):
         #try:
         #    while self.__output:
