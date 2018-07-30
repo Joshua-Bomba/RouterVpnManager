@@ -1,24 +1,28 @@
 ﻿using Foundation;
 using System;
-using UIKit;
 using RouterVpnManagerClient.vpnsViewCollection;
+using UIKit;
 
 namespace RouterVpnManagerClient
 {
-    public partial class VpnsCollectionViewController : UICollectionViewController
+    public partial class VpnsCollectionViewController : UICollectionView
     {
-        public VpnsCollectionViewController (IntPtr handle) : base (handle)
+        public static AppDelegate App
         {
+            get { return (AppDelegate)UIApplication.SharedApplication.Delegate; }
         }
 
-        public VpnsCollectionView Collection => (CollectionView as VpnsCollectionView);
 
-        public override void AwakeFromNib()
+        public VpnsCollectionViewController(IntPtr handle) : base(handle)
         {
-            base.AwakeFromNib();
+            RegisterClassForCell(typeof(VpnsCollectionViewCell), VpnsCollectionViewModel.vpnCellId);
+            DataSource = new VpnsCollectionViewModel(this);
+            Delegate = new VpnsCollectionDelegate();
 
-            //Adds reference to the controller in the child element (The VpnsCollectionView)
-            Collection.ParentController = this;
         }
+
+        public new VpnsCollectionViewModel Source => DataSource as VpnsCollectionViewModel;
+
+        public VpnsCollectionViewPageController ParentController { get; set; }
     }
 }

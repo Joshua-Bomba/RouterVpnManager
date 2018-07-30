@@ -11,18 +11,27 @@ using UIKit;
 
 namespace RouterVpnManagerClient
 {
-    [Register ("VpnsViewCollection")]
+    [Register ("VpnsCollectionViewController")]
     partial class VpnsCollectionViewController
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UICollectionView vpnSelection { get; set; }
+        RouterVpnManagerClient.VpnsCollectionViewPageController dataSource { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        RouterVpnManagerClient.VpnsCollectionViewPageController @delegate { get; set; }
 
         void ReleaseDesignerOutlets ()
         {
-            if (vpnSelection != null) {
-                vpnSelection.Dispose ();
-                vpnSelection = null;
+            if (dataSource != null) {
+                dataSource.Dispose ();
+                dataSource = null;
+            }
+
+            if (@delegate != null) {
+                @delegate.Dispose ();
+                @delegate = null;
             }
         }
     }

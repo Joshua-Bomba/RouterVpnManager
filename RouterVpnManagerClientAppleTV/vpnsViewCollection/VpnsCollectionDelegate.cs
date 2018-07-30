@@ -26,8 +26,8 @@ namespace RouterVpnManagerClient.vpnsViewCollection
             }
             else
             {
-                var view = collectionView as VpnsCollectionView;
-                return view.Source.Vpns[indexPath.Row].Selectable;
+                var controller = collectionView as VpnsCollectionViewController;
+                return controller.Source.Vpns[indexPath.Row].Selectable;
             }
         }
 

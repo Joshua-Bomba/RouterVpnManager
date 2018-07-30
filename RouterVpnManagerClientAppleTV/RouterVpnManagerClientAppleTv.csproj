@@ -203,9 +203,12 @@
     <Compile Include="VpnsCollectionViewController.designer.cs">
       <DependentUpon>VpnsCollectionViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="VpnsCollectionViewPageController.cs" />
+    <Compile Include="VpnsCollectionViewPageController.designer.cs">
+      <DependentUpon>VpnsCollectionViewPageController.cs</DependentUpon>
+    </Compile>
     <Compile Include="vpnsViewCollection\VpnsCollectionDelegate.cs" />
     <Compile Include="vpnsViewCollection\VpnsCollectionModel.cs" />
-    <Compile Include="vpnsViewCollection\VpnsCollectionView.cs" />
     <Compile Include="vpnsViewCollection\VpnsCollectionViewCell.cs" />
     <Compile Include="vpnsViewCollection\VpnsCollectionViewModel.cs" />
   </ItemGroup>
