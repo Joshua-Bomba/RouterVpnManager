@@ -137,9 +137,55 @@
     <ImageAsset Include="Resources\Media.xcassets\App Icon &amp; Top Shelf Image.brandassets\Top Shelf Image.imageset\Contents.json">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Back.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Back.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Front.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Front.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Middle.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon - App Store.imagestack\Middle.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Back.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Back.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Front.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Front.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Middle.imagestacklayer\Content.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\App Icon.imagestack\Middle.imagestacklayer\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="VpnsCollectionView.xcassets\App Icon and Top Shelf Image.brandassets\Top Shelf Image.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="wrapThisGarbage\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
@@ -153,6 +199,15 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="VpnsCollectionViewController.cs" />
+    <Compile Include="VpnsCollectionViewController.designer.cs">
+      <DependentUpon>VpnsCollectionViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vpnsViewCollection\VpnsCollectionDelegate.cs" />
+    <Compile Include="vpnsViewCollection\VpnsCollectionModel.cs" />
+    <Compile Include="vpnsViewCollection\VpnsCollectionView.cs" />
+    <Compile Include="vpnsViewCollection\VpnsCollectionViewCell.cs" />
+    <Compile Include="vpnsViewCollection\VpnsCollectionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
