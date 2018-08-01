@@ -1,6 +1,5 @@
 ﻿using Foundation;
 using System;
-using RouterVpnManagerClient.vpnsViewCollection;
 using UIKit;
 
 namespace RouterVpnManagerClient

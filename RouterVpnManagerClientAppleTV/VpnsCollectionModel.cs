@@ -5,7 +5,7 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
-namespace RouterVpnManagerClient.vpnsViewCollection
+namespace RouterVpnManagerClient
 {
     public class VpnsCollectionModel
     {

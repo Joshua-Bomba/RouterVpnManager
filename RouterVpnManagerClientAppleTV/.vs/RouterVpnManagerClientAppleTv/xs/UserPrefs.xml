@@ -1,0 +1,10 @@
+﻿<Properties StartupConfiguration="{56646EFE-00B6-4868-AAC7-461BB4DCB338}|Default">
+  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.RouterVpnManagerClientAppleTv PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.4D9C0B0C-5781-48B7-8608-0E0B105DCD19" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
