@@ -40,67 +40,6 @@
             </objects>
             <point key="canvasLocation" x="2018" y="2"/>
         </scene>
-        <scene sceneID="2731">
-            <objects>
-                <tableViewController id="2732" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="40" sectionFooterHeight="40" id="2734">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="2748">
-                                <rect key="frame" x="0.0" y="40" width="1700" height="66"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2748" id="2749">
-                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="66"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="397" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                            <rect key="frame" x="0.0" y="0.0" width="195" height="86"/>
-                                            <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                            <state key="normal" title="Button"/>
-                                            <connections>
-                                                <segue id="937" destination="183" kind="push"/>
-                                                <action selector="UIButton397_PrimaryActionTriggered:" destination="BYZ-38-t0r" id="939" eventType="primaryActionTriggered"/>
-                                            </connections>
-                                            <accessibility key="accessibilityConfiguration" label="Vpns"/>
-                                        </button>
-                                    </subviews>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="btnViewVpns" destination="397" id="name-outlet-397"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="2737">
-                                <rect key="frame" x="0.0" y="120" width="1700" height="66"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2737" id="2738">
-                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="66"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="940" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                            <rect key="frame" x="0.0" y="0.0" width="195" height="86"/>
-                                            <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                            <state key="normal" title="Button"/>
-                                            <accessibility key="accessibilityConfiguration" label="Settings"/>
-                                        </button>
-                                    </subviews>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="btnSettings" destination="940" id="name-outlet-940"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="2732" id="2735"/>
-                            <outlet property="delegate" destination="2732" id="2736"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="2733"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2739" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="278" y="-1352"/>
-        </scene>
         <scene sceneID="2740">
             <objects>
                 <navigationController id="2741" sceneMemberID="viewController">
@@ -109,12 +48,55 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="2732" kind="relationship" relationship="rootViewController" id="2742"/>
+                        <segue id="3834" destination="3352" kind="relationship" relationship="rootViewController"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2744" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1822" y="-1352"/>
+            <point key="canvasLocation" x="-2632" y="-1338"/>
+        </scene>
+        <scene sceneID="3351">
+            <objects>
+                <viewController id="3352" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3349"/>
+                        <viewControllerLayoutGuide type="bottom" id="3350"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3353">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" id="3631" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                <rect key="frame" x="0.0" y="212" width="522" height="86"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="940" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="0.0" y="0.0" width="223" height="86"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <accessibility key="accessibilityConfiguration" label="Settings"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <state key="normal" title="Settings"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="397" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="223" y="0.0" width="299" height="86"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <connections>
+                                            <segue id="937" destination="183" kind="push"/>
+                                            <action selector="UIButton397_PrimaryActionTriggered:" destination="BYZ-38-t0r" id="939" eventType="primaryActionTriggered"/>
+                                        </connections>
+                                        <accessibility key="accessibilityConfiguration" label="Vpns"/>
+                                        <state key="normal" title="Select A Vpn"/>
+                                    </button>
+                                </subviews>
+                                <rect key="contentStretch" x="0.0" y="0.0" width="1" height="1"/>
+                            </stackView>
+                        </subviews>
+                    </view>
+                    <navigationItem id="3833" key="navigationItem" title="Vpn Manager"/>
+                    <connections/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3354" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-837" y="18"/>
         </scene>
     </scenes>
 </document>
