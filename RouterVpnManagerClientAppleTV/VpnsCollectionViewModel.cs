@@ -27,7 +27,7 @@ namespace RouterVpnManagerClient
         {
             Vpns.Clear();
 
-            Vpns.Add(new VpnsCollectionModel{ImageLocation = "", Title = "Hello World!"});
+            Vpns.Add(new VpnsCollectionModel{ImageLocation = "back_graident.png", Title = "Hello World!"});
 
         }
 

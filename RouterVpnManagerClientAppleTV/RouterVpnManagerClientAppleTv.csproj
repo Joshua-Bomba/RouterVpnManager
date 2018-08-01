@@ -132,7 +132,6 @@
     </ImageAsset>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\" />
     <Folder Include="wrapThisGarbage\" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\back_graident.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
 </Project>
