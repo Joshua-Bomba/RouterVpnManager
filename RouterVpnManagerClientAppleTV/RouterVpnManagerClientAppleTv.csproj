@@ -142,6 +142,10 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="MainPageViewController.cs" />
+    <Compile Include="MainPageViewController.designer.cs">
+      <DependentUpon>MainPageViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="VpnsCollectionViewController.cs" />
     <Compile Include="VpnsCollectionViewController.designer.cs">
       <DependentUpon>VpnsCollectionViewController.cs</DependentUpon>

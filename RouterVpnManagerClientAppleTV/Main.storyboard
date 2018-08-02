@@ -57,7 +57,7 @@
         </scene>
         <scene sceneID="3351">
             <objects>
-                <viewController id="3352" sceneMemberID="viewController">
+                <viewController id="3352" sceneMemberID="viewController" customClass="MainPageViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3349"/>
                         <viewControllerLayoutGuide type="bottom" id="3350"/>
@@ -66,18 +66,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" id="3631" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
-                                <rect key="frame" x="0.0" y="212" width="522" height="86"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" id="3631" translatesAutoresizingMaskIntoConstraints="NO" axis="vertical" distribution="equalSpacing">
+                                <rect key="frame" x="810" y="454" width="299" height="172"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="940" translatesAutoresizingMaskIntoConstraints="NO">
-                                        <rect key="frame" x="0.0" y="0.0" width="223" height="86"/>
-                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <accessibility key="accessibilityConfiguration" label="Settings"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                        <state key="normal" title="Settings"/>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="397" translatesAutoresizingMaskIntoConstraints="NO">
-                                        <rect key="frame" x="223" y="0.0" width="299" height="86"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="299" height="86"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <connections>
                                             <segue id="937" destination="183" kind="push"/>
@@ -86,13 +79,26 @@
                                         <accessibility key="accessibilityConfiguration" label="Vpns"/>
                                         <state key="normal" title="Select A Vpn"/>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="940" translatesAutoresizingMaskIntoConstraints="NO">
+                                        <rect key="frame" x="0.0" y="86" width="299" height="86"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <accessibility key="accessibilityConfiguration" label="Settings"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <state key="normal" title="Settings"/>
+                                    </button>
                                 </subviews>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="1" height="1"/>
                             </stackView>
                         </subviews>
+                        <constraints>
+                            <constraint id="6523" firstItem="3631" firstAttribute="top" secondItem="3349" secondAttribute="bottom" constant="309"/>
+                            <constraint id="6524" firstItem="3631" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="700"/>
+                        </constraints>
                     </view>
                     <navigationItem id="3833" key="navigationItem" title="Vpn Manager"/>
-                    <connections/>
+                    <connections>
+                        <outlet property="btnStack" destination="3631" id="name-outlet-3631"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3354" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
