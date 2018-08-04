@@ -48,12 +48,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue id="3834" destination="3352" kind="relationship" relationship="rootViewController"/>
+                        <segue id="7808" destination="3352" kind="relationship" relationship="rootViewController"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2744" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2632" y="-1338"/>
+            <point key="canvasLocation" x="-2833" y="-1535"/>
         </scene>
         <scene sceneID="3351">
             <objects>
@@ -85,6 +85,9 @@
                                         <accessibility key="accessibilityConfiguration" label="Settings"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <state key="normal" title="Settings"/>
+                                        <connections>
+                                            <segue id="7475" destination="7136" kind="push"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="1" height="1"/>
@@ -103,6 +106,33 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3354" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-837" y="18"/>
+        </scene>
+        <scene sceneID="7135">
+            <objects>
+                <tableViewController id="7136" sceneMemberID="viewController" customClass="SettingsPageViewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="66" sectionFooterHeight="66" id="7137" customClass="SettingViewController">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="7140" customClass="SettingsViewCell">
+                                <rect key="frame" x="0.0" y="66" width="1700" height="66"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7140" id="7141">
+                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="66"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="7136" id="7138"/>
+                            <outlet property="delegate" destination="7136" id="7139"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem title="Vpn Manager" id="7597" key="navigationItem"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7142" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1393" y="-1687"/>
         </scene>
     </scenes>
 </document>

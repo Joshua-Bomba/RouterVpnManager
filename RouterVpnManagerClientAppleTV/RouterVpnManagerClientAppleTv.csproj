@@ -146,6 +146,19 @@
     <Compile Include="MainPageViewController.designer.cs">
       <DependentUpon>MainPageViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsPageViewController.cs" />
+    <Compile Include="SettingsPageViewController.designer.cs">
+      <DependentUpon>SettingsPageViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViewCell.cs" />
+    <Compile Include="SettingsViewCell.designer.cs">
+      <DependentUpon>SettingsViewCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="SettingViewController.cs" />
+    <Compile Include="SettingViewController.designer.cs">
+      <DependentUpon>SettingViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="VpnsCollectionViewController.cs" />
     <Compile Include="VpnsCollectionViewController.designer.cs">
       <DependentUpon>VpnsCollectionViewController.cs</DependentUpon>
