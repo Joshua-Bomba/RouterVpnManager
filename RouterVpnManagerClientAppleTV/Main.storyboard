@@ -66,7 +66,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" id="3631" translatesAutoresizingMaskIntoConstraints="NO" axis="vertical" distribution="equalSpacing">
+                            <stackView opaque="NO" contentMode="scaleToFill" id="3631" translatesAutoresizingMaskIntoConstraints="NO" axis="vertical" distribution="equalSpacing" misplaced="YES">
                                 <rect key="frame" x="810" y="454" width="299" height="172"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="397" translatesAutoresizingMaskIntoConstraints="NO">
@@ -92,15 +92,32 @@
                                 </subviews>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="1" height="1"/>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8897" translatesAutoresizingMaskIntoConstraints="NO" text="Server Status" misplaced="YES">
+                                <rect key="frame" x="624" y="206" width="672" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="42"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Connected / Can't Find" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8902" translatesAutoresizingMaskIntoConstraints="NO" misplaced="YES">
+                                <rect key="frame" x="536" y="268" width="847" height="43"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="0.047058823529411764" blue="0.047058823529411764" alpha="1"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
-                            <constraint id="6523" firstItem="3631" firstAttribute="top" secondItem="3349" secondAttribute="bottom" constant="309"/>
-                            <constraint id="6524" firstItem="3631" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="700"/>
+                            <constraint id="8987" firstItem="8897" firstAttribute="top" secondItem="3353" secondAttribute="top" constant="206"/>
+                            <constraint id="8988" firstItem="8897" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="514"/>
+                            <constraint id="8989" firstItem="8902" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="426"/>
+                            <constraint id="8990" firstItem="8902" firstAttribute="top" secondItem="8897" secondAttribute="bottom" constant="14"/>
+                            <constraint id="8991" firstItem="3631" firstAttribute="top" secondItem="8902" secondAttribute="bottom" constant="143"/>
+                            <constraint id="8992" firstItem="3631" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="700"/>
                         </constraints>
                     </view>
                     <navigationItem id="3833" key="navigationItem" title="Vpn Manager"/>
                     <connections>
                         <outlet property="btnStack" destination="3631" id="name-outlet-3631"/>
+                        <outlet property="lblStatusTitle" destination="8897" id="name-outlet-8897"/>
+                        <outlet property="lblStatus" destination="8902" id="name-outlet-8902"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3354" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -121,7 +138,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8024" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2402" y="-1234"/>
+            <point key="canvasLocation" x="2357" y="-1170"/>
         </scene>
         <scene sceneID="8025">
             <objects>

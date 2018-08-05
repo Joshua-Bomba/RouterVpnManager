@@ -18,11 +18,29 @@ namespace RouterVpnManagerClient
         [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIStackView btnStack { get; set; }
 
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel lblStatus { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel lblStatusTitle { get; set; }
+
         void ReleaseDesignerOutlets ()
         {
             if (btnStack != null) {
                 btnStack.Dispose ();
                 btnStack = null;
+            }
+
+            if (lblStatus != null) {
+                lblStatus.Dispose ();
+                lblStatus = null;
+            }
+
+            if (lblStatusTitle != null) {
+                lblStatusTitle.Dispose ();
+                lblStatusTitle = null;
             }
         }
     }

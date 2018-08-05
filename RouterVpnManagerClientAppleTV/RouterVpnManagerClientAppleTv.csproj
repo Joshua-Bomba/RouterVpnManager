@@ -131,7 +131,6 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
     <None Include="Info.plist" />
@@ -144,6 +143,7 @@
     <Compile Include="MainPageViewController.designer.cs">
       <DependentUpon>MainPageViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="RouterVpnManagerWrapper.cs" />
     <Compile Include="SettingsPageViewController.cs" />
     <Compile Include="SettingsPageViewController.designer.cs">
       <DependentUpon>SettingsPageViewController.cs</DependentUpon>
@@ -178,6 +178,12 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\back_graident.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RouterVpnManagerClientLibrary\RouterVpnManagerClientLibrary.csproj">
+      <Project>{8684ad50-4f55-4753-859d-1920daad6c80}</Project>
+      <Name>RouterVpnManagerClientLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
 </Project>
