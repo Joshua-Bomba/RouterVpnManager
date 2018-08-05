@@ -26,7 +26,7 @@ namespace RouterVpnManagerClient
         public static NSString settingsCellId = new NSString("SettingsViewModel");
         public SettingsViewModel() : base()
         {
-
+            PopulateSettings();
         }
 
         public List<SettingsModel> Settings { get; set; } = new List<SettingsModel>();

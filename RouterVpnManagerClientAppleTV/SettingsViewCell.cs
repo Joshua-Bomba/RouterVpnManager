@@ -17,8 +17,16 @@ namespace RouterVpnManagerClient
             get { return _model; }
             set
             {
-                _model = value;
-                TextLabel.Text = _model.Name;
+                try
+                {
+                    _model = value;
+                    
+                    TextLabel.Text = _model.Name;
+                }
+                catch
+                {
+
+                }
             }
         }
 

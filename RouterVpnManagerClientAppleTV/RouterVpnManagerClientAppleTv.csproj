@@ -131,9 +131,7 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="wrapThisGarbage\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="GettingStarted.Xamarin" />
     <None Include="Info.plist" />
