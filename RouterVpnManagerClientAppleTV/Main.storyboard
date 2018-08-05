@@ -86,7 +86,7 @@
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <state key="normal" title="Settings"/>
                                         <connections>
-                                            <segue id="7475" destination="7136" kind="push"/>
+                                            <segue id="8438" destination="8040" kind="push"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -107,32 +107,75 @@
             </objects>
             <point key="canvasLocation" x="-837" y="18"/>
         </scene>
-        <scene sceneID="7135">
+        <scene sceneID="8021">
             <objects>
-                <tableViewController id="7136" sceneMemberID="viewController" customClass="SettingsPageViewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="66" sectionFooterHeight="66" id="7137" customClass="SettingViewController">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                <viewController id="8022" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8019"/>
+                        <viewControllerLayoutGuide type="bottom" id="8020"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8023">
+                        <rect key="frame" x="0.0" y="0.0" width="1285" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8024" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2402" y="-1234"/>
+        </scene>
+        <scene sceneID="8025">
+            <objects>
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="8026" sceneMemberID="viewController" customClass="SettingsPageViewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="66" sectionFooterHeight="66" id="8028" customClass="SettingViewController">
+                        <rect key="frame" x="0.0" y="0.0" width="634" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="7140" customClass="SettingsViewCell">
-                                <rect key="frame" x="0.0" y="66" width="1700" height="66"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="8031" customClass="SettingsViewCell">
+                                <rect key="frame" x="0.0" y="66" width="414" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7140" id="7141">
-                                    <rect key="frame" x="0.0" y="0.0" width="1700" height="66"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8031" id="8032">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="66"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="7136" id="7138"/>
-                            <outlet property="delegate" destination="7136" id="7139"/>
+                            <outlet property="dataSource" destination="8026" id="8029"/>
+                            <outlet property="delegate" destination="8026" id="8030"/>
                         </connections>
                     </tableView>
-                    <navigationItem title="Vpn Manager" id="7597" key="navigationItem"/>
+                    <navigationItem key="navigationItem" title="Settings" id="8027"/>
                 </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7142" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8033" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1393" y="-1687"/>
+            <point key="canvasLocation" x="3375" y="-2416"/>
+        </scene>
+        <scene sceneID="8034">
+            <objects>
+                <navigationController id="8035" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8037">
+                        <rect key="frame" x="0.0" y="0.0" width="634" height="145"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="8026" kind="relationship" relationship="rootViewController" id="8036"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8038" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2407" y="-2416"/>
+        </scene>
+        <scene sceneID="8039">
+            <objects>
+                <splitViewController id="8040" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="8035" kind="relationship" relationship="masterViewController" id="8041"/>
+                        <segue destination="8022" kind="relationship" relationship="detailViewController" id="8042"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8043" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-624" y="-1748"/>
         </scene>
     </scenes>
 </document>
