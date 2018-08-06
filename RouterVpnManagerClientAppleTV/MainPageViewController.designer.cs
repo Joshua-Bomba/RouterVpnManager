@@ -16,6 +16,14 @@ namespace RouterVpnManagerClient
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton btnConnect { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton btnSelectAVpn { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIStackView btnStack { get; set; }
 
         [Outlet]
@@ -26,8 +34,22 @@ namespace RouterVpnManagerClient
         [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UILabel lblStatusTitle { get; set; }
 
+        [Action ("Click_ConnectToServer:")]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        partial void Click_ConnectToServer (UIKit.UIButton sender);
+
         void ReleaseDesignerOutlets ()
         {
+            if (btnConnect != null) {
+                btnConnect.Dispose ();
+                btnConnect = null;
+            }
+
+            if (btnSelectAVpn != null) {
+                btnSelectAVpn.Dispose ();
+                btnSelectAVpn = null;
+            }
+
             if (btnStack != null) {
                 btnStack.Dispose ();
                 btnStack = null;

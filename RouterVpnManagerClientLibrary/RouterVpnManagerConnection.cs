@@ -26,6 +26,7 @@ namespace RouterVpnManagerClientLibrary
             {
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(Host), Port);
                 client_.Connect(ep);
+                
 
                 requestProcessor_.Start();
 
@@ -130,6 +131,8 @@ namespace RouterVpnManagerClientLibrary
                 Disconnect();
             }
         }
+
+        public bool IsConnected => client_.Connected;
 
         private void SetDefaults()
         {

@@ -13,6 +13,13 @@ namespace RouterVpnManagerClient
 
         }
 
+        public UILabel LblStatus => lblStatus;
+
+        public UIButton BtnSelectAVpn => btnSelectAVpn;
+
+        public UIButton BtnConnect => btnConnect;
+
+
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
@@ -20,19 +27,25 @@ namespace RouterVpnManagerClient
             SetLayout();
 
             if(vpnManager_ == null)
-                vpnManager_ = new RouterVpnManagerWrapper();
+                vpnManager_ = new RouterVpnManagerWrapper(this);
 
+        }
+
+        partial void Click_ConnectToServer(UIKit.UIButton sender)
+        {
+            vpnManager_.Connect();
         }
 
 
 
         public void SetLayout()
         {
-            btnStack.Axis = UILayoutConstraintAxis.Vertical;
-            btnStack.Alignment = UIStackViewAlignment.Fill;
+            //btnStack.Axis = UILayoutConstraintAxis.Vertical;
+            //btnStack.Alignment = UIStackViewAlignment.Fill;
             btnStack.Distribution = UIStackViewDistribution.EqualSpacing;
             btnStack.Spacing = 10;
             btnStack.TranslatesAutoresizingMaskIntoConstraints = false;
+            btnSelectAVpn.Enabled = false;
         }
 
         
