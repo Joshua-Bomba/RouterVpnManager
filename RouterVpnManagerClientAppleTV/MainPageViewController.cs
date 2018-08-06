@@ -31,7 +31,7 @@ namespace RouterVpnManagerClient
 
         }
 
-        partial void Click_ConnectToServer(UIKit.UIButton sender)
+        partial void Click_ConnectToServer()
         {
             vpnManager_.Connect();
         }

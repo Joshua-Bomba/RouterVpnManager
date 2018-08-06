@@ -20,7 +20,7 @@ namespace RouterVpnManagerClientLibrary
             SetDefaults();
         }
 
-        public async void Connect()
+        public void Connect()
         {
             try
             {
@@ -42,7 +42,7 @@ namespace RouterVpnManagerClientLibrary
                 });
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
-                await callbackstate;
+                callbackstate.Wait();
                 if (!state)
                     throw new Exception("was not able to connect properly");
             }

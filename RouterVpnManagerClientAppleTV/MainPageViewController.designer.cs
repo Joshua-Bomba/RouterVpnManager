@@ -34,9 +34,9 @@ namespace RouterVpnManagerClient
         [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UILabel lblStatusTitle { get; set; }
 
-        [Action ("Click_ConnectToServer:")]
+        [Action ("Click_ConnectToServer")]
         [GeneratedCode ("iOS Designer", "1.0")]
-        partial void Click_ConnectToServer (UIKit.UIButton sender);
+        partial void Click_ConnectToServer ();
 
         void ReleaseDesignerOutlets ()
         {

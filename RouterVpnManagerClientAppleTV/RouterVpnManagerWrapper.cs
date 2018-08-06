@@ -39,7 +39,6 @@ namespace RouterVpnManagerClient
                 {
                     mainPageController_.LblStatus.Text = "Connecting, Please Wait...";
                     mainPageController_.LblStatus.TextColor = UIColor.Black;
-
                     GetSettings();
                     connection_.Connect();
                     mainPageController_.LblStatus.Text = "Connected";
