@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RouterVpnManagerClientLibrary\RouterVpnManagerClientLibrary.csproj">
-      <Project>{8684ad50-4f55-4753-859d-1920daad6c80}</Project>
+      <Project>{f02bcb81-f3c2-405a-97bf-6135c26f7016}</Project>
       <Name>RouterVpnManagerClientLibrary</Name>
     </ProjectReference>
   </ItemGroup>

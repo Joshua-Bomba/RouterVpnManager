@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -9,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
 namespace RouterVpnManagerClientLibrary
 {
     public class RouterVpnManagerConnection : IDisposable
@@ -137,10 +133,10 @@ namespace RouterVpnManagerClientLibrary
 
         private void SetDefaults()
         {
-            SendTimeout = Properties.Settings.Default.Timeout;
+            SendTimeout = 5000;
             RecivedTimeout = 0;
-            Host = Properties.Settings.Default.Host;
-            Port = Properties.Settings.Default.Port;
+            Host = "127.0.0.1";
+            Port = 8000;
         }
 
         public int SendTimeout { get => client_.SendTimeout; set => client_.SendTimeout = value; }
