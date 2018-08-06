@@ -35,9 +35,9 @@ namespace RouterVpnManagerClient
         {
             Settings.Clear();
 
-            Settings.Add(new SettingsModel { Name = "test1" });
-            Settings.Add(new SettingsModel { Name = "test2" });
-            Settings.Add(new SettingsModel { Name = "test2" });
+            Settings.Add(new SettingsModel { Name = "IP Settings" });
+            //Settings.Add(new SettingsModel { Name = "test2" });
+            //Settings.Add(new SettingsModel { Name = "test2" });
         }
 
         public override nint RowsInSection(UITableView tableView, nint section) => Settings.Count;
