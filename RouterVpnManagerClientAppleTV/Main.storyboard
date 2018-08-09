@@ -136,7 +136,7 @@
         </scene>
         <scene sceneID="8021">
             <objects>
-                <viewController id="8022" sceneMemberID="viewController" customClass="UIAndPortPageController">
+                <viewController id="8022" sceneMemberID="viewController" customClass="SplitSettingsPageViewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8019"/>
                         <viewControllerLayoutGuide type="bottom" id="8020"/>
@@ -183,6 +183,7 @@
                         <outlet property="btnReset" destination="10886" id="name-outlet-10886"/>
                         <outlet property="txtPort" destination="10884" id="name-outlet-10884"/>
                         <outlet property="txtIP" destination="10883" id="name-outlet-10883"/>
+                        <outlet property="IPSettingsView" destination="10880" id="name-outlet-10880"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8024" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -233,7 +234,7 @@
         </scene>
         <scene sceneID="8039">
             <objects>
-                <splitViewController id="8040" sceneMemberID="viewController">
+                <splitViewController id="8040" sceneMemberID="viewController" customClass="SettingsSplitViewController">
                     <connections>
                         <segue destination="8035" kind="relationship" relationship="masterViewController" id="8041"/>
                         <segue destination="8022" kind="relationship" relationship="detailViewController" id="8042"/>

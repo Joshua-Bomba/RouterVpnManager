@@ -11,8 +11,8 @@ using UIKit;
 
 namespace RouterVpnManagerClient
 {
-    [Register ("UIAndPortPageController")]
-    partial class UIAndPortPageController
+    [Register ("SplitSettingsPageViewController")]
+    partial class SplitSettingsPageViewController
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
@@ -21,6 +21,10 @@ namespace RouterVpnManagerClient
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIButton btnSave { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIView IPSettingsView { get; set; }
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
@@ -40,6 +44,11 @@ namespace RouterVpnManagerClient
             if (btnSave != null) {
                 btnSave.Dispose ();
                 btnSave = null;
+            }
+
+            if (IPSettingsView != null) {
+                IPSettingsView.Dispose ();
+                IPSettingsView = null;
             }
 
             if (txtIP != null) {

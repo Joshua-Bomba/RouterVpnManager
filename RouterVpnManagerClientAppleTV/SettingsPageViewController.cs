@@ -7,15 +7,9 @@ namespace RouterVpnManagerClient
     public partial class SettingsPageViewController : UITableViewController
     {
 
-        public SettingsViewModel DataSource
-        {
-            get { return TableView.DataSource as SettingsViewModel;}
-        }
+        public SettingsViewModel DataSource => TableView.DataSource as SettingsViewModel;
 
-        public SettingsDelegate TableDelegate
-        {
-            get { return  TableView.Delegate as SettingsDelegate;}
-        }
+        public SettingsDelegate TableDelegate => TableView.Delegate as SettingsDelegate;
 
         public SettingsPageViewController (IntPtr handle) : base (handle)
         {

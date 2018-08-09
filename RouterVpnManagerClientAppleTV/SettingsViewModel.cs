@@ -14,6 +14,18 @@ namespace RouterVpnManagerClient
         {
             
         }
+
+        public override void RowSelected(UITableView tableView, Foundation.NSIndexPath indexPath)
+        {
+            Console.WriteLine("Row Selected");            
+        }
+
+        public override bool CanFocusRow(UITableView tableView, Foundation.NSIndexPath indexPath)
+        {
+            Console.WriteLine("Row Focused");
+            // Inform caller of highlight change
+            return true;
+        }
     }
 
     public class SettingsModel
@@ -36,8 +48,8 @@ namespace RouterVpnManagerClient
             Settings.Clear();
 
             Settings.Add(new SettingsModel { Name = "IP Settings" });
-            //Settings.Add(new SettingsModel { Name = "test2" });
-            //Settings.Add(new SettingsModel { Name = "test2" });
+            Settings.Add(new SettingsModel { Name = "test" });
+            Settings.Add(new SettingsModel { Name = "test" });
         }
 
         public override nint RowsInSection(UITableView tableView, nint section) => Settings.Count;

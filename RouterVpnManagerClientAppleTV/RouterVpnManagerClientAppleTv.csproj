@@ -153,6 +153,10 @@
     <Compile Include="SettingsPageViewController.designer.cs">
       <DependentUpon>SettingsPageViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsSplitViewController.cs" />
+    <Compile Include="SettingsSplitViewController.designer.cs">
+      <DependentUpon>SettingsSplitViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsViewCell.cs" />
     <Compile Include="SettingsViewCell.designer.cs">
       <DependentUpon>SettingsViewCell.cs</DependentUpon>
@@ -162,9 +166,9 @@
     <Compile Include="SettingViewController.designer.cs">
       <DependentUpon>SettingViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="UIAndPortPageController.cs" />
-    <Compile Include="UIAndPortPageController.designer.cs">
-      <DependentUpon>UIAndPortPageController.cs</DependentUpon>
+    <Compile Include="SplitSettingsPageViewController.cs" />
+    <Compile Include="SplitSettingsPageViewController.designer.cs">
+      <DependentUpon>SplitSettingsPageViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="VpnsCollectionViewController.cs" />
     <Compile Include="VpnsCollectionViewController.designer.cs">
