@@ -162,6 +162,10 @@
     <Compile Include="SettingViewController.designer.cs">
       <DependentUpon>SettingViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="UIAndPortPageController.cs" />
+    <Compile Include="UIAndPortPageController.designer.cs">
+      <DependentUpon>UIAndPortPageController.cs</DependentUpon>
+    </Compile>
     <Compile Include="VpnsCollectionViewController.cs" />
     <Compile Include="VpnsCollectionViewController.designer.cs">
       <DependentUpon>VpnsCollectionViewController.cs</DependentUpon>

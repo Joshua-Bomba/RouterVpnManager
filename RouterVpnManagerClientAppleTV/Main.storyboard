@@ -136,7 +136,7 @@
         </scene>
         <scene sceneID="8021">
             <objects>
-                <viewController id="8022" sceneMemberID="viewController">
+                <viewController id="8022" sceneMemberID="viewController" customClass="UIAndPortPageController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8019"/>
                         <viewControllerLayoutGuide type="bottom" id="8020"/>
@@ -144,7 +144,46 @@
                     <view key="view" contentMode="scaleToFill" id="8023">
                         <rect key="frame" x="0.0" y="0.0" width="1285" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="10880" translatesAutoresizingMaskIntoConstraints="NO" misplaced="YES" ambiguous="YES">
+                                <rect key="frame" x="125" y="365" width="750" height="350"/>
+                                <color key="backgroundColor" colorSpace="calibratedWhite" white="0.666666666666667" alpha="1"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="10883" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" placeholder="IP Address">
+                                        <rect key="frame" x="50" y="67" width="440" height="46"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="10884" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" placeholder="Port">
+                                        <rect key="frame" x="550" y="67" width="150" height="46"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="10885" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                        <rect key="frame" x="165" y="191" width="200" height="86"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Save"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="10886" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                        <rect key="frame" x="385" y="191" width="200" height="86"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <state key="normal" title="Reset"/>
+                                    </button>
+                                </subviews>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint id="10882" firstItem="10880" firstAttribute="top" secondItem="8023" secondAttribute="top" constant="365"/>
+                            <constraint id="11179" firstItem="10880" firstAttribute="leading" secondItem="8023" secondAttribute="leadingMargin" constant="15"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="btnSave" destination="10885" id="name-outlet-10885"/>
+                        <outlet property="btnReset" destination="10886" id="name-outlet-10886"/>
+                        <outlet property="txtPort" destination="10884" id="name-outlet-10884"/>
+                        <outlet property="txtIP" destination="10883" id="name-outlet-10883"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8024" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -202,7 +241,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8043" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-632" y="-1760"/>
+            <point key="canvasLocation" x="-216" y="-1739"/>
         </scene>
     </scenes>
 </document>
