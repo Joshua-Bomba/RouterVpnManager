@@ -33,7 +33,11 @@ namespace RouterVpnManagerClient
 
         partial void Click_ConnectToServer()
         {
-            vpnManager_.Connect();
+            //if (vpnManager_.Connect())
+            {
+                btnConnect.Enabled = false;
+                btnSelectAVpn.Enabled = true;
+            }
         }
 
 

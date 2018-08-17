@@ -11,8 +11,8 @@ using UIKit;
 
 namespace RouterVpnManagerClient
 {
-    [Register ("SettingsPageViewController")]
-    partial class SettingsPageViewController
+    [Register ("SettingsMenuTableViewCell")]
+    partial class SettingsMenuTableViewCell
     {
         void ReleaseDesignerOutlets ()
         {

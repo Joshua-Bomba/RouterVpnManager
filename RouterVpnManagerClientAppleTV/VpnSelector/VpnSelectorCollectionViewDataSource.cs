@@ -5,19 +5,19 @@ using System.Drawing;
 using CoreGraphics;
 using Foundation;
 using UIKit;
-
+// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public class VpnsCollectionViewModel : UICollectionViewDataSource
+    public class VpnSelectorCollectionViewDataSource : UICollectionViewDataSource
     {
         public static NSString vpnCellId = new NSString("VpnCollectionCell");
         
-        public VpnsCollectionViewController ViewController { get; set; }
+        public VpnSelectorCollectionView ViewController { get; set; }
 
-        public List<VpnsCollectionModel> Vpns { get; set; }= new List<VpnsCollectionModel>();
+        public List<VpnSelectorModel> Vpns { get; set; }= new List<VpnSelectorModel>();
 
 
-        public VpnsCollectionViewModel(VpnsCollectionViewController viewController) : base()
+        public VpnSelectorCollectionViewDataSource(VpnSelectorCollectionView viewController) : base()
         {
             ViewController = viewController;
             PopulateVpns();
@@ -27,7 +27,7 @@ namespace RouterVpnManagerClient
         {
             Vpns.Clear();
 
-            Vpns.Add(new VpnsCollectionModel{ImageLocation = "back_graident.png", Title = "Hello World!"});
+            Vpns.Add(new VpnSelectorModel{ImageLocation = "back_graident.png", Title = "Hello World!"});
 
         }
 
@@ -43,7 +43,7 @@ namespace RouterVpnManagerClient
 
         public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            var cell = (VpnsCollectionViewCell) collectionView.DequeueReusableCell(vpnCellId, indexPath);
+            var cell = (VpnSelectorCollectionViewCell) collectionView.DequeueReusableCell(vpnCellId, indexPath);
             var model = Vpns[indexPath.Row];
             cell.Model = model;
             return cell;

@@ -2,6 +2,7 @@
 using System;
 using UIKit;
 
+// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
     public partial class SettingsSplitViewController : UISplitViewController
@@ -10,7 +11,7 @@ namespace RouterVpnManagerClient
         {
         }
 
-        public SettingsPageViewController Menu=> ViewControllers[0] as SettingsPageViewController;
+        public SettingsMenuTableViewController Menu=> ViewControllers[0] as SettingsMenuTableViewController;
 
         public SplitSettingsPageViewController ContentArea=>ViewControllers[1] as SplitSettingsPageViewController;
 

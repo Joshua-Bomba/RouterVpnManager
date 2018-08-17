@@ -6,39 +6,18 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
+// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public class SettingsDelegate : UITableViewDelegate
-    {
-        public SettingsPageViewController Controller { get; private set; }
-
-        public SettingsDelegate(SettingsPageViewController controller) : base()
-        {
-            Controller = controller;
-        }
-
-        public override void RowSelected(UITableView tableView, Foundation.NSIndexPath indexPath)
-        {
-            Console.WriteLine("Row Selected");            
-        }
-
-        public override bool CanFocusRow(UITableView tableView, Foundation.NSIndexPath indexPath)
-        {
-            Console.WriteLine("Row Focused");
-            // Inform caller of highlight change
-            return true;
-        }
-    }
-
     public class SettingsModel
     {
         public string Name { get; set; }
     }
 
-    public class SettingsViewModel : UITableViewDataSource
+    public class SettingsMenuTableViewDataSource : UITableViewDataSource
     {
         public static NSString settingsCellId = new NSString("SettingsViewModel");
-        public SettingsViewModel() : base()
+        public SettingsMenuTableViewDataSource() : base()
         {
             PopulateSettings();
         }
@@ -66,7 +45,7 @@ namespace RouterVpnManagerClient
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            var cell = tableView.DequeueReusableCell(settingsCellId) as SettingsViewCell ?? new SettingsViewCell(Handle);
+            var cell = tableView.DequeueReusableCell(settingsCellId) as SettingsMenuTableViewCell ?? new SettingsMenuTableViewCell(Handle);
             cell.Model = Settings[indexPath.Row];
             return cell;
         }

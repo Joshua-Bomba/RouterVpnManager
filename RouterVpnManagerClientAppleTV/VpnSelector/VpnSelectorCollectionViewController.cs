@@ -2,15 +2,16 @@
 using System;
 using UIKit;
 
+// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public partial class VpnsCollectionViewPageController : UICollectionViewController
+    public partial class VpnSelectorCollectionViewController : UICollectionViewController
     {
-        public VpnsCollectionViewPageController(IntPtr handle) : base(handle)
+        public VpnSelectorCollectionViewController(IntPtr handle) : base(handle)
         {
         }
 
-        public VpnsCollectionViewController Collection => (CollectionView as VpnsCollectionViewController);
+        public VpnSelectorCollectionView Collection => (CollectionView as VpnSelectorCollectionView);
 
         public override void AwakeFromNib()
         {

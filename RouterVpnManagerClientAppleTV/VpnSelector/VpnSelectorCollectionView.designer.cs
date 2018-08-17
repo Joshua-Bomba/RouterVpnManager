@@ -11,16 +11,16 @@ using UIKit;
 
 namespace RouterVpnManagerClient
 {
-    [Register ("SettingViewController")]
-    partial class SettingViewController
+    [Register ("VpnSelectorCollectionView")]
+    partial class VpnSelectorCollectionView
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        RouterVpnManagerClient.SettingsPageViewController dataSource { get; set; }
+        RouterVpnManagerClient.VpnSelectorCollectionViewController dataSource { get; set; }
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        RouterVpnManagerClient.SettingsPageViewController @delegate { get; set; }
+        RouterVpnManagerClient.VpnSelectorCollectionViewController @delegate { get; set; }
 
         void ReleaseDesignerOutlets ()
         {

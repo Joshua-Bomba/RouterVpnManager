@@ -5,11 +5,12 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
+// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public class VpnsCollectionDelegate : UICollectionViewDelegateFlowLayout
+    public class VpnSelectorCollectionViewDelegateFlowLayout : UICollectionViewDelegateFlowLayout
     {
-        public VpnsCollectionDelegate() : base()
+        public VpnSelectorCollectionViewDelegateFlowLayout() : base()
         {
 
         }
@@ -26,7 +27,7 @@ namespace RouterVpnManagerClient
             }
             else
             {
-                var controller = collectionView as VpnsCollectionViewController;
+                var controller = collectionView as VpnSelectorCollectionView;
                 return controller.Source.Vpns[indexPath.Row].Selectable;
             }
         }

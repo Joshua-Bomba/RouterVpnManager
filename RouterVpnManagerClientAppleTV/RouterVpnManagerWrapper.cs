@@ -31,7 +31,7 @@ namespace RouterVpnManagerClient
 
         }
 
-        public void Connect()
+        public bool Connect()
         {
             try
             {
@@ -43,11 +43,13 @@ namespace RouterVpnManagerClient
                     connection_.Connect();
                     mainPageController_.LblStatus.Text = "Connected";
                     mainPageController_.LblStatus.TextColor = UIColor.Green;
+                    return true;
                 }
                 else
                 {
                     Global.BasicNotificationAlert("Unable To Connect", "You are already connected to the server",
                         mainPageController_);
+                    return false;
                 }
 
             }
@@ -56,6 +58,7 @@ namespace RouterVpnManagerClient
                 mainPageController_.LblStatus.Text = "Not Connected";
                 mainPageController_.LblStatus.TextColor = UIColor.Red;
                 Global.BasicNotificationAlert("Unable To Connect", ex.ToString(),mainPageController_);
+                return false;
             }
 
         }

@@ -2,14 +2,15 @@
 using System;
 using UIKit;
 
+// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public partial class SettingsViewCell : UITableViewCell
+    public partial class SettingsMenuTableViewCell : UITableViewCell
     {
         private SettingsModel _model;
-        public SettingsViewCell (IntPtr handle) : base (handle)
+        public SettingsMenuTableViewCell(IntPtr handle) : base(handle)
         {
-            
+
         }
 
         public SettingsModel Model
@@ -20,7 +21,7 @@ namespace RouterVpnManagerClient
                 try
                 {
                     _model = value;
-                    
+
                     TextLabel.Text = _model.Name;
                 }
                 catch

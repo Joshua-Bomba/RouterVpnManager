@@ -149,42 +149,43 @@
       <DependentUpon>MainPageViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="RouterVpnManagerWrapper.cs" />
-    <Compile Include="SettingsPageViewController.cs" />
-    <Compile Include="SettingsPageViewController.designer.cs">
-      <DependentUpon>SettingsPageViewController.cs</DependentUpon>
+    <Compile Include="SettingsMenu\SettingsMenuTableViewCell.cs" />
+    <Compile Include="SettingsMenu\SettingsMenuTableViewCell.designer.cs">
+      <DependentUpon>SettingsMenuTableViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsSplitViewController.cs" />
-    <Compile Include="SettingsSplitViewController.designer.cs">
+    <Compile Include="SettingsMenu\SettingMenuTableView.cs" />
+    <Compile Include="SettingsMenu\SettingMenuTableView.designer.cs">
+      <DependentUpon>SettingMenuTableView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsMenu\SettingsMenuTableViewController.cs" />
+    <Compile Include="SettingsMenu\SettingsMenuTableViewController.designer.cs">
+      <DependentUpon>SettingsMenuTableViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsMenu\SettingsMenuTableViewDelegate.cs" />
+    <Compile Include="SettingsSplitView\SettingsSplitViewController.cs" />
+    <Compile Include="SettingsSplitView\SettingsSplitViewController.designer.cs">
       <DependentUpon>SettingsSplitViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsViewCell.cs" />
-    <Compile Include="SettingsViewCell.designer.cs">
-      <DependentUpon>SettingsViewCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsViewModel.cs" />
-    <Compile Include="SettingViewController.cs" />
-    <Compile Include="SettingViewController.designer.cs">
-      <DependentUpon>SettingViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SplitSettingsPageViewController.cs" />
-    <Compile Include="SplitSettingsPageViewController.designer.cs">
+    <Compile Include="SettingsMenu\SettingsMenuTableViewDataSource.cs" />
+    <Compile Include="SettingsSplitView\SplitSettingsPageViewController.cs" />
+    <Compile Include="SettingsSplitView\SplitSettingsPageViewController.designer.cs">
       <DependentUpon>SplitSettingsPageViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="VpnsCollectionViewController.cs" />
-    <Compile Include="VpnsCollectionViewController.designer.cs">
-      <DependentUpon>VpnsCollectionViewController.cs</DependentUpon>
+    <Compile Include="VpnSelector\VpnSelectorCollectionView.cs" />
+    <Compile Include="VpnSelector\VpnSelectorCollectionView.designer.cs">
+      <DependentUpon>VpnSelectorCollectionView.cs</DependentUpon>
     </Compile>
-    <Compile Include="VpnsCollectionViewPageController.cs" />
-    <Compile Include="VpnsCollectionViewPageController.designer.cs">
-      <DependentUpon>VpnsCollectionViewPageController.cs</DependentUpon>
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewController.cs" />
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewController.designer.cs">
+      <DependentUpon>VpnSelectorCollectionViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="VpnsCollectionViewCell.cs" />
-    <Compile Include="VpnsCollectionViewCell.designer.cs">
-      <DependentUpon>VpnsCollectionViewCell.cs</DependentUpon>
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewCell.cs" />
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewCell.designer.cs">
+      <DependentUpon>VpnSelectorCollectionViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="VpnsCollectionDelegate.cs" />
-    <Compile Include="VpnsCollectionViewModel.cs" />
-    <Compile Include="VpnsCollectionModel.cs" />
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewDelegateFlowLayout.cs" />
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewDataSource.cs" />
+    <Compile Include="VpnSelector\VpnSelectorModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
@@ -198,8 +199,6 @@
       <Name>RouterVpnManagerClientLibrary</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Settings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
 </Project>
