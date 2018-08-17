@@ -198,5 +198,8 @@
       <Name>RouterVpnManagerClientLibrary</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Settings\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
 </Project>

@@ -21,7 +21,7 @@ namespace RouterVpnManagerClient
 
             TableView.RegisterClassForCellReuse(typeof(SettingsViewCell), SettingsViewModel.settingsCellId);
             TableView.DataSource = new SettingsViewModel();
-            TableView.Delegate = new SettingsDelegate();
+            TableView.Delegate = new SettingsDelegate(this);
             TableView.ReloadData();
         }
     }
