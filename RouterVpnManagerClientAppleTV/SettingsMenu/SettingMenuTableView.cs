@@ -11,6 +11,5 @@ namespace RouterVpnManagerClient
         {
         }
 
-        public new SettingsMenuTableViewDataSource Source => DataSource as SettingsMenuTableViewDataSource;
     }
 }

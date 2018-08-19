@@ -10,29 +10,26 @@ namespace RouterVpnManagerClient
 {
     public class SettingsMenuTableViewDelegate : UITableViewDelegate
     {
-        public SettingsMenuTableViewController Controller { get; private set; }
+        public SettingsMenuTableViewController Controller { get; set; }
 
         public SettingsMenuTableViewDelegate(SettingsMenuTableViewController controller) : base()
         {
-            Controller = controller;
+            this.Controller = controller;
         }
 
         public override void RowSelected(UITableView tableView, Foundation.NSIndexPath indexPath)
         {
-            Console.WriteLine("Row Selected");
+            var setting = Controller.DataSource.Settings[indexPath.Row];
+            setting.Name = "Clicked";
+
+            //Update the UI
+            Controller.TableView.ReloadData();
         }
 
         public override bool CanFocusRow(UITableView tableView, Foundation.NSIndexPath indexPath)
         {
             Console.WriteLine("Row Focused");
-            // Inform caller of highlight change
-            this.HighLight?.Invoke(Controller.DataSource.Settings[indexPath.Row]);
             return true;
         }
-
-        public delegate void CanFocusRowDelegate(SettingsModel model);
-
-        public event CanFocusRowDelegate HighLight;
-
     }
 }

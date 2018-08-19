@@ -9,20 +9,28 @@ using UIKit;
 // ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public class SettingsModel
+    public class SettingsModel : NSObject
     {
         public string Name { get; set; }
     }
 
     public class SettingsMenuTableViewDataSource : UITableViewDataSource
     {
-        public static NSString settingsCellId = new NSString("SettingsViewModel");
-        public SettingsMenuTableViewDataSource() : base()
+        public const string settingsCellId = "SettingsViewModel";
+
+
+        public SettingsMenuTableViewController Controller { get; set; }
+
+        public List<SettingsModel> Settings { get; set; }
+
+        public SettingsMenuTableViewDataSource(SettingsMenuTableViewController controller)
         {
+            this.Controller = controller;
+            this.Settings = new List<SettingsModel>();
             PopulateSettings();
         }
 
-        public List<SettingsModel> Settings { get; set; } = new List<SettingsModel>();
+
 
         public void PopulateSettings()
         {
@@ -31,6 +39,17 @@ namespace RouterVpnManagerClient
             Settings.Add(new SettingsModel { Name = "IP Settings" });
             Settings.Add(new SettingsModel { Name = "test" });
             Settings.Add(new SettingsModel { Name = "test" });
+        }
+
+        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
+        {
+            var cell = tableView.DequeueReusableCell(settingsCellId) as SettingsMenuTableViewCell;
+
+            if (cell != null)
+            {
+                cell.Model = Settings[indexPath.Row];
+            }
+            return cell;
         }
 
 
@@ -45,11 +64,5 @@ namespace RouterVpnManagerClient
             return "Main Section";
         }
 
-        public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
-        {
-            var cell = tableView.DequeueReusableCell(settingsCellId) as SettingsMenuTableViewCell ?? new SettingsMenuTableViewCell(Handle);
-            cell.Model = Settings[indexPath.Row];
-            return cell;
-        }
     }
 }

@@ -20,7 +20,6 @@ namespace RouterVpnManagerClient
             base.ViewDidLoad();
 
             //Sets the current option to the current model
-            Menu.TableDelegate.HighLight += (settingModel) => ContentArea.CurrentSetting = settingModel;
         }
     }
 }

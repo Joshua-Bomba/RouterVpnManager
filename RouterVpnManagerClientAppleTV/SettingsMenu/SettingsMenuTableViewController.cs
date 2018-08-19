@@ -18,10 +18,11 @@ namespace RouterVpnManagerClient
         {
             base.ViewDidLoad();
 
-            TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewDataSource.settingsCellId);
-            TableView.DataSource = new SettingsMenuTableViewDataSource();
+            TableView.DataSource = new SettingsMenuTableViewDataSource(this);
             TableView.Delegate = new SettingsMenuTableViewDelegate(this);
             TableView.ReloadData();
+
+            TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewDataSource.settingsCellId);
         }
     }
 }
