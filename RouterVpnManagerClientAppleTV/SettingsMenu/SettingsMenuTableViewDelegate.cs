@@ -26,7 +26,13 @@ namespace RouterVpnManagerClient
         {
             Console.WriteLine("Row Focused");
             // Inform caller of highlight change
+            this.HighLight?.Invoke(Controller.DataSource.Settings[indexPath.Row]);
             return true;
         }
+
+        public delegate void CanFocusRowDelegate(SettingsModel model);
+
+        public event CanFocusRowDelegate HighLight;
+
     }
 }

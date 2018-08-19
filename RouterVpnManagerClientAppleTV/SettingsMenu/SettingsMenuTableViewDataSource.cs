@@ -38,6 +38,8 @@ namespace RouterVpnManagerClient
 
         public override nint RowsInSection(UITableView tableView, nint section) => Settings.Count;
 
+        
+
         public override string TitleForHeader(UITableView tableView, nint section)
         {
             return "Main Section";
