@@ -12,14 +12,12 @@ namespace RouterVpnManagerClient
 
         public SettingsMenuTableViewDataSource DataSource => TableView.DataSource as SettingsMenuTableViewDataSource;
 
-        public SettingsMenuTableViewDelegate TableDelegate => TableView.Delegate as SettingsMenuTableViewDelegate;
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
             TableView.DataSource = new SettingsMenuTableViewDataSource(this);
-            TableView.Delegate = new SettingsMenuTableViewDelegate(this);
             TableView.ReloadData();
 
             TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewDataSource.settingsCellId);

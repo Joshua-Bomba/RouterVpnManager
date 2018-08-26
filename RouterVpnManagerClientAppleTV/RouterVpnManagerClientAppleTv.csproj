@@ -161,7 +161,6 @@
     <Compile Include="SettingsMenu\SettingsMenuTableViewController.designer.cs">
       <DependentUpon>SettingsMenuTableViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsMenu\SettingsMenuTableViewDelegate.cs" />
     <Compile Include="SettingsSplitView\SettingsSplitViewController.cs" />
     <Compile Include="SettingsSplitView\SettingsSplitViewController.designer.cs">
       <DependentUpon>SettingsSplitViewController.cs</DependentUpon>
