@@ -16,8 +16,7 @@ namespace RouterVpnManagerClient
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-
-            TableView.DataSource = new SettingsMenuTableViewDataSource(this);
+            TableView.Source = new SettingsMenuTableViewDataSource(this);
             TableView.ReloadData();
 
             TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewDataSource.settingsCellId);

@@ -14,7 +14,7 @@ namespace RouterVpnManagerClient
         public string Name { get; set; }
     }
 
-    public class SettingsMenuTableViewDataSource : UITableViewSource, IUITableViewDataSource
+    public class SettingsMenuTableViewDataSource : UITableViewSource
     {
         public const string settingsCellId = "SettingsViewModel";
 

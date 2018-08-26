@@ -24,6 +24,10 @@ namespace RouterVpnManagerClient
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton btnSetting { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIStackView btnStack { get; set; }
 
         [Outlet]
@@ -48,6 +52,11 @@ namespace RouterVpnManagerClient
             if (btnSelectAVpn != null) {
                 btnSelectAVpn.Dispose ();
                 btnSelectAVpn = null;
+            }
+
+            if (btnSetting != null) {
+                btnSetting.Dispose ();
+                btnSetting = null;
             }
 
             if (btnStack != null) {
