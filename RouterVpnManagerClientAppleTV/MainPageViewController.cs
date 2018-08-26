@@ -19,6 +19,8 @@ namespace RouterVpnManagerClient
 
         public UIButton BtnConnect => btnConnect;
 
+        public UIButton BtnSettings => btnSettings;
+
 
         public override void ViewDidLoad()
         {
@@ -33,11 +35,7 @@ namespace RouterVpnManagerClient
 
         partial void Click_ConnectToServer()
         {
-            //if (vpnManager_.Connect())
-            {
-                btnConnect.Enabled = false;
-                btnSelectAVpn.Enabled = true;
-            }
+            vpnManager_.Connect();
         }
 
 
@@ -50,6 +48,7 @@ namespace RouterVpnManagerClient
             btnStack.Spacing = 10;
             btnStack.TranslatesAutoresizingMaskIntoConstraints = false;
             btnSelectAVpn.Enabled = false;
+            btnSettings.Enabled = false;
         }
 
         
