@@ -2,7 +2,6 @@
 using System;
 using UIKit;
 
-// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
     public partial class SettingMenuTableView : UITableView
@@ -10,6 +9,5 @@ namespace RouterVpnManagerClient
         public SettingMenuTableView (IntPtr handle) : base (handle)
         {
         }
-
     }
 }

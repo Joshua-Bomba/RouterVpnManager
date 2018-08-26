@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="9046" systemVersion="14F27" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" initialViewController="2741">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="14113" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="2741">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Vpn Selector Collection View Controller-->
         <scene sceneID="182">
             <objects>
-                <collectionViewController id="183" sceneMemberID="viewController" customClass="VpnSelectorCollectionViewController">
+                <collectionViewController id="183" customClass="VpnSelectorCollectionViewController" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="184" customClass="VpnSelectorCollectionView">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -18,12 +20,11 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" id="187" reuseIdentifier="vpnViewCell" customClass="VpnSelectorCollectionViewCell">
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="vpnViewCell" id="187" customClass="VpnSelectorCollectionViewCell">
                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </collectionViewCell>
                         </cells>
@@ -40,6 +41,7 @@
             </objects>
             <point key="canvasLocation" x="2018" y="2"/>
         </scene>
+        <!--Navigation Controller-->
         <scene sceneID="2740">
             <objects>
                 <navigationController id="2741" sceneMemberID="viewController">
@@ -48,16 +50,17 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue id="7808" destination="3352" kind="relationship" relationship="rootViewController"/>
+                        <segue destination="3352" kind="relationship" relationship="rootViewController" id="7808"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2744" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2833" y="-1535"/>
         </scene>
+        <!--Vpn Manager-->
         <scene sceneID="3351">
             <objects>
-                <viewController id="3352" sceneMemberID="viewController" customClass="MainPageViewController">
+                <viewController id="3352" customClass="MainPageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3349"/>
                         <viewControllerLayoutGuide type="bottom" id="3350"/>
@@ -66,77 +69,77 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" id="3631" translatesAutoresizingMaskIntoConstraints="NO" axis="vertical" distribution="equalSpacing" misplaced="YES">
+                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="3631">
                                 <rect key="frame" x="810" y="464" width="299" height="258"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9219" translatesAutoresizingMaskIntoConstraints="NO">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9219">
                                         <rect key="frame" x="0.0" y="0.0" width="299" height="86"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Connect To Server"/>
                                         <connections>
-                                            <action selector="Click_ConnectToServer" destination="3352" id="10642" eventType="primaryActionTriggered"/>
+                                            <action selector="Click_ConnectToServer" destination="3352" eventType="primaryActionTriggered" id="10642"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="397" translatesAutoresizingMaskIntoConstraints="NO">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="397">
                                         <rect key="frame" x="0.0" y="86" width="299" height="86"/>
-                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <connections>
-                                            <segue id="937" destination="183" kind="push"/>
-                                            <action selector="UIButton397_PrimaryActionTriggered:" destination="BYZ-38-t0r" id="939" eventType="primaryActionTriggered"/>
-                                        </connections>
                                         <accessibility key="accessibilityConfiguration" label="Vpns"/>
-                                        <state key="normal" title="Select A Vpn"/>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="940" translatesAutoresizingMaskIntoConstraints="NO">
-                                        <rect key="frame" x="0.0" y="172" width="299" height="86"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Select A Vpn"/>
+                                        <connections>
+                                            <segue destination="183" kind="push" id="937"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="940">
+                                        <rect key="frame" x="0.0" y="172" width="299" height="86"/>
                                         <accessibility key="accessibilityConfiguration" label="Settings"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Settings"/>
                                         <connections>
-                                            <segue id="8438" destination="8040" kind="push"/>
+                                            <segue destination="8040" kind="push" id="8438"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <rect key="contentStretch" x="0.0" y="0.0" width="1" height="1"/>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8897" translatesAutoresizingMaskIntoConstraints="NO" text="Server Status" misplaced="YES">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Server Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8897">
                                 <rect key="frame" x="624" y="206" width="672" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="42"/>
+                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Connected" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8902" translatesAutoresizingMaskIntoConstraints="NO" misplaced="YES">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Not Connected" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8902">
                                 <rect key="frame" x="536" y="268" width="847" height="43"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
-                                <color key="textColor" colorSpace="calibratedRGB" red="1" green="0" blue="0" alpha="1"/>
                             </label>
                         </subviews>
                         <constraints>
-                            <constraint id="8987" firstItem="8897" firstAttribute="top" secondItem="3353" secondAttribute="top" constant="206"/>
-                            <constraint id="8988" firstItem="8897" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="514"/>
-                            <constraint id="8989" firstItem="8902" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="426"/>
-                            <constraint id="8990" firstItem="8902" firstAttribute="top" secondItem="8897" secondAttribute="bottom" constant="14"/>
-                            <constraint id="9485" firstItem="3631" firstAttribute="top" secondItem="8902" secondAttribute="bottom" constant="153"/>
-                            <constraint id="9486" firstItem="3631" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="700"/>
+                            <constraint firstItem="8897" firstAttribute="top" secondItem="3353" secondAttribute="top" constant="206" id="8987"/>
+                            <constraint firstItem="8897" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="514" id="8988"/>
+                            <constraint firstItem="8902" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="426" id="8989"/>
+                            <constraint firstItem="8902" firstAttribute="top" secondItem="8897" secondAttribute="bottom" constant="14" id="8990"/>
+                            <constraint firstItem="3631" firstAttribute="top" secondItem="8902" secondAttribute="bottom" constant="153" id="9485"/>
+                            <constraint firstItem="3631" firstAttribute="leading" secondItem="3353" secondAttribute="leadingMargin" constant="700" id="9486"/>
                         </constraints>
                     </view>
-                    <navigationItem id="3833" key="navigationItem" title="Vpn Manager"/>
+                    <navigationItem key="navigationItem" title="Vpn Manager" id="3833"/>
                     <connections>
-                        <outlet property="btnStack" destination="3631" id="name-outlet-3631"/>
-                        <outlet property="lblStatusTitle" destination="8897" id="name-outlet-8897"/>
-                        <outlet property="lblStatus" destination="8902" id="name-outlet-8902"/>
                         <outlet property="btnConnect" destination="9219" id="name-outlet-9219"/>
                         <outlet property="btnSelectAVpn" destination="397" id="name-outlet-397"/>
+                        <outlet property="btnStack" destination="3631" id="name-outlet-3631"/>
+                        <outlet property="lblStatus" destination="8902" id="name-outlet-8902"/>
+                        <outlet property="lblStatusTitle" destination="8897" id="name-outlet-8897"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3354" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-837" y="18"/>
         </scene>
+        <!--Split Settings Page View Controller-->
         <scene sceneID="8021">
             <objects>
-                <viewController id="8022" sceneMemberID="viewController" customClass="SplitSettingsPageViewController">
+                <viewController id="8022" customClass="SplitSettingsPageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8019"/>
                         <viewControllerLayoutGuide type="bottom" id="8020"/>
@@ -145,55 +148,62 @@
                         <rect key="frame" x="0.0" y="0.0" width="1285" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" id="10880" translatesAutoresizingMaskIntoConstraints="NO" misplaced="YES" ambiguous="YES">
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="10880">
                                 <rect key="frame" x="125" y="365" width="750" height="350"/>
-                                <color key="backgroundColor" colorSpace="calibratedWhite" white="0.666666666666667" alpha="1"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="10883" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" placeholder="IP Address">
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="IP Address" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="10883">
                                         <rect key="frame" x="50" y="67" width="440" height="46"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="10884" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES" placeholder="Port">
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Port" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="10884">
                                         <rect key="frame" x="550" y="67" width="150" height="46"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="10885" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="10885">
                                         <rect key="frame" x="165" y="191" width="200" height="86"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Save"/>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="10886" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="10886">
                                         <rect key="frame" x="385" y="191" width="200" height="86"/>
-                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Reset"/>
                                     </button>
                                 </subviews>
+                                <color key="backgroundColor" red="0.66666668653488159" green="0.66666668653488159" blue="0.66666668653488159" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>
                         <constraints>
-                            <constraint id="10882" firstItem="10880" firstAttribute="top" secondItem="8023" secondAttribute="top" constant="365"/>
-                            <constraint id="11179" firstItem="10880" firstAttribute="leading" secondItem="8023" secondAttribute="leadingMargin" constant="15"/>
+                            <constraint firstItem="10880" firstAttribute="top" secondItem="8023" secondAttribute="top" constant="365" id="10882"/>
+                            <constraint firstItem="10880" firstAttribute="leading" secondItem="8023" secondAttribute="leadingMargin" constant="15" id="11179"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnSave" destination="10885" id="name-outlet-10885"/>
-                        <outlet property="btnReset" destination="10886" id="name-outlet-10886"/>
-                        <outlet property="txtPort" destination="10884" id="name-outlet-10884"/>
-                        <outlet property="txtIP" destination="10883" id="name-outlet-10883"/>
                         <outlet property="IPSettingsView" destination="10880" id="name-outlet-10880"/>
+                        <outlet property="btnReset" destination="10886" id="name-outlet-10886"/>
+                        <outlet property="btnSave" destination="10885" id="name-outlet-10885"/>
+                        <outlet property="txtIP" destination="10883" id="name-outlet-10883"/>
+                        <outlet property="txtPort" destination="10884" id="name-outlet-10884"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8024" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2357" y="-1170"/>
         </scene>
+        <!--Settings-->
         <scene sceneID="8025">
             <objects>
-                <tableViewController clearsSelectionOnViewWillAppear="NO" id="8026" sceneMemberID="viewController" customClass="SettingsMenuTableViewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="66" sectionFooterHeight="66" id="8028" customClass="SettingMenuTableView">
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="8026" customClass="SettingsMenuTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="66" sectionHeaderHeight="66" sectionFooterHeight="66" id="8028">
                         <rect key="frame" x="0.0" y="0.0" width="634" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
@@ -217,6 +227,7 @@
             </objects>
             <point key="canvasLocation" x="3375" y="-2416"/>
         </scene>
+        <!--Navigation Controller-->
         <scene sceneID="8034">
             <objects>
                 <navigationController id="8035" sceneMemberID="viewController">
@@ -232,9 +243,10 @@
             </objects>
             <point key="canvasLocation" x="2407" y="-2416"/>
         </scene>
+        <!--Settings Split View Controller-->
         <scene sceneID="8039">
             <objects>
-                <splitViewController id="8040" sceneMemberID="viewController" customClass="SettingsSplitViewController">
+                <splitViewController id="8040" customClass="SettingsSplitViewController" sceneMemberID="viewController">
                     <connections>
                         <segue destination="8035" kind="relationship" relationship="masterViewController" id="8041"/>
                         <segue destination="8022" kind="relationship" relationship="detailViewController" id="8042"/>

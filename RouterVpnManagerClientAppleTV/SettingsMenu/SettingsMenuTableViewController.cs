@@ -10,19 +10,18 @@ namespace RouterVpnManagerClient
         {
         }
 
-        public SettingsMenuTableViewDataSource DataSource => TableView.DataSource as SettingsMenuTableViewDataSource;
-
-        public SettingsMenuTableViewDelegate TableDelegate => TableView.Delegate as SettingsMenuTableViewDelegate;
+        public new SettingMenuTableView TableView => base.TableView.Delegate as SettingMenuTableView;
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
 
-            TableView.DataSource = new SettingsMenuTableViewDataSource(this);
-            TableView.Delegate = new SettingsMenuTableViewDelegate(this);
-            TableView.ReloadData();
 
-            TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewDataSource.settingsCellId);
+            //TableView.Controller = this;
+            //TableView.DataSource = new SettingsMenuTableViewDataSource(this);
+            //TableView.Delegate = new SettingsMenuTableViewDelegate(this);
+            
+            //TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingMenuTableView.settingsCellId);
         }
     }
 }

@@ -1,34 +1,25 @@
-﻿using System;
+﻿using Foundation;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
-
-using CoreGraphics;
-using Foundation;
 using UIKit;
 
-// ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public class SettingsModel : NSObject
+    public partial class SettingMenuTableView : UITableViewSource
     {
-        public string Name { get; set; }
-    }
+        public SettingMenuTableView (IntPtr handle) : base (handle)
+        {
+            this.Settings = new List<SettingsModel>();
+            PopulateSettings();
 
-    public class SettingsMenuTableViewDataSource : UITableViewDataSource
-    {
+
+        }
         public const string settingsCellId = "SettingsViewModel";
 
 
         public SettingsMenuTableViewController Controller { get; set; }
 
         public List<SettingsModel> Settings { get; set; }
-
-        public SettingsMenuTableViewDataSource(SettingsMenuTableViewController controller)
-        {
-            this.Controller = controller;
-            this.Settings = new List<SettingsModel>();
-            PopulateSettings();
-        }
 
 
 
@@ -57,11 +48,26 @@ namespace RouterVpnManagerClient
 
         public override nint RowsInSection(UITableView tableView, nint section) => Settings.Count;
 
-        
+
 
         public override string TitleForHeader(UITableView tableView, nint section)
         {
             return "Main Section";
+        }
+
+        public override void RowSelected(UITableView tableView, Foundation.NSIndexPath indexPath)
+        {
+            var setting = Settings[indexPath.Row];
+            setting.Name = "Clicked";
+
+            //Update the UI
+            //Controller.TableView.ReloadData();
+        }
+
+        public override bool CanFocusRow(UITableView tableView, Foundation.NSIndexPath indexPath)
+        {
+            Console.WriteLine("Row Focused");
+            return true;
         }
 
     }

@@ -149,24 +149,24 @@
       <DependentUpon>MainPageViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="RouterVpnManagerWrapper.cs" />
+    <Compile Include="SettingMenuTableView.cs" />
+    <Compile Include="SettingsMenuTableView_.cs" />
+    <Compile Include="SettingsMenuTableView_.designer.cs">
+      <DependentUpon>SettingsMenuTableView_.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsMenu\SettingsMenuTableViewCell.cs" />
     <Compile Include="SettingsMenu\SettingsMenuTableViewCell.designer.cs">
       <DependentUpon>SettingsMenuTableViewCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SettingsMenu\SettingMenuTableView.cs" />
-    <Compile Include="SettingsMenu\SettingMenuTableView.designer.cs">
-      <DependentUpon>SettingMenuTableView.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingsMenu\SettingsMenuTableViewController.cs" />
     <Compile Include="SettingsMenu\SettingsMenuTableViewController.designer.cs">
       <DependentUpon>SettingsMenuTableViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsMenu\SettingsMenuTableViewDelegate.cs" />
+    <Compile Include="SettingsMenu\SettingsModel.cs" />
     <Compile Include="SettingsSplitView\SettingsSplitViewController.cs" />
     <Compile Include="SettingsSplitView\SettingsSplitViewController.designer.cs">
       <DependentUpon>SettingsSplitViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsMenu\SettingsMenuTableViewDataSource.cs" />
     <Compile Include="SettingsSplitView\SplitSettingsPageViewController.cs" />
     <Compile Include="SettingsSplitView\SplitSettingsPageViewController.designer.cs">
       <DependentUpon>SplitSettingsPageViewController.cs</DependentUpon>
