@@ -20,15 +20,13 @@ namespace RouterVpnManagerClient
         public VpnSelectorCollectionViewDataSource(VpnSelectorCollectionView viewController) : base()
         {
             ViewController = viewController;
-            PopulateVpns();
+            RouterVpnManagerWrapper.Instance.VpnSelectorDataSource = this;
         }
 
         public void PopulateVpns()
         {
-            Vpns.Clear();
-
-            Vpns.Add(new VpnSelectorModel{ImageLocation = "back_graident.png", Title = "Hello World!"});
-
+            //Vpns.Add(new VpnSelectorModel{ImageLocation = "back_graident.png", Title = "Hello World!"});
+            Vpns = RouterVpnManagerWrapper.Instance.GetVpns();
         }
 
         public override nint NumberOfSections(UICollectionView collectionView)

@@ -20,5 +20,12 @@ namespace RouterVpnManagerClient
             //Adds reference to the controller in the child element (The VpnsCollectionView)
             Collection.ParentController = this;
         }
+
+        public override void ViewDidLoad()
+        {
+            base.ViewDidLoad();
+
+            Collection.Source.PopulateVpns();
+        }
     }
 }

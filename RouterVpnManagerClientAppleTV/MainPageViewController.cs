@@ -6,10 +6,9 @@ namespace RouterVpnManagerClient
 {
     public partial class MainPageViewController : UIViewController
     {
-        public static RouterVpnManagerWrapper vpnManager_;
         public MainPageViewController (IntPtr handle) : base (handle)
         {
-
+            RouterVpnManagerWrapper.Instance.MainPageController = this;
 
         }
 
@@ -28,14 +27,11 @@ namespace RouterVpnManagerClient
 
             SetLayout();
 
-            if(vpnManager_ == null)
-                vpnManager_ = new RouterVpnManagerWrapper(this);
-
         }
 
         partial void Click_ConnectToServer()
         {
-            vpnManager_.Connect();
+            RouterVpnManagerWrapper.Instance.Connect();
         }
 
 

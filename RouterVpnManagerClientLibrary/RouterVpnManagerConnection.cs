@@ -42,7 +42,7 @@ namespace RouterVpnManagerClientLibrary
                 });
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
-                callbackstate.Wait();
+                callbackstate.Wait(RecivedTimeout);
                 if (!state)
                     throw new Exception("was not able to connect properly");
             }

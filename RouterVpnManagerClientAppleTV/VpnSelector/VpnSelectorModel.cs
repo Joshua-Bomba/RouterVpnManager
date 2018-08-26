@@ -11,7 +11,7 @@ namespace RouterVpnManagerClient
     {
         public string ImageLocation { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = "back_graident.png";
 
         public bool Selectable { get; set; } = true;
 
