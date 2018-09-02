@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -9,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
 namespace RouterVpnManagerClientLibrary
 {
     public class RouterVpnManagerConnection : IDisposable
@@ -24,12 +20,13 @@ namespace RouterVpnManagerClientLibrary
             SetDefaults();
         }
 
-        public async void Connect()
+        public void Connect()
         {
             try
             {
                 IPEndPoint ep = new IPEndPoint(IPAddress.Parse(Host), Port);
                 client_.Connect(ep);
+                
 
                 requestProcessor_.Start();
 
@@ -45,7 +42,7 @@ namespace RouterVpnManagerClientLibrary
                 });
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
-                await callbackstate;
+                callbackstate.Wait(RecivedTimeout);
                 if (!state)
                     throw new Exception("was not able to connect properly");
             }
@@ -70,6 +67,7 @@ namespace RouterVpnManagerClientLibrary
 
             //https://stackoverflow.com/questions/18756354/wrapping-manualresetevent-as-awaitable-task
             //Most of this below is copy pasta black magic
+
 
             var tcs = new TaskCompletionSource<bool>();
 
@@ -135,12 +133,14 @@ namespace RouterVpnManagerClientLibrary
             }
         }
 
+        public bool IsConnected => client_.Connected;
+
         private void SetDefaults()
         {
-            SendTimeout = Properties.Settings.Default.Timeout;
-            RecivedTimeout = 0;
-            Host = Properties.Settings.Default.Host;
-            Port = Properties.Settings.Default.Port;
+            SendTimeout = 5000;
+            RecivedTimeout = 10000;
+            Host = "127.0.0.1";
+            Port = 8000;
         }
 
         public int SendTimeout { get => client_.SendTimeout; set => client_.SendTimeout = value; }
