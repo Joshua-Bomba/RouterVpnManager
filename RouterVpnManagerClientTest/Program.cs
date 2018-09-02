@@ -21,7 +21,7 @@ namespace RouterVpnManagerClientTest
             {
                 try
                 {
-                    connection.Host = "192.168.2.36";
+                    connection.Host = "192.168.3.1";
                     connection.Connect();
                     requests = new ControlledRequests(connection);
                     requests.AddBroadcastListener(new Broadcasts());
