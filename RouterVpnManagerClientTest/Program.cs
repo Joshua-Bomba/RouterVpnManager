@@ -21,6 +21,7 @@ namespace RouterVpnManagerClientTest
             {
                 try
                 {
+                    connection.Host = "192.168.2.36";
                     connection.Connect();
                     requests = new ControlledRequests(connection);
                     requests.AddBroadcastListener(new Broadcasts());
@@ -73,7 +74,7 @@ namespace RouterVpnManagerClientTest
                                 break;
                             case "clearconfigfolder":
                                 ClearConfigFolder();
-                                break;;
+                                break;
                             case "copyconfigto":
                                 CopyConfigTo(input);
                                 break;
