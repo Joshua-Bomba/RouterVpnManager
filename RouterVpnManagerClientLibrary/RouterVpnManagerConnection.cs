@@ -68,6 +68,7 @@ namespace RouterVpnManagerClientLibrary
             //https://stackoverflow.com/questions/18756354/wrapping-manualresetevent-as-awaitable-task
             //Most of this below is copy pasta black magic
 
+
             var tcs = new TaskCompletionSource<bool>();
 
             var registration = ThreadPool.RegisterWaitForSingleObject(oSignalEvent, (state, timedOut) =>
@@ -137,7 +138,7 @@ namespace RouterVpnManagerClientLibrary
         private void SetDefaults()
         {
             SendTimeout = 5000;
-            RecivedTimeout = 0;
+            RecivedTimeout = 10000;
             Host = "127.0.0.1";
             Port = 8000;
         }

@@ -9,9 +9,9 @@ namespace RouterVpnManagerClient
 {
     public class VpnSelectorModel
     {
-        public string ImageLocation { get; set; }
+        public string ImageLocation { get; set; } = "back_graident.png";
 
-        public string Title { get; set; } = "back_graident.png";
+        public string Title { get; set; } 
 
         public bool Selectable { get; set; } = true;
 
