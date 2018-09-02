@@ -1,15 +1,16 @@
-﻿################################################################################
+################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/RouterVpnManager/v15/Server/sqlite3
+/.vs/
 /RouterVpnManagerClient/obj
-/RouterVpnManagerClientAppleTV/bin/iPhoneSimulator/Debug
-/RouterVpnManagerClientAppleTV/obj/iPhoneSimulator/Debug
-/RouterVpnManagerClientLibrary/obj/Debug
+/RouterVpnManagerClientAppleTV/bin/
+/RouterVpnManagerClientAppleTV/obj/
 /RouterVpnManagerClientTest/obj/Debug
 /RouterVpnManagerClientTest/bin/Debug
 /packages/Newtonsoft.Json.11.0.2
 /RouterVpnManagerClientLibrary/bin/Debug
+/RouterVpnManagerClientLibrary/bin/
+/RouterVpnManagerClientLibrary/obj/
 /RouterVpnManager/template/*
 /RouterVpnManager/configurations/*

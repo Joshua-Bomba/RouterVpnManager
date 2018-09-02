@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RouterVpnManagerClientLibrary.ServerResponseObjects;
 
@@ -69,7 +66,7 @@ namespace RouterVpnManagerClientLibrary
             connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
-            })).Wait();
+            })).Wait(connection_.RecivedTimeout);
             return array;
         }
 
@@ -78,13 +75,13 @@ namespace RouterVpnManagerClientLibrary
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
-            connection_.SendJson(obj).Wait();
+            connection_.SendJson(obj).Wait(connection_.RecivedTimeout);
         }
 
         public void DisconnectFromVpn()
         {
             JObject obj = FormatMessage("request", "disconnectfrompvpn");
-            connection_.SendJson(obj).Wait();
+            connection_.SendJson(obj).Wait(connection_.RecivedTimeout);
         }
 
         public ConnectionStatusResponse CheckCurrentConnection()
@@ -102,7 +99,7 @@ namespace RouterVpnManagerClientLibrary
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
                 }
-            }).Wait();
+            }).Wait(connection_.RecivedTimeout);
             return currentConnection;
         }
 
@@ -126,7 +123,7 @@ namespace RouterVpnManagerClientLibrary
                     status = new StatusResponse {Status = false, Message = e.ToString()};
                 }
 
-            }).Wait();
+            }).Wait(connection_.RecivedTimeout);
 
             return status;
         }
@@ -151,7 +148,7 @@ namespace RouterVpnManagerClientLibrary
                     status = new StatusResponse { Status = false, Message = e.ToString() };
                 }
 
-            }).Wait();
+            }).Wait(connection_.RecivedTimeout);
 
             return status;
         }
@@ -165,7 +162,7 @@ namespace RouterVpnManagerClientLibrary
                 StatusResponse rb = response.ToObject<StatusResponse>();
                 rb.SetData();
                 status = rb;
-            }).Wait();
+            }).Wait(connection_.RecivedTimeout);
             return status;
         }
 
@@ -180,7 +177,7 @@ namespace RouterVpnManagerClientLibrary
                 StatusResponse rb = response.ToObject<StatusResponse>();
                 rb.SetData();
                 status = rb;
-            }).Wait();
+            }).Wait(connection_.RecivedTimeout);
             return status;
         }
     }
