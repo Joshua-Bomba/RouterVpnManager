@@ -14,7 +14,7 @@ namespace RouterVpnManagerClient
         public string Name { get; set; }
     }
 
-    public class SettingsMenuTableViewDataSource : UITableViewDataSource
+    public class SettingsMenuTableViewDataSource : UITableViewSource
     {
         public const string settingsCellId = "SettingsViewModel";
 
@@ -62,6 +62,21 @@ namespace RouterVpnManagerClient
         public override string TitleForHeader(UITableView tableView, nint section)
         {
             return "Main Section";
+        }
+
+        public override void RowSelected(UITableView tableView, Foundation.NSIndexPath indexPath)
+        {
+            var setting = Controller.DataSource.Settings[indexPath.Row];
+            setting.Name = "Clicked";
+
+            //Update the UI
+            Controller.TableView.ReloadData();
+        }
+
+        public override bool CanFocusRow(UITableView tableView, Foundation.NSIndexPath indexPath)
+        {
+            Console.WriteLine("Row Focused");
+            return true;
         }
 
     }
