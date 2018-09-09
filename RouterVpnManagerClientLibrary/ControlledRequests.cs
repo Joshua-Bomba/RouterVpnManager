@@ -58,11 +58,19 @@ namespace RouterVpnManagerClientLibrary
             });
         }
 
-
-        public IEnumerable<string> ListAvaliableVpns()
+        /// <summary>
+        /// Get all of the avaliablevpns
+        /// 
+        /// Params Pass in null if you don't care about the images
+        /// Pass in a blank list if you want to fetch all images
+        /// Pass in a dictionary of all images with the vpn name as the key and a checksum as a value
+        /// </summary>
+        /// <param name="currentImages"></param>
+        /// <returns></returns>
+        public IEnumerable<string> ListAvaliableVpns(Dictionary<string,string> currentImages = null)
         {
 
-            JObject obj = FormatMessage("request", "listovpn", null);
+            JObject obj = FormatMessage("request", "listovpn", currentImages);
             IEnumerable<string> array = null;
             connection_.SendJson(obj, ((JObject response) =>
             {
