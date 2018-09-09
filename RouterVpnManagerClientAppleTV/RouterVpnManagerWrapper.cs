@@ -57,7 +57,7 @@ namespace RouterVpnManagerClient
         {
             connection_.Host = "192.168.2.36";
             connection_.Port = 8000;
-            connection_.RecivedTimeout = 10000;
+            connection_.CallbackTimeout = -1;
             //TODO: fix that dam settings menu
         }
 

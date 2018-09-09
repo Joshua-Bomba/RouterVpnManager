@@ -25,8 +25,8 @@ namespace RouterVpnManagerClient
 
         public void PopulateVpns()
         {
-            //Vpns.Add(new VpnSelectorModel{ImageLocation = "back_graident.png", Title = "Hello World!"});
             Vpns = RouterVpnManagerWrapper.Instance.GetVpns();
+            Vpns.Insert(0, new VpnSelectorModel { ImageLocation = "back_graident.png", Title = "Disconnect" });
         }
 
         public override nint NumberOfSections(UICollectionView collectionView)
