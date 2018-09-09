@@ -128,10 +128,11 @@ namespace RouterVpnManagerClient
                 {
                     string[] list = request_.ListAvaliableVpns().ToArray();
                     vpns = new List<VpnSelectorModel>(list.Length);
-                    foreach (string s in list)
+                    for (int i = 0; i < list.Length; i++)
                     {
-                        vpns.Add(new VpnSelectorModel {Selectable = true, Title = s});
+                        vpns.Add(new VpnSelectorModel { Selectable = true, Title = list[i],ConnectionNumber = i});
                     }
+
                 }
                 else
                 {

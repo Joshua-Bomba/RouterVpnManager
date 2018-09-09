@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 using CoreGraphics;
@@ -10,14 +11,16 @@ namespace RouterVpnManagerClient
 {
     public class VpnSelectorCollectionViewDelegateFlowLayout : UICollectionViewDelegateFlowLayout
     {
-        public VpnSelectorCollectionViewDelegateFlowLayout() : base()
+        public VpnSelectorCollectionViewDelegateFlowLayout(VpnSelectorCollectionViewController controller) : base()
         {
-
+            this.Controller = controller;
         }
         public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
         {
             return new CGSize(361, 256);
         }
+
+        public VpnSelectorCollectionViewController Controller { get; private set; }
 
         public override bool CanFocusItem(UICollectionView collectionView, NSIndexPath indexPath)
         {
@@ -32,11 +35,20 @@ namespace RouterVpnManagerClient
             }
         }
 
-        //public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
-        //{
-        //    var view = collectionView as VpnsCollectionView;
-        //    App
+        public NSIndexPath[] SelectedItems { get { return _selectedItems.ToArray(); } }
+        readonly List<NSIndexPath> _selectedItems = new List<NSIndexPath>();
 
-        //}
+        public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            base.ItemSelected(collectionView, indexPath);
+            _selectedItems.Add(indexPath);
+            Global.BasicNotificationAlert("Test", "Test", Controller);
+        }
+
+        public override void ItemDeselected(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            base.ItemDeselected(collectionView, indexPath);
+            _selectedItems.Remove(indexPath);
+        }
     }
 }

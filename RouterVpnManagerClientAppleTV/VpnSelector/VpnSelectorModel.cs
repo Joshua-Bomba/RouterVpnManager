@@ -15,6 +15,8 @@ namespace RouterVpnManagerClient
 
         public bool Selectable { get; set; } = true;
 
+        public int ConnectionNumber { get; set; } = -1;
+
 
         public VpnSelectorModel()
         {

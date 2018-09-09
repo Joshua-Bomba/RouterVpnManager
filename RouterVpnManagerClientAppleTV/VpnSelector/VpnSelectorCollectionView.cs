@@ -16,7 +16,7 @@ namespace RouterVpnManagerClient
         {
             RegisterClassForCell(typeof(VpnSelectorCollectionViewCell), VpnSelectorCollectionViewDataSource.vpnCellId);
             DataSource = new VpnSelectorCollectionViewDataSource(this);
-            Delegate = new VpnSelectorCollectionViewDelegateFlowLayout();
+            Delegate = new VpnSelectorCollectionViewDelegateFlowLayout(ParentController);
 
         }
 
