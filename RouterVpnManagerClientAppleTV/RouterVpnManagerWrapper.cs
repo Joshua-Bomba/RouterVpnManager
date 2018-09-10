@@ -34,7 +34,7 @@ namespace RouterVpnManagerClient
 
         public MainPageViewController MainPageController { get; set; }
 
-        public VpnSelectorCollectionViewDataSource VpnSelectorDataSource { get; set; }
+        public VpnSelectorCollectionViewSource VpnSelectorSource { get; set; }
 
         private RouterVpnManagerWrapper()
         {
@@ -72,9 +72,9 @@ namespace RouterVpnManagerClient
                         MainPageController.LblStatus.Text = "Connecting, Please Wait...";
                         MainPageController.LblStatus.TextColor = UIColor.Black;
                         connection_.Connect();
-                        if (VpnSelectorDataSource != null)
+                        if (VpnSelectorSource != null)
                         {
-                            VpnSelectorDataSource.PopulateVpns();
+                            VpnSelectorSource.PopulateVpns();
                         }
                         MainPageController.BtnSelectAVpn.Enabled = true;
                         MainPageController.LblStatus.Text = "Connected";

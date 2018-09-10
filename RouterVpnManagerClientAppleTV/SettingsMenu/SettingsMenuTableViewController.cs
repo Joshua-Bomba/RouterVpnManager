@@ -10,16 +10,16 @@ namespace RouterVpnManagerClient
         {
         }
 
-        public SettingsMenuTableViewDataSource DataSource => TableView.DataSource as SettingsMenuTableViewDataSource;
+        public SettingsMenuTableViewSource Source => TableView.DataSource as SettingsMenuTableViewSource;
 
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            TableView.Source = new SettingsMenuTableViewDataSource(this);
+            TableView.Source = new SettingsMenuTableViewSource(this);
             TableView.ReloadData();
 
-            TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewDataSource.settingsCellId);
+            TableView.RegisterClassForCellReuse(typeof(SettingsMenuTableViewCell), SettingsMenuTableViewSource.settingsCellId);
         }
     }
 }

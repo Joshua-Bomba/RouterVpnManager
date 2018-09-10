@@ -25,7 +25,7 @@ namespace RouterVpnManagerClient
         {
             base.ViewDidLoad();
 
-            Collection.Source.PopulateVpns();
+            (Collection.Source as VpnSelectorCollectionViewSource)?.PopulateVpns();
         }
     }
 }

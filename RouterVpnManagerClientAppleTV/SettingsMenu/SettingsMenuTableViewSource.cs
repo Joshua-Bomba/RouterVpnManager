@@ -14,7 +14,7 @@ namespace RouterVpnManagerClient
         public string Name { get; set; }
     }
 
-    public class SettingsMenuTableViewDataSource : UITableViewSource
+    public class SettingsMenuTableViewSource : UITableViewSource
     {
         public const string settingsCellId = "SettingsViewModel";
 
@@ -23,7 +23,7 @@ namespace RouterVpnManagerClient
 
         public List<SettingsModel> Settings { get; set; }
 
-        public SettingsMenuTableViewDataSource(SettingsMenuTableViewController controller)
+        public SettingsMenuTableViewSource(SettingsMenuTableViewController controller)
         {
             this.Controller = controller;
             this.Settings = new List<SettingsModel>();
@@ -66,7 +66,7 @@ namespace RouterVpnManagerClient
 
         public override void RowSelected(UITableView tableView, Foundation.NSIndexPath indexPath)
         {
-            var setting = Controller.DataSource.Settings[indexPath.Row];
+            var setting = Controller.Source.Settings[indexPath.Row];
             setting.Name = "Clicked";
 
             //Update the UI

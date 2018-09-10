@@ -8,7 +8,7 @@ using UIKit;
 // ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
-    public class VpnSelectorCollectionViewDataSource : UICollectionViewSource
+    public class VpnSelectorCollectionViewSource : UICollectionViewSource
     {
         public static NSString vpnCellId = new NSString("VpnCollectionCell");
         
@@ -17,10 +17,10 @@ namespace RouterVpnManagerClient
         public List<VpnSelectorModel> Vpns { get; set; }= new List<VpnSelectorModel>();
 
 
-        public VpnSelectorCollectionViewDataSource(VpnSelectorCollectionViewController viewController) : base()
+        public VpnSelectorCollectionViewSource(VpnSelectorCollectionViewController viewController) : base()
         {
             ViewController = viewController;
-            RouterVpnManagerWrapper.Instance.VpnSelectorDataSource = this;
+            RouterVpnManagerWrapper.Instance.VpnSelectorSource = this;
         }
 
         public void PopulateVpns()
@@ -61,5 +61,10 @@ namespace RouterVpnManagerClient
             //_selectedItems.Remove(indexPath);
         }
 
+        public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            Global.BasicNotificationAlert("Test", "Test", ViewController);
+            return base.ShouldHighlightItem(collectionView, indexPath);
+        }
     }
 }

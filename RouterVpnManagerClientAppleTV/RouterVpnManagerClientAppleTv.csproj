@@ -165,7 +165,7 @@
     <Compile Include="SettingsSplitView\SettingsSplitViewController.designer.cs">
       <DependentUpon>SettingsSplitViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsMenu\SettingsMenuTableViewDataSource.cs" />
+    <Compile Include="SettingsMenu\SettingsMenuTableViewSource.cs" />
     <Compile Include="SettingsSplitView\SplitSettingsPageViewController.cs" />
     <Compile Include="SettingsSplitView\SplitSettingsPageViewController.designer.cs">
       <DependentUpon>SplitSettingsPageViewController.cs</DependentUpon>
@@ -182,8 +182,7 @@
     <Compile Include="VpnSelector\VpnSelectorCollectionViewCell.designer.cs">
       <DependentUpon>VpnSelectorCollectionViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="VpnSelector\VpnSelectorCollectionViewDelegateFlowLayout.cs" />
-    <Compile Include="VpnSelector\VpnSelectorCollectionViewDataSource.cs" />
+    <Compile Include="VpnSelector\VpnSelectorCollectionViewSource.cs" />
     <Compile Include="VpnSelector\VpnSelectorModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -14,14 +14,14 @@ namespace RouterVpnManagerClient
 
         public VpnSelectorCollectionView(IntPtr handle) : base(handle)
         {
-            RegisterClassForCell(typeof(VpnSelectorCollectionViewCell), VpnSelectorCollectionViewDataSource.vpnCellId);
-            DataSource = new VpnSelectorCollectionViewDataSource(ParentController);
+            RegisterClassForCell(typeof(VpnSelectorCollectionViewCell), VpnSelectorCollectionViewSource.vpnCellId);
+            Source = new VpnSelectorCollectionViewSource(ParentController);
             //Delegate = new VpnSelectorCollectionViewDelegateFlowLayout(ParentController);
             
 
         }
 
-        public new VpnSelectorCollectionViewDataSource Source => DataSource as VpnSelectorCollectionViewDataSource;
+        //public new VpnSelectorCollectionViewSource Source => Source as VpnSelectorCollectionViewSource;
 
         public VpnSelectorCollectionViewController ParentController { get; set; }
     }
