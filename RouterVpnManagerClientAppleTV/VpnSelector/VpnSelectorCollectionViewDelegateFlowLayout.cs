@@ -31,7 +31,7 @@ namespace RouterVpnManagerClient
             else
             {
                 var controller = collectionView as VpnSelectorCollectionView;
-                return controller.Source.Vpns[indexPath.Row].Selectable;
+                return controller != null && ((VpnSelectorCollectionViewDataSource) controller.DataSource).Vpns[indexPath.Row].Selectable;
             }
         }
 
@@ -49,6 +49,11 @@ namespace RouterVpnManagerClient
         {
             base.ItemDeselected(collectionView, indexPath);
             _selectedItems.Remove(indexPath);
+        }
+        public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            Global.BasicNotificationAlert("Test", "Test", Controller);
+            return base.ShouldHighlightItem(collectionView, indexPath);
         }
     }
 }

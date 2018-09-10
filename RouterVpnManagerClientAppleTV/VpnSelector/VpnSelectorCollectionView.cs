@@ -20,7 +20,7 @@ namespace RouterVpnManagerClient
 
         }
 
-        public new VpnSelectorCollectionViewDataSource Source => DataSource as VpnSelectorCollectionViewDataSource;
+        //public new VpnSelectorCollectionViewDataSource Source => DataSource as VpnSelectorCollectionViewDataSource;
 
         public VpnSelectorCollectionViewController ParentController { get; set; }
     }
