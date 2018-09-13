@@ -48,22 +48,36 @@ namespace RouterVpnManagerClient
             return cell;
         }
 
+
+        //public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
+        //{
+        //    return new CGSize(361, 256);
+        //}
+        public override bool CanFocusItem(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            if (indexPath == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+                //return ViewController.CollectionView.Source.Vpns[indexPath.Row].Selectable;
+            }
+        }
+        public NSIndexPath[] SelectedItems { get { return _selectedItems.ToArray(); } }
+        readonly List<NSIndexPath> _selectedItems = new List<NSIndexPath>();
+
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            //_selectedItems.Add(indexPath);
+            base.ItemSelected(collectionView, indexPath);
+            _selectedItems.Add(indexPath);
             Global.BasicNotificationAlert("Test", "Test", ViewController);
         }
-
         public override void ItemDeselected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            Global.BasicNotificationAlert("Test", "Test", ViewController);
-            //_selectedItems.Remove(indexPath);
+            base.ItemDeselected(collectionView, indexPath);
+            _selectedItems.Remove(indexPath);
         }
-
-        //public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
-        //{
-        //    Global.BasicNotificationAlert("Test", "Test", ViewController);
-        //    return true;
-        //}
     }
 }
