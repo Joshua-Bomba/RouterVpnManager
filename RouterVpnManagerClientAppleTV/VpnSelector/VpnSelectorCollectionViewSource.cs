@@ -40,6 +40,7 @@ namespace RouterVpnManagerClient
         }
 
         public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
+
         {
             var cell = (VpnSelectorCollectionViewCell) collectionView.DequeueReusableCell(vpnCellId, indexPath);
             var model = Vpns[indexPath.Row];

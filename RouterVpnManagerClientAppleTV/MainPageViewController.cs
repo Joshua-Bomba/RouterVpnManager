@@ -44,7 +44,7 @@ namespace RouterVpnManagerClient
             btnStack.Spacing = 10;
             btnStack.TranslatesAutoresizingMaskIntoConstraints = false;
             btnSelectAVpn.Enabled = false;
-            btnSettings.Enabled = false;
+            btnSettings.Enabled = true;
         }
 
         

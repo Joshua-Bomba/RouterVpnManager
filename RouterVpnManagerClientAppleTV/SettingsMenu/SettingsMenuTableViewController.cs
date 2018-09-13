@@ -10,7 +10,7 @@ namespace RouterVpnManagerClient
         {
         }
 
-        public SettingsMenuTableViewSource Source => TableView.DataSource as SettingsMenuTableViewSource;
+        public SettingsMenuTableViewSource Source => TableView.Source as SettingsMenuTableViewSource;
 
 
         public override void ViewDidLoad()

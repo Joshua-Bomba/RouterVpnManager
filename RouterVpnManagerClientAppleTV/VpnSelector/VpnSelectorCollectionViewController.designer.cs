@@ -16,7 +16,7 @@ namespace RouterVpnManagerClient
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        RouterVpnManagerClient.VpnSelectorCollectionView vpnSelection { get; set; }
+        UIKit.UICollectionView vpnSelection { get; set; }
 
         void ReleaseDesignerOutlets ()
         {
