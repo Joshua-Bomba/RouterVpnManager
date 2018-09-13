@@ -4,6 +4,7 @@ using UIKit;
 // ReSharper disable once CheckNamespace
 namespace RouterVpnManagerClient
 {
+    //This code is proably never ran
     public partial class VpnSelectorCollectionView : UICollectionView
     {
         public static AppDelegate App
@@ -14,10 +15,6 @@ namespace RouterVpnManagerClient
 
         public VpnSelectorCollectionView(IntPtr handle) : base(handle)
         {
-            RegisterClassForCell(typeof(VpnSelectorCollectionViewCell), VpnSelectorCollectionViewSource.vpnCellId);
-            Source = new VpnSelectorCollectionViewSource(ParentController);
-            //Delegate = new VpnSelectorCollectionViewDelegateFlowLayout(ParentController);
-            
 
         }
 

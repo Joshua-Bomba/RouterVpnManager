@@ -50,22 +50,20 @@ namespace RouterVpnManagerClient
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            base.ItemSelected(collectionView, indexPath);
             //_selectedItems.Add(indexPath);
             Global.BasicNotificationAlert("Test", "Test", ViewController);
         }
 
         public override void ItemDeselected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            base.ItemDeselected(collectionView, indexPath);
             Global.BasicNotificationAlert("Test", "Test", ViewController);
             //_selectedItems.Remove(indexPath);
         }
 
-        public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
-        {
-            Global.BasicNotificationAlert("Test", "Test", ViewController);
-            return base.ShouldHighlightItem(collectionView, indexPath);
-        }
+        //public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
+        //{
+        //    Global.BasicNotificationAlert("Test", "Test", ViewController);
+        //    return true;
+        //}
     }
 }
