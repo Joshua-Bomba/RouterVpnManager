@@ -30,8 +30,7 @@ namespace RouterVpnManagerClient
             }
             else
             {
-                var controller = collectionView as VpnSelectorCollectionView;
-                return controller != null && ((VpnSelectorCollectionViewDataSource) controller.DataSource).Vpns[indexPath.Row].Selectable;
+                return Controller?.CollectionView?.DataSource != null && ((VpnSelectorCollectionViewDataSource) Controller.CollectionView.DataSource).Vpns[indexPath.Row].Selectable;
             }
         }
 

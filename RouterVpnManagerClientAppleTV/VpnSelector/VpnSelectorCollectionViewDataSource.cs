@@ -12,14 +12,14 @@ namespace RouterVpnManagerClient
     {
         public static NSString vpnCellId = new NSString("VpnCollectionCell");
         
-        public VpnSelectorCollectionView ViewController { get; set; }
+        public VpnSelectorCollectionViewController Controller { get; set; }
 
         public List<VpnSelectorModel> Vpns { get; set; }= new List<VpnSelectorModel>();
 
 
-        public VpnSelectorCollectionViewDataSource(VpnSelectorCollectionView viewController) : base()
+        public VpnSelectorCollectionViewDataSource(VpnSelectorCollectionViewController controller) : base()
         {
-            ViewController = viewController;
+            Controller = controller;
             RouterVpnManagerWrapper.Instance.VpnSelectorDataSource = this;
         }
 
