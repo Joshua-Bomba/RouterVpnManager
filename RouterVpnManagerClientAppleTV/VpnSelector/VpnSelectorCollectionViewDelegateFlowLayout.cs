@@ -34,22 +34,22 @@ namespace RouterVpnManagerClient
             }
         }
 
-        public NSIndexPath[] SelectedItems { get { return _selectedItems.ToArray(); } }
-        readonly List<NSIndexPath> _selectedItems = new List<NSIndexPath>();
+        //public NSIndexPath[] SelectedItems { get { return _selectedItems.ToArray(); } }
+        //readonly List<NSIndexPath> _selectedItems = new List<NSIndexPath>();
 
         public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            _selectedItems.Add(indexPath);
-            Global.BasicNotificationAlert("Test", "Test", Controller);
+            //Global.BasicNotificationAlert("Test", "Test", Controller);
+
         }
 
         public override void ItemDeselected(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            _selectedItems.Remove(indexPath);
+            //_selectedItems.Remove(indexPath);
         }
         public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
         {
-            Global.BasicNotificationAlert("Test", "Test", Controller);
+            //Global.BasicNotificationAlert("Test", "Test", Controller);
             return true;
         }
     }

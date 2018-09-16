@@ -69,7 +69,7 @@ namespace RouterVpnManagerClientLibrary
         }
 
 
-        public void Disconnect()
+        public void DisconnectFromServer()
         {
             requestProcessor_.Stop();
             client_.Close();
@@ -114,7 +114,7 @@ namespace RouterVpnManagerClientLibrary
         {
             if (client_.Connected)
             {
-                Disconnect();
+                DisconnectFromServer();
             }
         }
 

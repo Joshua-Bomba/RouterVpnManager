@@ -129,7 +129,7 @@ namespace RouterVpnManagerClientLibrary
                 catch (Exception e)
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
-                    status = new StatusResponse {Status = false, Message = e.ToString()};
+                    status = new StatusResponse {Status = false, ExceptionMessage = e.ToString()};
                 }
 
             }).Wait(connection_.CallbackTimeout);
@@ -154,7 +154,7 @@ namespace RouterVpnManagerClientLibrary
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    status = new StatusResponse { Status = false, Message = e.ToString() };
+                    status = new StatusResponse { Status = false, ExceptionMessage = e.ToString() };
                 }
 
             }).Wait(connection_.CallbackTimeout);

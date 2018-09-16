@@ -9,19 +9,29 @@ namespace RouterVpnManagerClient
 {
     public class Global
     {
-        //Stole this from a xamarin example
-        public static UIAlertController BasicNotificationAlert(string title, string description, UIViewController controller)
+        //Stole this from a xamarin example & modified it a bit
+
+        public static UIAlertController BasicNotificationAlert(string title, string description, UIViewController controller, string ex = null)
         {
-            // No, inform the user that they must create a home first
             UIAlertController alert = UIAlertController.Create(title, description, UIAlertControllerStyle.Alert);
 
-            // Configure the alert
-            alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, (action) => { }));
+            //Configure the alert
+            alert.AddAction(UIAlertAction.Create("Ok", UIAlertActionStyle.Default, (action) => { }));
 
-            // Display the alert
+            if (ex != null)
+            {
+                alert.AddAction(UIAlertAction.Create("Big Scary ExceptionMessage",UIAlertActionStyle.Destructive,(action =>
+                {
+                    UIAlertController a = UIAlertController.Create("Exception", ex, UIAlertControllerStyle.Alert);
+
+                    a.AddAction(UIAlertAction.Create("Cool", UIAlertActionStyle.Default, (ac) => { }));
+                    controller.PresentViewController(a, true, null);
+
+                })));
+            }
+
             controller.PresentViewController(alert, true, null);
 
-            // Return created controller
             return alert;
         }
     }

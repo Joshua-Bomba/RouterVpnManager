@@ -26,6 +26,16 @@ namespace RouterVpnManagerClient
                 }
 
                 Title.Text = _model.Title;
+
+                if (_model.Selected)
+                {
+                    
+                    
+                }
+                else
+                {
+                    
+                }
             }
         }
 
