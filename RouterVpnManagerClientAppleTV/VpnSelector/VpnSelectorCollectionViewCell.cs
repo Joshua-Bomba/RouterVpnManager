@@ -8,11 +8,27 @@ namespace RouterVpnManagerClient
     public partial class VpnSelectorCollectionViewCell : UICollectionViewCell
     {
         private VpnSelectorModel _model;
-
+        private bool _border;
 
         public UIImageView Image { get; set; }
 
         public UILabel Title { get; set; }
+
+        public bool Border
+        {
+            get => _border; set
+            {
+                _border = value;
+                if (_border)
+                {
+                    ContentView.Layer.BorderWidth = 5.0f;
+                }
+                else
+                {
+                    ContentView.Layer.BorderWidth = 0.0f;
+                }
+            }
+        }
 
         public VpnSelectorModel Model
         {
@@ -20,22 +36,18 @@ namespace RouterVpnManagerClient
             set
             {
                 _model = value;
-                if (_model?.ImageLocation != null)
+                if (_model != null)
                 {
-                    Image.Image = UIImage.FromFile(_model.ImageLocation);
+                    if (_model.ImageLocation != null)
+                    {
+                        Image.Image = UIImage.FromFile(_model.ImageLocation);
+                    }
+
+                    Title.Text = _model.Title;
+
+                    Border = _model.Selected;
                 }
 
-                Title.Text = _model.Title;
-
-                if (_model.Selected)
-                {
-                    
-                    
-                }
-                else
-                {
-                    
-                }
             }
         }
 
@@ -66,6 +78,9 @@ namespace RouterVpnManagerClient
                 Font = UIFont.PreferredFootnote.WithSize(16f),
                 Text = Model?.Title
             };
+            ContentView.Layer.BorderColor = UIColor.Green.CGColor;
+            ContentView.Layer.BorderWidth = 0.0f;
+            ContentView.Layer.MasksToBounds = true;
 
             ContentView.AddSubview(Title);
         }

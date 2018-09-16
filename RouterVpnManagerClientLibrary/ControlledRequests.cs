@@ -39,7 +39,7 @@ namespace RouterVpnManagerClientLibrary
                 //RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
                 ConnectToVpnResponse ctvr = response.ToObject<ConnectToVpnResponse>();
                 ctvr.SetData();
-                listener_?.ConnectToVpn(ctvr);
+                listener_?.ConnectedToVpn(ctvr);
             });
 
             connection_.AddBroadcastCallbackHandler("disconnectfrompvpn", (JObject response) =>
@@ -47,7 +47,7 @@ namespace RouterVpnManagerClientLibrary
                 //RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
                 DisconnectFromVpnResponse dfvr = response.ToObject<DisconnectFromVpnResponse>();
                 dfvr.SetData();
-                listener_?.DisconnectFromVpn(dfvr);
+                listener_?.DisconnectedFromVpn(dfvr);
             });
 
             connection_.AddBroadcastCallbackHandler("broadcastlog", (JObject response) =>

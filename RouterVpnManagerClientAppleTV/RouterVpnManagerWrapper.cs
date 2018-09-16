@@ -33,7 +33,7 @@ namespace RouterVpnManagerClient
         private ControlledRequests request_;
 
 
-        public MainPageViewController MainPageController { get; set; }
+        public static MainPageViewController MainPageController { get; set; }
 
         public VpnSelectorCollectionViewDataSource VpnSelectorDataSource { get; set; }
 
@@ -112,6 +112,8 @@ namespace RouterVpnManagerClient
                     MainPageController.LblStatus.TextColor = UIColor.Red;
                     Global.BasicNotificationAlert("Unable To Connect", "We were unable to find the server", MainPageController, ex.ToString());
                     connected_ = false;
+                    connection_.Dispose();
+                    DeleteInstance();
                     return false;
                 }
                 catch (Exception ex)
@@ -126,7 +128,6 @@ namespace RouterVpnManagerClient
             else
             {
                 Console.WriteLine("Can't find main controller");
-                Global.BasicNotificationAlert("Unable To Connect", "We were unable to find the controller", MainPageController);
                 return false;
             }
         }
@@ -169,26 +170,26 @@ namespace RouterVpnManagerClient
         /// Broadcast ExceptionMessage For connect to vpn being compleated
         /// </summary>
         /// <param name="response"></param>
-        public void ConnectToVpn(ConnectToVpnResponse response)
+        public void ConnectedToVpn(ConnectToVpnResponse response)
         {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(response.Status))
-                {
-                    Console.WriteLine("Vpn Connected to: " + response.VpnLocation);
-                    Global.BasicNotificationAlert("Connected", "Vpn Connected to: " + response.VpnLocation,
-                        MainPageController);
-                }
-                else
-                {
-                    Console.WriteLine("Connection Attempted failed to " + response.VpnLocation + " Reason:" +
-                                      response.Status);
-                }
-            }
-            catch (Exception ex)
-            {
-                Global.BasicNotificationAlert("Something Broke", "We were unable to process a request", MainPageController, ex.ToString());
-            }
+            //try
+            //{
+            //    if (string.IsNullOrWhiteSpace(response.Status))
+            //    {
+            //        Console.WriteLine("Vpn Connected to: " + response.VpnLocation);
+            //        Global.BasicNotificationAlert("Connected", "Vpn Connected to: " + response.VpnLocation,
+            //            MainPageController);
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Connection Attempted failed to " + response.VpnLocation + " Reason:" +
+            //                          response.Status);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Global.BasicNotificationAlert("Something Broke", "We were unable to process a request", MainPageController, ex.ToString());
+            //}
 
 
         }
@@ -197,32 +198,57 @@ namespace RouterVpnManagerClient
         /// Broadcast ExceptionMessage For vpn being disconnected
         /// </summary>
         /// <param name="response"></param>
-        public void DisconnectFromVpn(DisconnectFromVpnResponse response)
+        public void DisconnectedFromVpn(DisconnectFromVpnResponse response)
+        {
+            //try
+            //{
+            //    if (string.IsNullOrWhiteSpace(response.Status))
+            //    {
+            //        Global.BasicNotificationAlert("\nVpn was disconnected: ", response.Reason, MainPageController);
+            //        MainPageController.LblStatus.Text = "Not Connected";
+            //        MainPageController.LblStatus.TextColor = UIColor.Red;
+            //        connected_ = false;
+            //    }
+            //    else
+            //    {
+            //        Global.BasicNotificationAlert("\nVpn was unable to disconnect: ",
+            //            response.Status + " Reason: " + response.Reason, MainPageController);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Global.BasicNotificationAlert("Something Broke", "We were unable to process a request", MainPageController, ex.ToString());
+            //}
+        }
+
+        public void ConnectToVpn(int selection)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(response.Status))
-                {
-                    Global.BasicNotificationAlert("\nVpn was disconnected: ", response.Reason, MainPageController);
-                    MainPageController.LblStatus.Text = "Not Connected";
-                    MainPageController.LblStatus.TextColor = UIColor.Red;
-                    connected_ = false;
-                }
-                else
-                {
-                    Global.BasicNotificationAlert("\nVpn was unable to disconnect: ",
-                        response.Status + " Reason: " + response.Reason, MainPageController);
-                }
+
             }
             catch (Exception ex)
             {
-                Global.BasicNotificationAlert("Something Broke", "We were unable to process a request", MainPageController, ex.ToString());
+
+            }//TODO: add a wait for a broadcast response
+
+        }
+
+        public void DisconnectFromVpn()
+        {
+            try
+            {
+
             }
+            catch (Exception ex)
+            {
+
+            }//TODO: add a wait for a broadcast response
         }
 
         //public bool IsConnectedToVpn()
         //{
-            
+
         //}
     }
 }

@@ -198,7 +198,7 @@ namespace RouterVpnManagerClientTest
 
         private class Broadcasts : IBroadcastListener
         {
-            public void ConnectToVpn(ConnectToVpnResponse response)
+            public void ConnectedToVpn(ConnectToVpnResponse response)
             {
                 if (string.IsNullOrWhiteSpace(response.Status))
                 {
@@ -211,7 +211,7 @@ namespace RouterVpnManagerClientTest
 
             }
 
-            public void DisconnectFromVpn(DisconnectFromVpnResponse response)
+            public void DisconnectedFromVpn(DisconnectFromVpnResponse response)
             {
                 if (string.IsNullOrWhiteSpace(response.Status))
                 {

@@ -25,7 +25,11 @@ namespace RouterVpnManagerClientLibrary
 
         public void Wait(int timeOut)
         {
-            Task?.Wait(timeOut);
+            bool? timeout = Task?.Wait(timeOut);
+            if (timeout.HasValue && timeout.Value == false)
+            {
+                throw new TimeoutException();
+            }
         }
 
         public void SetupAsyncSignal()

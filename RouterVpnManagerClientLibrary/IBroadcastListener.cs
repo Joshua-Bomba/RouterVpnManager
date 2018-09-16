@@ -4,8 +4,8 @@ namespace RouterVpnManagerClientLibrary
 {
     public interface IBroadcastListener
     {
-        void ConnectToVpn(ConnectToVpnResponse response);
+        void ConnectedToVpn(ConnectToVpnResponse response);
 
-        void DisconnectFromVpn(DisconnectFromVpnResponse response);
+        void DisconnectedFromVpn(DisconnectFromVpnResponse response);
     }
 }
