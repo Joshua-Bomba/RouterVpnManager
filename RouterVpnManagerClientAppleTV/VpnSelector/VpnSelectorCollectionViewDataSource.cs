@@ -26,7 +26,11 @@ namespace RouterVpnManagerClient
         public void PopulateVpns()
         {
             Vpns = RouterVpnManagerWrapper.Instance.GetVpns();
-            Vpns.Insert(0, new VpnSelectorModel { ImageLocation = "back_graident.png", Title = "Disconnect",ConnectionNumber = -2});
+            Vpns.Insert(0, new VpnSelectorModel { ImageLocation = "back_graident.png", Title = "Disconnect", ConnectionNumber = -2 });
+            //for (int i = 1; i <= 60; i++)
+            //{
+            //    Vpns.Add(new VpnSelectorModel { ImageLocation = "back_graident.png", Title = "Item " + i, ConnectionNumber = -2 });
+            //}
         }
 
         public override nint NumberOfSections(UICollectionView collectionView)
@@ -42,10 +46,16 @@ namespace RouterVpnManagerClient
         public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
         {
             var cell = (VpnSelectorCollectionViewCell) collectionView.DequeueReusableCell(vpnCellId, indexPath);
-            var model = Vpns[indexPath.Row];
-            cell.Model = model;
+            if (cell != null)
+            {
+                var model = Vpns[indexPath.Row];
+                cell.Model = model;
+            }
+
             return cell;
         }
+
+        
 
     }
 }

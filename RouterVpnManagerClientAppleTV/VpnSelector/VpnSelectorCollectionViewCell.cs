@@ -20,18 +20,23 @@ namespace RouterVpnManagerClient
             set
             {
                 _model = value;
-                UpdateUI();
+                if (_model?.ImageLocation != null)
+                {
+                    Image.Image = UIImage.FromFile(_model.ImageLocation);
+                }
+
+                Title.Text = _model.Title;
             }
         }
 
         public VpnSelectorCollectionViewCell(IntPtr handle) : base(handle)
         {
 
-            UpdateUI();
+            CreateUI();
 
         }
 
-        public void UpdateUI()
+        public void CreateUI()
         {
             Image = new UIImageView(new CGRect(22, 19, 320, 171));
             Image.AdjustsImageWhenAncestorFocused = true;
@@ -41,7 +46,7 @@ namespace RouterVpnManagerClient
                 Image.Image = UIImage.FromFile(_model.ImageLocation);
             }
 
-            AddSubview(Image);
+            ContentView.AddSubview(Image);
 
             Title = new UILabel(new CGRect(22, 209, 320, 21))
             {
@@ -52,7 +57,7 @@ namespace RouterVpnManagerClient
                 Text = Model?.Title
             };
 
-            AddSubview(Title);
+            ContentView.AddSubview(Title);
         }
     }
 }

@@ -30,5 +30,6 @@ namespace RouterVpnManagerClient
 
             (CollectionView.DataSource as VpnSelectorCollectionViewDataSource)?.PopulateVpns();
         }
+
     }
 }
