@@ -68,6 +68,14 @@ namespace RouterVpnManagerClientLibrary
             return callbackRecieved;
         }
 
+        private HasCallbackBeenRecieved AddBroadcastCallback(JObject response)
+        {
+            HasCallbackBeenRecieved callbackRecieved = new HasCallbackBeenRecieved();
+            callbackRecieved.ResponseState = requestProcessor_.AddBroadcastHandleListener(response, callbackRecieved);
+            callbackRecieved.SetupAsyncSignal();
+            return callbackRecieved;
+        }
+
 
         public void DisconnectFromServer()
         {
@@ -75,33 +83,36 @@ namespace RouterVpnManagerClientLibrary
             client_.Close();
         }
 
-        public HasCallbackBeenRecieved SendJson(JObject obj, RequestProcessor.Callback callback = null)
+        /// <summary>
+        /// Sends json to the server
+        /// </summary>
+        /// <param name="obj">The Json object</param>
+        /// <param name="callback">A callback function which will be called when a response is recived</param>
+        /// <param name="broadcastCallback">if it's a broadcast callback it will return a HasCallbackBeenRecieved which will trigger when the broadcast is recived</param>
+        /// <returns></returns>
+        public HasCallbackBeenRecieved SendJson(JObject obj, RequestProcessor.Callback callback = null,bool broadcastCallback = false)
         {
+            HasCallbackBeenRecieved state = new HasCallbackBeenRecieved();
             JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
             {
                 o["signature"] = Guid.NewGuid().ToString();
 
                 NetworkStream ns = client_.GetStream();
-                if (callback != null)
+                if (broadcastCallback)
                 {
-                    HasCallbackBeenRecieved state = AddCallback(o, callback);
-                    byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
-                        ns.Write(bytes, 0, bytes.Length);
+                    state = AddBroadcastCallback(o);
 
-                    return state;
                 }
-                else
+                else if (callback != null)
                 {
-                    byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
-                    ns.Write(bytes, 0, bytes.Length);
+                    state = AddCallback(o, callback);
                 }
+                byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
+                ns.Write(bytes, 0, bytes.Length);
             }
-            else
-            {
 
-            }
-            return new HasCallbackBeenRecieved();
+            return state;
         }
 
         public bool AddBroadcastCallbackHandler(string request, RequestProcessor.Callback callback)
