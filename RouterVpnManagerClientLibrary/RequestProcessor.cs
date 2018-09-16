@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -136,17 +138,18 @@ namespace RouterVpnManagerClientLibrary
                     try
                     {
                         JObject obj = responses_.Take();
+
                         if (obj["type"].ToString() == "broadcast")
                         {
                             if (broadcastCallbacksHandlers_.ContainsKey(obj["request"].ToString()))
                             {
                                 broadcastCallbacksHandlers_.TryGetValue(obj["request"].ToString(), out var callback);
                                 callback?.Invoke(obj);
-                                JObject key = broadcastCallback_.FirstOrDefault(x =>
-                                    x.Key["request"].ToString() == obj["request"].ToString() &&
-                                    x.Key["signature"].ToString() == obj["signature"].ToString()).Key;
-                                if (key != null)
+                                Func<KeyValuePair<JObject, HasCallbackBeenRecieved>, bool> equalCheck = (KeyValuePair<JObject, HasCallbackBeenRecieved> x) => x.Key["request"].ToString() == obj["request"].ToString() && x.Key["signature"].ToString() == obj["signature"].ToString();
+                                
+                                if (broadcastCallback_.Any(equalCheck))
                                 {
+                                    JObject key = broadcastCallback_.First(equalCheck).Key;
                                     HasCallbackBeenRecieved response;
                                     if (broadcastCallback_.TryRemove(key, out response))
                                     {
@@ -161,9 +164,10 @@ namespace RouterVpnManagerClientLibrary
                         }
                         else if (obj["type"].ToString() == "response")
                         {
-                            JObject key = privateCallbacks_.FirstOrDefault(x => x.Key["request"].ToString() == obj["request"].ToString() && x.Key["signature"].ToString() == obj["signature"].ToString()).Key;
-                            if (key != null)
+                            Func<KeyValuePair<JObject, Callback>, bool> equalCheck = (KeyValuePair<JObject, Callback> x) => x.Key["request"].ToString() == obj["request"].ToString() && x.Key["signature"].ToString() == obj["signature"].ToString();
+                            if (privateCallbacks_.Any(equalCheck))
                             {
+                                JObject key = privateCallbacks_.Where(equalCheck).First().Key;
                                 Callback response;
                                 if (privateCallbacks_.TryRemove(key, out response))
                                 {
