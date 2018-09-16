@@ -1,4 +1,4 @@
-﻿// WARNING
+// WARNING
 //
 // This file has been generated automatically by Visual Studio from the outlets and
 // actions declared in your storyboard file.
@@ -16,7 +16,7 @@ namespace RouterVpnManagerClient
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        RouterVpnManagerClient.VpnSelectorCollectionView vpnSelection { get; set; }
+        UIKit.UICollectionView vpnSelection { get; set; }
 
         void ReleaseDesignerOutlets ()
         {

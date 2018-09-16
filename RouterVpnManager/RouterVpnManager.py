@@ -2,7 +2,7 @@
 
 #remote debugging tools
 
-#pip install ptvsd
+#pip install ptvsd, it's now fucking broken
 import ptvsd
 ptvsd.enable_attach('RouterVpnManager')
 

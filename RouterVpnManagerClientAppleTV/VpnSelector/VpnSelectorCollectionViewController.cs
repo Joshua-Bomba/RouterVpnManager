@@ -11,21 +11,24 @@ namespace RouterVpnManagerClient
         {
         }
 
-        public VpnSelectorCollectionView Collection => (CollectionView as VpnSelectorCollectionView);
+        //public VpnSelectorCollectionView Collection => (CollectionView as VpnSelectorCollectionView);
 
         public override void AwakeFromNib()
         {
             base.AwakeFromNib();
 
             //Adds reference to the controller in the child element (The VpnsCollectionView)
-            Collection.ParentController = this;
         }
 
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+            CollectionView.RegisterClassForCell(typeof(VpnSelectorCollectionViewCell), VpnSelectorCollectionViewDataSource.vpnCellId);
+            CollectionView.DataSource = new VpnSelectorCollectionViewDataSource(this);
+            CollectionView.Delegate = new VpnSelectorCollectionViewDelegateFlowLayout(this);
+            
 
-            Collection.Source.PopulateVpns();
+            (CollectionView.DataSource as VpnSelectorCollectionViewDataSource)?.PopulateVpns();
         }
     }
 }

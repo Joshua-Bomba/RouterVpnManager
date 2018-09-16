@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 using CoreGraphics;
@@ -10,14 +11,16 @@ namespace RouterVpnManagerClient
 {
     public class VpnSelectorCollectionViewDelegateFlowLayout : UICollectionViewDelegateFlowLayout
     {
-        public VpnSelectorCollectionViewDelegateFlowLayout() : base()
+        public VpnSelectorCollectionViewDelegateFlowLayout(VpnSelectorCollectionViewController controller) : base()
         {
-
+            this.Controller = controller;
         }
         public override CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
         {
             return new CGSize(361, 256);
         }
+
+        public VpnSelectorCollectionViewController Controller { get; private set; }
 
         public override bool CanFocusItem(UICollectionView collectionView, NSIndexPath indexPath)
         {
@@ -27,16 +30,27 @@ namespace RouterVpnManagerClient
             }
             else
             {
-                var controller = collectionView as VpnSelectorCollectionView;
-                return controller.Source.Vpns[indexPath.Row].Selectable;
+                return Controller?.CollectionView?.DataSource != null && ((VpnSelectorCollectionViewDataSource) Controller.CollectionView.DataSource).Vpns[indexPath.Row].Selectable;
             }
         }
 
-        //public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
-        //{
-        //    var view = collectionView as VpnsCollectionView;
-        //    App
+        public NSIndexPath[] SelectedItems { get { return _selectedItems.ToArray(); } }
+        readonly List<NSIndexPath> _selectedItems = new List<NSIndexPath>();
 
-        //}
+        public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            _selectedItems.Add(indexPath);
+            Global.BasicNotificationAlert("Test", "Test", Controller);
+        }
+
+        public override void ItemDeselected(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            _selectedItems.Remove(indexPath);
+        }
+        public override bool ShouldHighlightItem(UICollectionView collectionView, NSIndexPath indexPath)
+        {
+            Global.BasicNotificationAlert("Test", "Test", Controller);
+            return true;
+        }
     }
 }

@@ -35,14 +35,14 @@ namespace RouterVpnManagerClientLibrary
                 byte[] bytes = Encoding.ASCII.GetBytes(obj.ToString());
 
                 bool state = false;
-                Task callbackstate = AddCallback(obj, (JObject message) =>
+                HasCallbackBeenRecieved callbackstate = AddCallback(obj, (JObject message) =>
                 {
                     RouterVpnManagerLogLibrary.Log(message["data"].ToString());
                     state = true;
                 });
                 NetworkStream ns = client_.GetStream();
                 ns.Write(bytes, 0, bytes.Length);
-                callbackstate.Wait(RecivedTimeout);
+                callbackstate.Wait(CallbackTimeout);
                 if (!state)
                     throw new Exception("was not able to connect properly");
             }
@@ -54,34 +54,18 @@ namespace RouterVpnManagerClientLibrary
 
         }
 
-
-        private Task<bool> AddCallback(JObject response,RequestProcessor.Callback callback)
+        private HasCallbackBeenRecieved AddCallback(JObject response,RequestProcessor.Callback callback)
         {
-            ManualResetEvent oSignalEvent = new ManualResetEvent(false);
-            bool responseState = true;
-            responseState = requestProcessor_.AddPrivateCallbackHandler(response, (JObject o) =>
+            HasCallbackBeenRecieved callbackRecieved = new HasCallbackBeenRecieved();
+            callbackRecieved.ResponseState = requestProcessor_.AddPrivateCallbackHandler(response, (JObject o) =>
             {
                 callback(o);
-                oSignalEvent.Set();
+                callbackRecieved.SignalEvent.Set();
             });
 
-            //https://stackoverflow.com/questions/18756354/wrapping-manualresetevent-as-awaitable-task
-            //Most of this below is copy pasta black magic
+           callbackRecieved.SetupAsyncSignal();
 
-
-            var tcs = new TaskCompletionSource<bool>();
-
-            var registration = ThreadPool.RegisterWaitForSingleObject(oSignalEvent, (state, timedOut) =>
-            {
-                var localTcs = (TaskCompletionSource<bool>)state;
-                if (timedOut)
-                    localTcs.TrySetCanceled();
-                else
-                    localTcs.TrySetResult(responseState);
-            },tcs, Timeout.InfiniteTimeSpan, executeOnlyOnce:true);
-
-            tcs.Task.ContinueWith((_, state) => ((RegisteredWaitHandle)state).Unregister(null), registration, TaskScheduler.Default);
-            return tcs.Task;
+            return callbackRecieved;
         }
 
 
@@ -91,7 +75,7 @@ namespace RouterVpnManagerClientLibrary
             client_.Close();
         }
 
-        public async Task SendJson(JObject obj, RequestProcessor.Callback callback = null)
+        public HasCallbackBeenRecieved SendJson(JObject obj, RequestProcessor.Callback callback = null)
         {
             JObject o = (JObject)obj.DeepClone();
             if (client_.Connected)
@@ -101,11 +85,11 @@ namespace RouterVpnManagerClientLibrary
                 NetworkStream ns = client_.GetStream();
                 if (callback != null)
                 {
-                    Task<bool> task = AddCallback(o, callback);
+                    HasCallbackBeenRecieved state = AddCallback(o, callback);
                     byte[] bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(o));
-                    ns.Write(bytes, 0, bytes.Length);
+                        ns.Write(bytes, 0, bytes.Length);
 
-                    await task;
+                    return state;
                 }
                 else
                 {
@@ -117,6 +101,7 @@ namespace RouterVpnManagerClientLibrary
             {
 
             }
+            return new HasCallbackBeenRecieved();
         }
 
         public bool AddBroadcastCallbackHandler(string request, RequestProcessor.Callback callback)
@@ -139,12 +124,22 @@ namespace RouterVpnManagerClientLibrary
         {
             SendTimeout = 5000;
             RecivedTimeout = 10000;
+            CallbackTimeout = 10000;
             Host = "127.0.0.1";
             Port = 8000;
         }
-
+        /// <summary>
+        /// How long it will wait untill a recieved ack is recived from the server
+        /// </summary>
         public int SendTimeout { get => client_.SendTimeout; set => client_.SendTimeout = value; }
+        /// <summary>
+        /// The ReceiveTimeout property determines the amount of time that the Read method will block until it is able to receive data
+        /// </summary>
         public int RecivedTimeout { get => client_.ReceiveTimeout; set => client_.ReceiveTimeout = value; }
+        /// <summary>
+        /// this is the total request time to send and recieve response json, parse it and call the callback function if applicable
+        /// </summary>
+        public int CallbackTimeout { get; set; }
 
         public string Host { get; set; }
 
