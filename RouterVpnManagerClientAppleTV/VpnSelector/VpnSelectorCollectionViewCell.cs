@@ -20,18 +20,18 @@ namespace RouterVpnManagerClient
             set
             {
                 _model = value;
-                UpdateModel();
+                UpdateUI();
             }
         }
 
         public VpnSelectorCollectionViewCell(IntPtr handle) : base(handle)
         {
 
-            UpdateModel();
+            UpdateUI();
 
         }
 
-        public void UpdateModel()
+        public void UpdateUI()
         {
             Image = new UIImageView(new CGRect(22, 19, 320, 171));
             Image.AdjustsImageWhenAncestorFocused = true;
