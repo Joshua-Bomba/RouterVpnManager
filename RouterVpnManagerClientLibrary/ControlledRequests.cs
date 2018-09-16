@@ -84,13 +84,13 @@ namespace RouterVpnManagerClientLibrary
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
-            connection_.SendJson(obj).Wait(connection_.CallbackTimeout);
+            connection_.SendJson(obj,broadcastCallback:true).Wait(connection_.CallbackTimeout);
         }
 
         public void DisconnectFromVpn()
         {
             JObject obj = FormatMessage("request", "disconnectfrompvpn");
-            connection_.SendJson(obj).Wait(connection_.CallbackTimeout);
+            connection_.SendJson(obj,broadcastCallback:true).Wait(connection_.CallbackTimeout);
         }
 
         public ConnectionStatusResponse CheckCurrentConnection()
