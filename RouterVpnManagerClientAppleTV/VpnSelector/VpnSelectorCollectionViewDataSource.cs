@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-
+using System.Linq;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -46,7 +46,6 @@ namespace RouterVpnManagerClient
             cell.Model = model;
             return cell;
         }
-
 
     }
 }

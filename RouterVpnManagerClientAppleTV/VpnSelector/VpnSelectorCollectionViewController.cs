@@ -26,7 +26,7 @@ namespace RouterVpnManagerClient
             CollectionView.RegisterClassForCell(typeof(VpnSelectorCollectionViewCell), VpnSelectorCollectionViewDataSource.vpnCellId);
             CollectionView.DataSource = new VpnSelectorCollectionViewDataSource(this);
             CollectionView.Delegate = new VpnSelectorCollectionViewDelegateFlowLayout(this);
-
+            
 
             (CollectionView.DataSource as VpnSelectorCollectionViewDataSource)?.PopulateVpns();
         }

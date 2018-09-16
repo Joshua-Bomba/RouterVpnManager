@@ -20,26 +20,39 @@ namespace RouterVpnManagerClient
             set
             {
                 _model = value;
-                Image.Image = UIImage.FromFile(_model.ImageLocation);
-                Title.Text = _model.Title;
+                UpdateModel();
             }
         }
 
         public VpnSelectorCollectionViewCell(IntPtr handle) : base(handle)
         {
+
+            UpdateModel();
+
+        }
+
+        public void UpdateModel()
+        {
             Image = new UIImageView(new CGRect(22, 19, 320, 171));
             Image.AdjustsImageWhenAncestorFocused = true;
+
+            if (Model?.ImageLocation != null)
+            {
+                Image.Image = UIImage.FromFile(_model.ImageLocation);
+            }
+
             AddSubview(Image);
 
             Title = new UILabel(new CGRect(22, 209, 320, 21))
             {
                 TextAlignment = UITextAlignment.Center,
-                TextColor = UIColor.White,
-                Alpha = 0.0f
+                TextColor = UIColor.Black,
+                Alpha = 1.0f,
+                Font = UIFont.PreferredFootnote.WithSize(16f),
+                Text = Model?.Title
             };
+
             AddSubview(Title);
-
-
         }
     }
 }
