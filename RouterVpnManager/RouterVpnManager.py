@@ -21,6 +21,7 @@ import Queue
 CONFIG_FOLDER_NAME = "configurations"
 OPENVPNCL_PATH = "/tmp/openvpncl" #I highly recommend against changing this
 VPN_CONNECTION_CODE = "openvpn --route-up " + OPENVPNCL_PATH + "/route-up.sh --route-pre-down " + OPENVPNCL_PATH +"/route-down.sh --config " + OPENVPNCL_PATH +"/openvpn.conf"
+IMAGE_NAME = "img.jpg"
 
 #raw_input("Press Any Key Once The Debugger is hooked on")
 
@@ -411,7 +412,9 @@ class processRequest:
                 self.sendResponse("response","connection","Connection Established")
                 return True
             elif self.__jsonObject["request"] == "listovpn":
-                self.sendResponse("response","listovpn",self.__vpnManager.getConnectionNames())
+                l = self.__vpnManager.getConnectionNames()
+
+                self.sendResponse("response","listovpn",l)
                 return True
             elif self.__jsonObject["request"] == "connecttovpn":
                 data = {}
