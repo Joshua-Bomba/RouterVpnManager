@@ -40,15 +40,16 @@ namespace RouterVpnManagerClient
 
         public static void HookOntoGuiThead(Action action)
         {
-            HasCallbackBeenRecieved sync = new HasCallbackBeenRecieved();
             
+            HasCallbackBeenRecieved sync = new HasCallbackBeenRecieved();
+
             NSRunLoop.Main.BeginInvokeOnMainThread(() =>
             {
                 action();
                 sync.SignalEvent.Set();
             });
             sync.SetupAsyncSignal();
-            sync.Wait(GUI_LOCK_TIMEOUT);
+            //sync.Wait(GUI_LOCK_TIMEOUT);
         }
     }
 }

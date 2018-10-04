@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
-using System.Threading;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -202,10 +201,9 @@ namespace RouterVpnManagerClient
         /// <param name="response"></param>
         public void DisconnectedFromVpn(DisconnectFromVpnResponse response)
         {
-
-            Global.HookOntoGuiThead(() =>
+            //Reconnect onto the UI Thread
+            Global.HookOntoGuiThead(()=>
             {
-                //Reconnect onto the UI Thread
                 try
                 {
                     if (string.IsNullOrWhiteSpace(response.Status))
@@ -226,9 +224,6 @@ namespace RouterVpnManagerClient
                     Global.BasicNotificationAlert("Something Broke", "We were unable to process a request", MainPageController, ex.ToString());
                 }
             });
-
-
-
             Console.WriteLine("Cool Beans");
         }
 
