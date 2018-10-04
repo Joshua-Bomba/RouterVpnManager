@@ -62,7 +62,7 @@ namespace RouterVpnManagerClient
 
         private void GetSettings()
         {
-            connection_.Host = "192.168.2.36";
+            connection_.Host = "192.168.3.1";
             connection_.Port = 8000;
             connection_.CallbackTimeout = -1;
             //TODO: fix that dam settings menu
