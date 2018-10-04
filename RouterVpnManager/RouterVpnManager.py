@@ -54,7 +54,7 @@ class logger(threading.Thread):
         #        if self.__connections is not None:
         #            m = {}
         #            m["message"] = str
-        #            self.__connections.sendBroadcast("broadcast","broadcastlog",m)
+        #            self.__connections.sendBroadcast("broadcast","broadcastlog",m,"")
         #except Exception, e:
         #    print "Queue Exception Exiting log" + str(e)#probably not a good idea to broadcast this exception out
         pass
@@ -417,14 +417,14 @@ class processRequest:
                 data = {}
                 data["vpnLocation"] = self.__jsonObject["data"][u'vpn']
                 data["status"] = self.__vpnManager.connectToVpn(data["vpnLocation"])
-                self.sendResponse("response","connecttovpn",data)
-                self.__connection.sendBroadcast("broadcast","connecttovpn",data)
+                #self.sendResponse("response","connecttovpn",data)
+                self.__connection.sendBroadcast("broadcast","connecttovpn",data,self.__jsonObject["signature"])
                 return True
             elif self.__jsonObject["request"] == "disconnectfrompvpn":
                 data = {}
                 data["reason"] = "Client Disconnected"
                 data["status"] = self.__vpnManager.disconnectFromVpn()#The disconnect from vpn will be callback twice because it shuts down the Subprocess and causes and unexpected disconnect
-                self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data)
+                self.__connection.sendBroadcast("broadcast","disconnectfrompvpn",data,self.__jsonObject["signature"])
                 return True
             elif self.__jsonObject["request"] == "checkconnectionstatus":
                 data = {}
@@ -538,12 +538,14 @@ class connections:
         data = {}
         data["status"] = ""
         data["reason"] = "Unexpected Disconnection"
-        self.sendBroadcast("broadcast","disconnectfrompvpn",data)
-    def sendBroadcast(self,type,request,data):
+        self.sendBroadcast("broadcast","disconnectfrompvpn",data,"")
+    def sendBroadcast(self,type,request,data,signature):
         response = {}
         response["type"] = type
         response["request"] = request
         response["data"] = data
+        response["signature"] = signature
+
         if(type == "broadcast"):
             self.__clientsMapLock.acquire()
             try:

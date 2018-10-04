@@ -102,7 +102,7 @@ namespace RouterVpnManagerClientTest
                     }
                     else
                     {
-                        Console.WriteLine("Config could not be copied: " + sr.Message);   
+                        Console.WriteLine("Config could not be copied: " + sr.ExceptionMessage);   
                     }
                 }
                 else
@@ -125,7 +125,7 @@ namespace RouterVpnManagerClientTest
             }
             else
             {
-                Console.WriteLine("Config could not be cleared: " + sr.Message);
+                Console.WriteLine("Config could not be cleared: " + sr.ExceptionMessage);
             }
         }
 
@@ -144,7 +144,7 @@ namespace RouterVpnManagerClientTest
                     }
                     else
                     {
-                        Console.WriteLine("Could not delete config: " + sr.Message);
+                        Console.WriteLine("Could not delete config: " + sr.ExceptionMessage);
                     }
                 }
                 else
@@ -170,7 +170,7 @@ namespace RouterVpnManagerClientTest
                 }
                 else
                 {
-                    Console.WriteLine("Config was not able to be copied: " + sr.Message);
+                    Console.WriteLine("Config was not able to be copied: " + sr.ExceptionMessage);
                 }
             }
             else
@@ -198,7 +198,7 @@ namespace RouterVpnManagerClientTest
 
         private class Broadcasts : IBroadcastListener
         {
-            public void ConnectToVpn(ConnectToVpnResponse response)
+            public void ConnectedToVpn(ConnectToVpnResponse response)
             {
                 if (string.IsNullOrWhiteSpace(response.Status))
                 {
@@ -211,7 +211,7 @@ namespace RouterVpnManagerClientTest
 
             }
 
-            public void DisconnectFromVpn(DisconnectFromVpnResponse response)
+            public void DisconnectedFromVpn(DisconnectFromVpnResponse response)
             {
                 if (string.IsNullOrWhiteSpace(response.Status))
                 {
