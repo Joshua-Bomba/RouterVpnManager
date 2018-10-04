@@ -10,12 +10,12 @@ namespace RouterVpnManagerClientLibrary.ServerResponseObjects
     {
         public bool Status { get; set; }
 
-        public string Message { get; set; }
+        public string ExceptionMessage { get; set; }
 
         public override void SetData()
         {
             Status = string.IsNullOrWhiteSpace(Data["status"].ToString());
-            Message = Data["status"].ToString();
+            ExceptionMessage = Data["status"].ToString();
         }
 
         public static implicit operator bool(StatusResponse response)
@@ -25,7 +25,7 @@ namespace RouterVpnManagerClientLibrary.ServerResponseObjects
 
         public static implicit operator StatusResponse(bool state)
         {
-            return new StatusResponse {Status = state, Message = ""};
+            return new StatusResponse {Status = state, ExceptionMessage = ""};
         }
     }
 }

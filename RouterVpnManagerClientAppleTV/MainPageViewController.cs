@@ -8,7 +8,7 @@ namespace RouterVpnManagerClient
     {
         public MainPageViewController (IntPtr handle) : base (handle)
         {
-            RouterVpnManagerWrapper.Instance.MainPageController = this;
+            RouterVpnManagerWrapper.MainPageController = this;
 
         }
 

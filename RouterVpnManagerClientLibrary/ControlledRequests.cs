@@ -39,7 +39,7 @@ namespace RouterVpnManagerClientLibrary
                 //RouterVpnManagerLogLibrary.Log("Connection has been made to " + response["data"].ToString());
                 ConnectToVpnResponse ctvr = response.ToObject<ConnectToVpnResponse>();
                 ctvr.SetData();
-                listener_?.ConnectToVpn(ctvr);
+                listener_?.ConnectedToVpn(ctvr);
             });
 
             connection_.AddBroadcastCallbackHandler("disconnectfrompvpn", (JObject response) =>
@@ -47,7 +47,7 @@ namespace RouterVpnManagerClientLibrary
                 //RouterVpnManagerLogLibrary.Log("Disconnection has been made from " + response["data"].ToString());
                 DisconnectFromVpnResponse dfvr = response.ToObject<DisconnectFromVpnResponse>();
                 dfvr.SetData();
-                listener_?.DisconnectFromVpn(dfvr);
+                listener_?.DisconnectedFromVpn(dfvr);
             });
 
             connection_.AddBroadcastCallbackHandler("broadcastlog", (JObject response) =>
@@ -58,15 +58,24 @@ namespace RouterVpnManagerClientLibrary
             });
         }
 
-
-        public IEnumerable<string> ListAvaliableVpns()
+        /// <summary>
+        /// Get all of the avaliablevpns
+        /// 
+        /// Params Pass in null if you don't care about the images
+        /// Pass in a blank list if you want to fetch all images
+        /// Pass in a dictionary of all images with the vpn name as the key and a checksum as a value
+        /// </summary>
+        /// <param name="currentImages"></param>
+        /// <returns></returns>
+        public IEnumerable<string> ListAvaliableVpns(Dictionary<string,string> currentImages = null)
         {
-            JObject obj = FormatMessage("request", "listovpn", null);
+
+            JObject obj = FormatMessage("request", "listovpn", currentImages);
             IEnumerable<string> array = null;
             connection_.SendJson(obj, ((JObject response) =>
             {
                 array = response["data"].ToArray().Select(x => x.ToString());
-            })).Wait(connection_.RecivedTimeout);
+            })).Wait(connection_.CallbackTimeout);
             return array;
         }
 
@@ -75,13 +84,13 @@ namespace RouterVpnManagerClientLibrary
             dynamic d = new ExpandoObject();
             d.vpn = vpn;
             JObject obj = FormatMessage("request", "connecttovpn", d);
-            connection_.SendJson(obj).Wait(connection_.RecivedTimeout);
+            connection_.SendJson(obj,broadcastCallback:true).Wait(connection_.CallbackTimeout);
         }
 
         public void DisconnectFromVpn()
         {
             JObject obj = FormatMessage("request", "disconnectfrompvpn");
-            connection_.SendJson(obj).Wait(connection_.RecivedTimeout);
+            connection_.SendJson(obj,broadcastCallback:true).Wait(connection_.CallbackTimeout);
         }
 
         public ConnectionStatusResponse CheckCurrentConnection()
@@ -99,7 +108,7 @@ namespace RouterVpnManagerClientLibrary
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
                 }
-            }).Wait(connection_.RecivedTimeout);
+            }).Wait(connection_.CallbackTimeout);
             return currentConnection;
         }
 
@@ -120,10 +129,10 @@ namespace RouterVpnManagerClientLibrary
                 catch (Exception e)
                 {
                     RouterVpnManagerLogLibrary.Log(e.ToString());
-                    status = new StatusResponse {Status = false, Message = e.ToString()};
+                    status = new StatusResponse {Status = false, ExceptionMessage = e.ToString()};
                 }
 
-            }).Wait(connection_.RecivedTimeout);
+            }).Wait(connection_.CallbackTimeout);
 
             return status;
         }
@@ -145,10 +154,10 @@ namespace RouterVpnManagerClientLibrary
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    status = new StatusResponse { Status = false, Message = e.ToString() };
+                    status = new StatusResponse { Status = false, ExceptionMessage = e.ToString() };
                 }
 
-            }).Wait(connection_.RecivedTimeout);
+            }).Wait(connection_.CallbackTimeout);
 
             return status;
         }
@@ -162,7 +171,7 @@ namespace RouterVpnManagerClientLibrary
                 StatusResponse rb = response.ToObject<StatusResponse>();
                 rb.SetData();
                 status = rb;
-            }).Wait(connection_.RecivedTimeout);
+            }).Wait(connection_.CallbackTimeout);
             return status;
         }
 
@@ -177,7 +186,7 @@ namespace RouterVpnManagerClientLibrary
                 StatusResponse rb = response.ToObject<StatusResponse>();
                 rb.SetData();
                 status = rb;
-            }).Wait(connection_.RecivedTimeout);
+            }).Wait(connection_.CallbackTimeout);
             return status;
         }
     }
