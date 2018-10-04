@@ -167,6 +167,7 @@
     <Compile Include="SettingsSplitView\SplitSettingsPageViewController.designer.cs">
       <DependentUpon>SplitSettingsPageViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="UIThreadHook.cs" />
     <Compile Include="VpnSelector\VpnSelectorCollectionViewController.cs" />
     <Compile Include="VpnSelector\VpnSelectorCollectionViewController.designer.cs">
       <DependentUpon>VpnSelectorCollectionViewController.cs</DependentUpon>
