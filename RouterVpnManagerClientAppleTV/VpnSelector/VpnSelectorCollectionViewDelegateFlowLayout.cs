@@ -51,13 +51,19 @@ namespace RouterVpnManagerClient
                     return;
                 //TODO: move the index selection code the broadcast response
                 model.Selected = false;
-                //RouterVpnManagerWrapper.Instance.DisconnectFromVpn();  
+                RouterVpnManagerWrapper.Instance.DisconnectFromVpn();  
             }
-
 
             Source.Vpns[indexPath.Row].Selected = true;
 
-            //RouterVpnManagerWrapper.Instance.ConnectToVpn(Source.Vpns[indexPath.Row].ConnectionNumber);
+            if (Source.Vpns[indexPath.Row].ConnectionNumber == -2)
+            {
+                RouterVpnManagerWrapper.Instance.DisconnectFromVpn();
+            }
+            else
+            {
+                RouterVpnManagerWrapper.Instance.ConnectToVpn(Source.Vpns[indexPath.Row].ConnectionNumber);
+            }
 
             Controller.CollectionView.ReloadData();
 
