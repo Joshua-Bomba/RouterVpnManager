@@ -14,3 +14,11 @@
 /RouterVpnManagerClientLibrary/obj/
 /RouterVpnManager/template/*
 /RouterVpnManager/configurations/*
+/RouterVpnManagerClient/RouterVpnManagerClient/obj
+/RouterVpnManagerClient/RouterVpnManagerClient.Android/obj
+/RouterVpnManagerClient/RouterVpnManagerClient.iOS/obj
+/RouterVpnManagerClient/RouterVpnManagerClient.UWP/obj/x86/Debug
+/RouterVpnManagerClientAppleTV
+/RouterVpnManagerClientTest/bin/Release
+/RouterVpnManagerClientTest/obj/Release
+/RouterVpnManager.sln.DotSettings.user
