@@ -145,9 +145,11 @@ namespace RouterVpnManagerClientLibrary
                             {
                                 broadcastCallbacksHandlers_.TryGetValue(obj["request"].ToString(), out var callback);
                                 callback?.Invoke(obj);
-                                Func<KeyValuePair<JObject, HasCallbackBeenRecieved>, bool> equalCheck = (KeyValuePair<JObject, HasCallbackBeenRecieved> x) => x.Key["request"].ToString() == obj["request"].ToString() && x.Key["signature"].ToString() == obj["signature"].ToString();
-                                
-                                if (broadcastCallback_.Any(equalCheck))
+                                Func<KeyValuePair<JObject, HasCallbackBeenRecieved>, bool> equalCheck = (KeyValuePair<JObject, HasCallbackBeenRecieved> x) =>
+                                    x.Key["request"] != null && obj["request"] != null && x.Key["signature"] != null && obj["signature"] != null
+                                    && x.Key["request"].ToString() == obj["request"].ToString() && x.Key["signature"].ToString() == obj["signature"].ToString();
+
+                                if (broadcastCallback_.Any(equalCheck))//this may not work properly
                                 {
                                     JObject key = broadcastCallback_.First(equalCheck).Key;
                                     HasCallbackBeenRecieved response;
