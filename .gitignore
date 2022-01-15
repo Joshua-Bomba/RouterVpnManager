@@ -6,8 +6,8 @@
 /RouterVpnManagerClient/obj
 /RouterVpnManagerClientAppleTV/bin/
 /RouterVpnManagerClientAppleTV/obj/
-/RouterVpnManagerClientTest/obj/Debug
-/RouterVpnManagerClientTest/bin/Debug
+/RouterVpnManagerClientTest/obj
+/RouterVpnManagerClientTest/bin
 /packages/Newtonsoft.Json.11.0.2
 /RouterVpnManagerClientLibrary/bin/Debug
 /RouterVpnManagerClientLibrary/bin/
